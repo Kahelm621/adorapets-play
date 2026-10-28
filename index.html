@@ -246,6 +246,16 @@ svg .csprk{animation:tw 1.6s ease-in-out infinite alternate}@keyframes tw{from{o
 #compGrid .fine{grid-column:1/-1}
 .petbig.comp{width:150px;height:150px;animation:bob 1.8s ease-in-out infinite alternate}.petbig.comp svg{overflow:visible}
 .newcomp h3{margin:4px 0 0}.newcomp small{opacity:.8}
+/* v6 readability: dark outlines + soft pills so text reads over bright scenes */
+h1{-webkit-text-stroke:1.5px #2a1250;filter:drop-shadow(0 2px 0 #2a1250) drop-shadow(0 0 6px #1a0f3dcc) drop-shadow(0 0 14px #ff7ad966)}
+.tag,.tag2,.fpname,.fpnone,.maphead h2,.wintro small,.wintro h2,.screen>h2,.hint,.sub{text-shadow:0 1px 2px #000c,0 0 6px #1a0f3dcc}
+.screen>.tag,#title .tag{opacity:1;color:#fff;font-weight:600;background:#1a0f3dbf;border-radius:999px;padding:6px 14px;display:inline-block;max-width:92%;text-align:center}
+.fpname,.fpnone{background:#1a0f3dc4;color:#fff;border-radius:999px;padding:5px 14px;opacity:1;font-weight:700}
+.maphead h2{background:#1a0f3db3;border-radius:12px;padding:2px 10px}
+.hudbox{background:#1a0f3dad}.hudbox small{opacity:.95}.hudbox b,.hudbox small{text-shadow:0 1px 2px #000b}
+.pill{text-shadow:0 1px 2px #000b}
+.topbar .pill,.topbar .iconbtn,.maphead .iconbtn{background:#1a0f3d99;color:#fff}.maphead h2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:48%;font-size:17px}
+.maphead h2{white-space:normal;overflow:visible;font-size:15px;line-height:1.2;max-width:44%}
 </style></head>
 <body><div id="bg"><canvas id="bgCanvas"></canvas></div><div id="app">
  <section id="title" class="screen on">
@@ -1240,7 +1250,7 @@ window.ADS_CONFIG = {
   var api = { DAILY_POOL: DAILY_POOL, dailyFor: dailyFor, ensureDay: ensureDay, track: track, allDone: allDone, dayKey: dayKey, msToMidnight: msToMidnight, ACH: ACH, ready: ready, totalStars: totalStars };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.GOALS = api;
 })(this);
-</script><script>// Adorapets audio: 100% original soft SFX + chill lo-fi per-world music, synthesized live with WebAudio.
+</script><script>// Adorapets audio: 100% original soft SFX + calm bamboo-flute per-world music in D, synthesized live with WebAudio.
 // No samples, no borrowed melodies. Safe to load without WebAudio (every call becomes a no-op).
 (function (root, factory) {
   var api = factory(typeof window !== 'undefined' ? window : {});
@@ -1264,7 +1274,7 @@ window.ADS_CONFIG = {
     var mLP = c.createBiquadFilter(); mLP.type = 'lowpass'; mLP.frequency.value = MUSIC_LP; mLP.Q.value = 0.4; mus.connect(mLP); mLP.connect(master);
     // cheap echo "reverb": one delay line with filtered feedback
     var dl = c.createDelay(1.0), fb = c.createGain(), wet = c.createGain(), dLP = c.createBiquadFilter();
-    dl.delayTime.value = 0.36; fb.gain.value = 0.32; wet.gain.value = 0.22; dLP.type = 'lowpass'; dLP.frequency.value = 1800;
+    dl.delayTime.value = 0.42; fb.gain.value = 0.4; wet.gain.value = 0.28; dLP.type = 'lowpass'; dLP.frequency.value = 1800;
     mLP.connect(dl); dl.connect(dLP); dLP.connect(fb); fb.connect(dl); dLP.connect(wet); wet.connect(master);
     var nb = c.createBuffer(1, Math.floor(c.sampleRate * 0.6), c.sampleRate), d = nb.getChannelData(0), r = rng(99);
     for (var i = 0; i < d.length; i++) d[i] = r() * 2 - 1;
@@ -1358,73 +1368,71 @@ window.ADS_CONFIG = {
     } catch (e) {}
   }
 
-  // ---------- music: one original chill/lo-fi loop per world, generated from a seed ----------
-  var SCALES = { major: [0, 2, 4, 5, 7, 9, 11], mixo: [0, 2, 4, 5, 7, 9, 10], dorian: [0, 2, 3, 5, 7, 9, 10], minor: [0, 2, 3, 5, 7, 8, 10], lydian: [0, 2, 4, 6, 7, 9, 11] };
-  var PENTA = { major: [0, 2, 4, 7, 9], mixo: [0, 2, 4, 7, 9], lydian: [0, 2, 4, 7, 9], dorian: [0, 3, 5, 7, 10], minor: [0, 3, 5, 7, 10] };
-  // root (lead register), tempo, mode, progressions (scale degrees), pad/lead timbre, percussion feel, density (0-1)
+  // ---------- music: calm original bamboo-flute (dizi/xiao-style) pieces, all in D, one per world ----------
+  // D major pentatonic (D E F# A B) or D minor pentatonic (D F G A C). Seeded, so every world is its own fixed tune.
+  var PENTA = { maj: [0, 2, 4, 7, 9], min: [0, 3, 5, 7, 10] };
+  var D_ROOT = 62; // D4
+  // flute: 'dizi' (brighter, upper octave) or 'xiao' (deep, airy); zh = guzheng pluck density; drone = pad colour
   var STYLES = [
-    { name: 'Whisker Woods', mood: 'acoustic forest', root: 55, bpm: 84, mode: 'major', pa: [0, 3, 5, 4], pb: [3, 4, 2, 5], lead: 'pluck', pad: 'warm', drum: 'brush', dens: 0.45 },
-    { name: 'Coral Cove', mood: 'dreamy ocean', root: 53, bpm: 72, mode: 'lydian', pa: [0, 1, 0, 4], pb: [3, 4, 5, 1], lead: 'sine', pad: 'wash', drum: 'none', dens: 0.3 },
-    { name: 'Sunny Dunes', mood: 'warm desert', root: 50, bpm: 80, mode: 'dorian', pa: [0, 3, 0, 4], pb: [5, 6, 3, 4], lead: 'tri', pad: 'warm', drum: 'shaker', dens: 0.4 },
-    { name: 'Frosty Peaks', mood: 'soft sparkle', root: 57, bpm: 76, mode: 'lydian', pa: [0, 4, 5, 1], pb: [3, 4, 0, 5], lead: 'bell', pad: 'wash', drum: 'none', dens: 0.35 },
-    { name: 'Jungle Canopy', mood: 'mellow groove', root: 52, bpm: 92, mode: 'minor', pa: [0, 5, 6, 4], pb: [3, 0, 5, 4], lead: 'pluck', pad: 'warm', drum: 'lofi', dens: 0.5 },
-    { name: 'Moonlit Grove', mood: 'sleepy night', root: 51, bpm: 70, mode: 'dorian', pa: [0, 3, 6, 4], pb: [5, 3, 4, 0], lead: 'sine', pad: 'wash', drum: 'none', dens: 0.28 },
-    { name: 'Happy Farm', mood: 'easy porch', root: 55, bpm: 88, mode: 'major', pa: [0, 3, 4, 0], pb: [5, 3, 1, 4], lead: 'pluck', pad: 'warm', drum: 'brush', dens: 0.45 },
-    { name: 'Misty Mountains', mood: 'airy', root: 50, bpm: 78, mode: 'mixo', pa: [0, 6, 3, 4], pb: [5, 4, 3, 6], lead: 'tri', pad: 'wash', drum: 'brush', dens: 0.35 },
-    { name: 'Bayou Bog', mood: 'lazy swamp', root: 46, bpm: 82, mode: 'mixo', pa: [0, 3, 0, 4], pb: [3, 3, 0, 4], lead: 'tri', pad: 'warm', drum: 'lofi', dens: 0.4 },
-    { name: 'Deep Glow Sea', mood: 'deep ambient', root: 49, bpm: 74, mode: 'minor', pa: [0, 5, 2, 6], pb: [3, 4, 0, 0], lead: 'sine', pad: 'wash', drum: 'none', dens: 0.25 },
-    { name: 'Candy Kingdom', mood: 'sweet lo-fi', root: 56, bpm: 90, mode: 'major', pa: [0, 5, 3, 4], pb: [1, 4, 0, 5], lead: 'bell', pad: 'warm', drum: 'lofi', dens: 0.5 }
+    { name: 'Whisker Woods', mood: 'morning forest, birds and bamboo', bpm: 78, mode: 'maj', flute: 'dizi', zh: 0.35, drone: 'open' },
+    { name: 'Coral Cove', mood: 'gentle waves, floating', bpm: 66, mode: 'maj', flute: 'xiao', zh: 0.2, drone: 'wash' },
+    { name: 'Sunny Dunes', mood: 'warm, wandering caravan', bpm: 72, mode: 'min', flute: 'dizi', zh: 0.45, drone: 'open' },
+    { name: 'Frosty Peaks', mood: 'still snow, sparkling', bpm: 68, mode: 'maj', flute: 'xiao', zh: 0.3, drone: 'high' },
+    { name: 'Jungle Canopy', mood: 'lush, softly lilting', bpm: 86, mode: 'maj', flute: 'dizi', zh: 0.5, drone: 'open' },
+    { name: 'Moonlit Grove', mood: 'sleepy night lullaby', bpm: 67, mode: 'min', flute: 'xiao', zh: 0.15, drone: 'wash' },
+    { name: 'Happy Farm', mood: 'sunny folk tune', bpm: 84, mode: 'maj', flute: 'dizi', zh: 0.45, drone: 'open' },
+    { name: 'Misty Mountains', mood: 'airy, faraway echoes', bpm: 70, mode: 'min', flute: 'xiao', zh: 0.25, drone: 'high' },
+    { name: 'Bayou Bog', mood: 'lazy, drifting boat', bpm: 74, mode: 'min', flute: 'dizi', zh: 0.35, drone: 'wash' },
+    { name: 'Deep Glow Sea', mood: 'deep, glowing calm', bpm: 65, mode: 'min', flute: 'xiao', zh: 0.12, drone: 'wash' },
+    { name: 'Candy Kingdom', mood: 'sweet, playful tea garden', bpm: 82, mode: 'maj', flute: 'dizi', zh: 0.5, drone: 'high' }
   ];
   var LEAD_MAX = 81, songCache = {}; // A5 = 880 Hz ceiling for any music note
   function songFor(w) {
     var k = ((w % STYLES.length) + STYLES.length) % STYLES.length, lap = Math.floor(w / STYLES.length);
     var key = k + ':' + lap; if (songCache[key]) return songCache[key];
-    var S = STYLES[k], sc = SCALES[S.mode], pen = PENTA[S.mode], r = rng(1000 + k * 7919 + lap * 31), root = S.root + (lap % 3) * 2;
-    var bpm = S.bpm + (lap % 2) * 3;
-    function deg(d, oct) { var o = Math.floor(d / 7); d = ((d % 7) + 7) % 7; return root + sc[d] + 12 * (o + (oct || 0)); }
-    // sparse pentatonic phrase (2 bars), lots of space
-    function motif() {
-      var m = [], p = 2 + Math.floor(r() * 3);
-      for (var s = 0; s < 32; s += 2) {
-        var strong = s % 8 === 0, go = strong ? r() < 0.7 : r() < S.dens * 0.6;
-        if (s >= 28) go = false; // breathe at phrase end
-        if (!go) continue;
-        p = Math.max(0, Math.min(7, p + [-2, -1, -1, 0, 1, 1, 2][Math.floor(r() * 7)]));
-        var len = strong ? 6 : (r() < 0.5 ? 4 : 2); m.push([s, p, len]);
+    var S = STYLES[k], pen = PENTA[S.mode], r = rng(1000 + k * 7919 + lap * 31), root = D_ROOT; // always D
+    var bpm = S.bpm + (lap % 2) * 2, base = root + (S.flute === 'dizi' ? 12 : 0); // dizi D5, xiao D4
+    function note(idx) { var o = Math.floor(idx / 5), d = ((idx % 5) + 5) % 5; return base + pen[d] + 12 * o; }
+    // long, breathing 4-bar phrase: few notes, held tones, ends on a resting note (D or A)
+    function phrase(endOn) {
+      var m = [], p = 2 + Math.floor(r() * 3), s = 0;
+      while (s < 56) {
+        var len = [4, 6, 8, 8, 12, 4][Math.floor(r() * 6)];
+        if (s + len > 56) len = 56 - s;
+        p = Math.max(-2, Math.min(6, p + [-2, -1, -1, 1, 1, 2, 0][Math.floor(r() * 7)]));
+        var orn = r() < 0.25; // grace-note ornament from the pitch above
+        m.push([s, p, len, orn]); s += len + (r() < 0.3 ? 2 : 0);
       }
+      m.push([56, endOn, 8, false]);
       return m;
     }
-    var MA = motif(), MB = motif(), MC = motif();
-    var sections = [['A', 'pa'], ['A2', 'pa'], ['B', 'pb'], ['A', 'pa'], ['C', 'pb'], ['C2', 'pb'], ['B', 'pb'], ['A', 'pa']];
-    var steps = 32 * 16, ev = []; for (var i = 0; i < steps; i++) ev.push([]);
-    sections.forEach(function (sec, si) {
-      var prog = S[sec[1]], mot = sec[0][0] === 'A' ? MA : sec[0][0] === 'B' ? MB : MC, varied = sec[0].length > 1;
-      for (var half = 0; half < 2; half++) mot.forEach(function (n, j) {
-        if (varied && half === 1 && j % 3 === 2) return; // even sparser variations
-        var bar = half * 2 + Math.floor(n[0] / 16), step = si * 64 + half * 32 + n[0];
-        var p = n[1], semi = pen[p % 5] + 12 * Math.floor(p / 5);
-        ev[step].push(['lead', root + semi, n[2]]);
-      });
-      for (var bar = 0; bar < 4; bar++) {
-        var c = prog[bar], s0 = si * 64 + bar * 16, R0 = deg(c, -1);
-        // warm major-7 / minor-7 pad: root, 3rd, 5th, 7th, held the whole bar
-        ev[s0].push(['pad', [deg(c, -1), deg(c + 2, -1), deg(c + 4, -1), deg(c + 6, -1)], 16]);
-        ev[s0].push(['bass', R0 - 12, 10]);
-        if (S.dens >= 0.4) ev[s0 + 10].push(['bass', deg(c + 4, -2), 5]);
-        for (var s = 0; s < 16; s++) {
-          var D = S.drum, e = ev[s0 + s];
-          if (D === 'brush') { if (s === 0 || s === 10) e.push(['kick', 0.16]); if (s === 4 || s === 12) e.push(['brush', 0.035]); }
-          if (D === 'lofi') { if (s === 0 || s === 7 || s === 10) e.push(['kick', 0.18]); if (s === 4 || s === 12) e.push(['brush', 0.04]); if (s % 4 === 2) e.push(['shake', 0.012]); }
-          if (D === 'shaker') { if (s === 0 || s === 8) e.push(['kick', 0.14]); if (s % 4 === 2) e.push(['shake', 0.014]); }
-          if (D === 'none' && s === 0 && bar % 2 === 0) e.push(['kick', 0.08]);
+    var PA = phrase(0), PB = phrase(3), PC = phrase(5);
+    var form = [PA, PB, null, PA, PC, PB, null, PA]; // null = flute rests, zheng + drone breathe
+    var steps = form.length * 64, ev = []; for (var i = 0; i < steps; i++) ev.push([]);
+    var third = S.mode === 'maj' ? 4 : 3;
+    form.forEach(function (ph, si) {
+      var s0 = si * 64;
+      if (ph) ph.forEach(function (n) { ev[s0 + n[0]].push(['lead', note(n[1]), n[2], n[3] ? note(n[1] + 1) : 0]); });
+      // drone: D + A held for 2 bars (pad), low D bass
+      for (var h = 0; h < 2; h++) {
+        var ch = S.drone === 'high' ? [root - 12, root - 5, root] : S.drone === 'wash' ? [root - 12, root - 12 + third, root - 5] : [root - 12, root - 5];
+        if ((si + h) % 2 === 1 && S.drone !== 'open') ch = [root - 12, root - 5, root - 3]; // gentle A/B colour
+        ev[s0 + h * 32].push(['pad', ch, 32]);
+        ev[s0 + h * 32].push(['bass', root - 24, 28]);
+      }
+      // guzheng: sparse plucks, small rising/falling pentatonic runs
+      for (var b = 0; b < 4; b++) {
+        if (r() < S.zh + (ph ? 0 : 0.35)) {
+          var st0 = s0 + b * 16 + (r() < 0.5 ? 0 : 8), q = Math.floor(r() * 4), dir = r() < 0.5 ? 1 : -1, cnt = 2 + Math.floor(r() * 3);
+          for (var z = 0; z < cnt && st0 + z * 2 < s0 + 64; z++) ev[st0 + z * 2].push(['zheng', root + pen[((q + z * dir) % 5 + 5) % 5] - (r() < 0.4 ? 12 : 0), 8]);
         }
       }
     });
     ev.forEach(function (st) { st.forEach(function (e) {
-      if (e[0] === 'pad') e[1] = e[1].map(function (m) { while (m > 67) m -= 12; while (m < 43) m += 12; return m; });
-      else if (typeof e[1] === 'number' && (e[0] === 'lead' || e[0] === 'bass')) { while (e[1] > LEAD_MAX) e[1] -= 12; while (e[1] < 28) e[1] += 12; if (e[0] === 'bass') while (e[1] > 52) e[1] -= 12; }
+      if (e[0] === 'pad') e[1] = e[1].map(function (m) { while (m > 67) m -= 12; while (m < 38) m += 12; return m; });
+      else if (e[0] === 'lead' || e[0] === 'zheng' || e[0] === 'bass') { while (e[1] > LEAD_MAX) e[1] -= 12; while (e[1] < 38) e[1] += 12; if (e[0] === 'bass') while (e[1] > 52) e[1] -= 12; if (e[0] === 'lead' && e[3]) while (e[3] > LEAD_MAX + 2) e[3] -= 12; }
     }); });
-    var song = { world: k, lap: lap, name: S.name, mood: S.mood, bpm: bpm, root: root, mode: S.mode, lead: S.lead, stepDur: 60 / bpm / 4, steps: steps, ev: ev };
+    var song = { world: k, lap: lap, name: S.name, mood: S.mood, key: 'D ' + (S.mode === 'maj' ? 'major' : 'minor') + ' pentatonic', bpm: bpm, root: root, mode: S.mode, lead: S.flute, stepDur: 60 / bpm / 4, steps: steps, ev: ev };
     song.seconds = steps * song.stepDur; songCache[key] = song; return song;
   }
   function softNote(b, dest, t, f, dur, wave, vol, att, rel) {
@@ -1433,21 +1441,31 @@ window.ADS_CONFIG = {
     g.gain.setValueAtTime(vol, t + Math.max(att, dur - rel)); g.gain.linearRampToValueAtTime(0.0001, t + dur);
     o.connect(g); g.connect(dest); o.start(t); o.stop(t + dur + 0.05);
   }
+  // breathy bamboo flute: sine body + quiet triangle edge, slow swell, delayed vibrato, breath-noise chiff
+  function flute(b, dest, t, f, dur, kind, grace) {
+    var c = b.c, o = c.createOscillator(), o2 = c.createOscillator(), g = c.createGain(), g2 = c.createGain();
+    var vol = kind === 'xiao' ? 0.075 : 0.06, att = kind === 'xiao' ? 0.22 : 0.12;
+    o.type = 'sine'; o2.type = 'triangle'; g2.gain.value = kind === 'xiao' ? 0.12 : 0.25;
+    if (grace) { o.frequency.setValueAtTime(mf(grace), t); o.frequency.exponentialRampToValueAtTime(f, t + 0.09); o2.frequency.setValueAtTime(mf(grace), t); o2.frequency.exponentialRampToValueAtTime(f, t + 0.09); }
+    else { o.frequency.setValueAtTime(f * 0.985, t); o.frequency.exponentialRampToValueAtTime(f, t + 0.12); o2.frequency.setValueAtTime(f, t); }
+    if (dur > 0.6) { var l = c.createOscillator(), lg = c.createGain(); l.frequency.value = 4.6; lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(f * 0.007, t + Math.min(0.9, dur * 0.5)); l.connect(lg); lg.connect(o.frequency); lg.connect(o2.frequency); l.start(t); l.stop(t + dur + 0.1); }
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + att);
+    g.gain.linearRampToValueAtTime(vol * 0.8, t + Math.max(att, dur * 0.7)); g.gain.linearRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(dest); o.start(t); o2.start(t); o.stop(t + dur + 0.05); o2.stop(t + dur + 0.05);
+    noise(b, dest, t, { type: 'bandpass', f: Math.min(4000, f * 2.2), dur: Math.min(0.35, dur), vol: kind === 'xiao' ? 0.018 : 0.012, q: 1.2, off: t * 2.3 });
+  }
+  function zheng(b, dest, t, f) { // plucked zither: bright attack, quick decay, faint octave shimmer
+    tone(b, dest, t, { f: f, dur: 1.6, wave: 'triangle', vol: 0.05, att: 0.004 });
+    tone(b, dest, t, { f: f * 2, dur: 0.5, wave: 'sine', vol: 0.012, att: 0.003 });
+  }
   function scheduleStep(b, dest, song, i, t) {
     var sd = song.stepDur, list = song.ev[i % song.steps];
     for (var j = 0; j < list.length; j++) {
       var e = list[j];
-      if (e[0] === 'lead') {
-        var f = mf(e[1]), d = e[2] * sd;
-        if (song.lead === 'pluck') { tone(b, dest, t, { f: f, dur: d * 1.4, wave: 'triangle', vol: 0.07, att: 0.012 }); }
-        else if (song.lead === 'bell') { tone(b, dest, t, { f: f, dur: d * 1.8, wave: 'sine', vol: 0.06, att: 0.01 }); tone(b, dest, t, { f: f * 2, dur: d * 0.7, wave: 'sine', vol: 0.012, att: 0.01 }); }
-        else softNote(b, dest, t, f, d * 1.2, song.lead === 'tri' ? 'triangle' : 'sine', 0.06, 0.08, d * 0.5);
-      }
-      else if (e[0] === 'pad') { for (var p = 0; p < e[1].length; p++) softNote(b, dest, t, mf(e[1][p]), e[2] * sd * 1.05, 'sine', 0.022, e[2] * sd * 0.35, e[2] * sd * 0.4); }
-      else if (e[0] === 'bass') softNote(b, dest, t, mf(e[1]), e[2] * sd, 'sine', 0.13, 0.03, e[2] * sd * 0.4);
-      else if (e[0] === 'kick') tone(b, dest, t, { f: 95, f2: 45, slide: 0.12, dur: 0.22, wave: 'sine', vol: e[1] || 0.15, att: 0.006 });
-      else if (e[0] === 'brush') noise(b, dest, t, { type: 'lowpass', f: 1600, f2: 700, dur: 0.18, vol: e[1] || 0.03, off: t * 3.1 });
-      else if (e[0] === 'shake') noise(b, dest, t, { type: 'bandpass', f: 2200, dur: 0.06, vol: e[1] || 0.012, q: 0.8, off: t * 5.7 });
+      if (e[0] === 'lead') flute(b, dest, t, mf(e[1]), e[2] * sd * 1.05, song.lead, e[3]);
+      else if (e[0] === 'zheng') zheng(b, dest, t, mf(e[1]));
+      else if (e[0] === 'pad') { for (var p = 0; p < e[1].length; p++) softNote(b, dest, t, mf(e[1][p]), e[2] * sd * 1.08, 'sine', 0.018, e[2] * sd * 0.3, e[2] * sd * 0.35); }
+      else if (e[0] === 'bass') softNote(b, dest, t, mf(e[1]), e[2] * sd, 'sine', 0.07, e[2] * sd * 0.25, e[2] * sd * 0.4);
     }
   }
   var unlocked = false;
@@ -1463,12 +1481,12 @@ window.ADS_CONFIG = {
     if (!ensure()) return;
     try { if (ctx.state === 'suspended') ctx.resume(); } catch (e) {}
     var s = songFor(st.world); if (M.song !== s) { M.song = s; M.step = 0; }
-    M.gain = ctx.createGain(); M.gain.gain.setValueAtTime(0.0001, ctx.currentTime); M.gain.gain.exponentialRampToValueAtTime(1, ctx.currentTime + 0.6); M.gain.connect(B.mus);
+    M.gain = ctx.createGain(); M.gain.gain.setValueAtTime(0.0001, ctx.currentTime); M.gain.gain.exponentialRampToValueAtTime(1, ctx.currentTime + 1.8); M.gain.connect(B.mus);
     M.next = ctx.currentTime + 0.08; musicTick(); M.timer = setInterval(musicTick, 90);
   }
-  function stopMusic() {
+  function stopMusic(fade) {
     if (M.timer) clearInterval(M.timer); M.timer = null;
-    if (M.gain && ctx) { var g = M.gain; try { g.gain.cancelScheduledValues(ctx.currentTime); g.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.05); } catch (e) {} setTimeout(function () { try { g.disconnect(); } catch (e) {} }, 400); }
+    if (M.gain && ctx) { var g = M.gain; try { g.gain.cancelScheduledValues(ctx.currentTime); g.gain.setTargetAtTime(0.0001, ctx.currentTime, fade || 0.05); } catch (e) {} setTimeout(function () { try { g.disconnect(); } catch (e) {} }, fade ? 4000 : 400); }
     M.gain = null;
   }
   function sync() { applyVol(); if (st.want && !st.muted && st.music && !hidden()) startMusic(); else stopMusic(); }
@@ -1503,7 +1521,7 @@ window.ADS_CONFIG = {
       sync();
     },
     play: play,
-    setWorld: function (w) { if (st.world === w && M.song) return; st.world = w; if (M.timer) { stopMusic(); M.song = null; setTimeout(sync, 120); } },
+    setWorld: function (w) { if (st.world === w && M.song) return; st.world = w; if (M.timer) { stopMusic(0.7); M.song = null; sync(); } }, // crossfade: old tune fades as new one swells
     music: function (on) { st.want = !!on; sync(); },
     duck: function (on) { st.ducked = !!on; if (on) stopMusic(); else sync(); applyVol(); },
     songFor: songFor, MAX_MUSIC_HZ: MAX_MUSIC_HZ, MUSIC_TRIM: MUSIC_TRIM, MUSIC_LP: MUSIC_LP, mf: mf, STYLES: STYLES, SFX_NAMES: Object.keys(SFX), renderOffline: renderOffline, _state: st
