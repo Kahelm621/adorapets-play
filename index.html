@@ -408,6 +408,31 @@ body[data-theme="spooky"] .cellbg.alt{background:#b06cff14}
 .cs-fly .cs-pet{animation:csfly 4s ease-in-out forwards}.cs-fly .cs-prop{left:200px;top:10px;animation:spin 4s linear infinite}
 @keyframes csfly{0%{transform:translate(0,40px)}25%{transform:translate(80px,-80px) rotate(20deg)}50%{transform:translate(0,-130px) rotate(-200deg)}75%{transform:translate(-80px,-60px) rotate(-340deg)}100%{transform:translate(0,0) rotate(-360deg)}}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* v12: smaller title companion so the name tag always sits clear above Play (small phones included) */
+#title>*{flex-shrink:0}
+#title{overflow-y:auto;overflow-x:hidden}
+.fpwrap{width:clamp(78px,14vh,118px);height:clamp(78px,14vh,118px)}
+.featpet{margin:4px 0 12px}
+.fpname{position:relative;z-index:2;margin-top:4px;font-size:15px}
+@media (max-height:700px){.fpwrap{width:clamp(70px,12vh,92px);height:clamp(70px,12vh,92px)}.featpet{margin:2px 0 10px}#title h1{font-size:34px;margin-top:1vh}#title .tag{font-size:13px;padding:4px 12px}}
+.srtimer{position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);white-space:nowrap;z-index:30;background:#1a0f3dcc;color:#ffd36e;font:700 12px/1 system-ui,sans-serif;padding:4px 8px;border-radius:999px;pointer-events:none}
+.srcard{border:2px solid #ffd36e88}
+/* v12 SUPER fireworks */
+#superCanvas{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:61}
+.superFlashBg{position:fixed;inset:0;pointer-events:none;z-index:59;mix-blend-mode:screen}
+.superTitle{position:fixed;left:50%;top:34%;z-index:62;pointer-events:none;text-align:center;transform:translate(-50%,-50%);animation:stIn 1.6s cubic-bezier(.2,1.4,.4,1) forwards;white-space:nowrap}
+.superTitle b{display:block;font:900 clamp(30px,10vw,58px)/1 system-ui,sans-serif;letter-spacing:1px;color:#fff;-webkit-text-stroke:2px #2a1250;text-shadow:0 0 18px var(--pc),0 0 36px var(--pc2),0 5px 0 #2a1250;transform:skewX(-6deg)}
+.superTitle i{display:inline-block;margin-top:6px;font:800 14px/1 system-ui,sans-serif;letter-spacing:5px;color:#2a1250;background:linear-gradient(90deg,#ffd36e,#fff,#ffd36e);padding:5px 12px;border-radius:999px;font-style:normal}
+.superTitle .stpet{width:120px;height:120px;margin:0 auto 4px;filter:drop-shadow(0 0 16px var(--pc))}.superTitle .stpet svg{width:100%;height:100%}
+.superTitle.fl-swoop .stpet{animation:stSwoop .9s ease-out}.superTitle.fl-charge .stpet{animation:stCharge .7s ease-in}.superTitle.fl-thump .stpet{animation:stThump .5s ease 2}.superTitle.fl-breath .stpet{animation:stThump .45s ease 3}
+@keyframes stIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(-8deg)}14%{opacity:1;transform:translate(-50%,-50%) scale(1.25) rotate(3deg)}24%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1;transform:translate(-50%,-50%) scale(1.04)}100%{opacity:0;transform:translate(-50%,-60%) scale(1.3)}}
+@keyframes stSwoop{0%{transform:translate(160px,-120px) rotate(-30deg)}100%{transform:none}}
+@keyframes stCharge{0%{transform:translateX(-220px)}70%{transform:translateX(16px)}100%{transform:none}}
+@keyframes stThump{50%{transform:translateY(-26px) scale(1.1,.9)}}
+.superTitle.reduced{animation:stInR 1s ease forwards}.superTitle.reduced .stpet{animation:none;width:80px;height:80px}
+@keyframes stInR{0%{opacity:0}15%{opacity:1}80%{opacity:1}100%{opacity:0}}
+.piece.sfxClear{z-index:3}
+@media (prefers-reduced-motion:reduce){.superTitle{animation:stInR 1s ease forwards}.superTitle .stpet{animation:none!important}}
 </style></head>
 <body><div id="bg"><canvas id="bgCanvas"></canvas></div><div id="app">
  <section id="title" class="screen on">
@@ -462,6 +487,8 @@ body[data-theme="spooky"] .cellbg.alt{background:#b06cff14}
    <label class="setrow">Music <input type="checkbox" id="setMusic"></label>
    <label class="setrow">SFX volume <input type="range" id="volSfx" min="0" max="100"></label>
    <label class="setrow">Holiday themes &amp; events <input type="checkbox" id="setEvents"></label>
+   <label class="setrow">Reduced effects (calmer supers) <input type="checkbox" id="setReduced"></label>
+   <label class="setrow">Speed-run timer in levels <input type="checkbox" id="setSrTimer"></label>
    <label class="setrow">Music volume <input type="range" id="volMusic" min="0" max="100"></label>
    <button class="setrow" id="setHow">How to play (tutorial) ▶</button>
    <a class="setrow" id="privacyLink" target="_blank" rel="noopener">Privacy policy ↗</a>
@@ -472,7 +499,7 @@ body[data-theme="spooky"] .cellbg.alt{background:#b06cff14}
  <section id="game" class="screen">
   <div class="topbar"><button class="iconbtn" id="quitBtn">◀ Map</button><span class="pill" id="lvlName"></span><button class="iconbtn" id="helpBtn" aria-label="How to play">?</button><button class="iconbtn musicBtn" aria-label="Music">🎵</button><button class="iconbtn muteBtn" aria-label="Sound">♪</button></div>
   <div id="goalLine"></div><div id="twistLine"></div>
-  <div id="hud"><div class="hudbox"><small>Moves</small><b id="moves">0</b></div><div class="hudbox"><small>Score</small><b id="score">0</b></div><div class="hudbox goalbox"><small>Goals</small><div id="goals"></div></div></div>
+  <div id="hud"><div class="hudbox"><small>Moves</small><b id="moves">0</b></div><div class="hudbox" style="position:relative"><small>Score</small><b id="score">0</b><div id="srTimer" class="srtimer" style="display:none"></div></div><div class="hudbox goalbox"><small>Goals</small><div id="goals"></div></div></div>
   <div id="starbar"><div id="starfill"></div></div><div id="starObj"></div>
   <div id="boardWrap"><div id="toolTip"></div><div id="board"></div><div id="cheer"></div></div>
   <div id="boostBar"></div>
@@ -545,7 +572,19 @@ window.GAMES_CONFIG = {
     level50:     '',  // "Explorer"         - beat level 50
     stars150:    '',  // "Star Hoarder"     - earn 150 stars
     perfect25:   '',  // "Flawless"         - 3 stars on 25 levels
-    seasonTop:   ''   // "Season Star"      - finish a season in the top 5
+    seasonTop:   '',  // "Season Star"      - finish a season in the top 5
+    // v12 brutal-but-fair streaks
+    starStreak10: '', // "Starstruck"        - 3 stars on 10 wins in a row
+    starStreak25: '', // "Untouchable Shine" - 3 stars on 25 wins in a row
+    winStreak50:  '', // "Iron Paws"         - win 50 levels in a row, no loss/quit
+    // v12 speed runs (incremental difficulty; see SPEEDRUN in extras.js)
+    speed1: '',       // "Speed Runner I"       - 10 levels in 6 min
+    speed2: '',       // "Speed Runner II"      - 20 levels in 10 min
+    speed3: '',       // "Speed Runner III"     - 30 levels in 15 min
+    speed4: '',       // "Blur"                 - 50 levels in 27 min
+    speed5: '',       // "Lightning Paws"       - 75 levels in 42 min
+    speed6: '',       // "Century Sprint"       - 100 levels in 60 min
+    speed7: ''        // "Legend of the Burrow" - 150 levels in 95 min
   },
   // v10 seasonal leaderboards (season = calendar quarter, id like '2026-Q4').
   // Put one id under 'current' for a single leaderboard you reset each season in Play Console,
@@ -1808,6 +1847,57 @@ window.GAMES_CONFIG = {
     }
   };
 
+
+  // ---------------- SPEED RUNS (v12) ----------------
+  // A "run" = consecutive WON levels with no gap longer than IDLE_MS between one level ending and the next starting.
+  //  - The clock for a level starts when that level begins (begin()), so time spent on menus between levels counts.
+  //  - A loss / quit (fail()) or going idle > 3 min ends the run. Leaving the app counts as idle.
+  //  - Replays count, but each level number counts once per run (no farming level 1 over and over).
+  //  - Tiers use a rolling window: the last N wins must fit inside the limit, measured from the start of the
+  //    first of those N levels to the win of the last. So one long 100-level run can unlock every tier.
+  var SR_TIERS = [
+    { key: 'speed1', icon: '\u23f1\ufe0f', name: 'Speed Runner I', n: 10, min: 6 },
+    { key: 'speed2', icon: '\u23f1\ufe0f', name: 'Speed Runner II', n: 20, min: 10 },
+    { key: 'speed3', icon: '\u26a1', name: 'Speed Runner III', n: 30, min: 15 },
+    { key: 'speed4', icon: '\u26a1', name: 'Blur', n: 50, min: 27 },
+    { key: 'speed5', icon: '\ud83d\udd25', name: 'Lightning Paws', n: 75, min: 42 },
+    { key: 'speed6', icon: '\ud83d\udd25', name: 'Century Sprint', n: 100, min: 60 },
+    { key: 'speed7', icon: '\ud83c\udf20', name: 'Legend of the Burrow', n: 150, min: 95 }
+  ];
+  var SPEEDRUN = {
+    IDLE_MS: 3 * 60 * 1000, MAX: 150, tiers: SR_TIERS,
+    ensure: function (S) { var r = S.sr; if (!r || typeof r !== 'object') r = S.sr = {}; r.best = r.best || {}; r.wins = r.wins || []; r.ids = r.ids || {}; return r; },
+    alive: function (S, now) { var r = SPEEDRUN.ensure(S); return !!r.last && now - r.last <= SPEEDRUN.IDLE_MS; },
+    reset: function (S) { var r = SPEEDRUN.ensure(S); r.wins = []; r.ids = {}; r.cur = null; r.last = 0; r.start = 0; },
+    // a level begins: start (or continue) the run and stamp this level's start time
+    begin: function (S, id, now) { var r = SPEEDRUN.ensure(S); if (!SPEEDRUN.alive(S, now)) { SPEEDRUN.reset(S); r.start = now; } r.cur = { id: id, at: now }; r.last = now; },
+    fail: function (S) { SPEEDRUN.reset(S); },
+    // a level is won. Returns the list of tier keys newly completed.
+    win: function (S, id, now) {
+      var r = SPEEDRUN.ensure(S), got = []; if (!r.cur || r.cur.id !== id || now - r.last > SPEEDRUN.IDLE_MS + 60 * 60 * 1000) { r.last = now; return got; }
+      var startAt = r.cur.at; r.cur = null; r.last = now; if (r.ids[id]) return got; r.ids[id] = 1;
+      r.wins.push(startAt); if (r.wins.length > SPEEDRUN.MAX) r.wins.shift();
+      SR_TIERS.forEach(function (t) {
+        // largest k <= n such that the last k wins fit in t's time limit -> progress toward n
+        var lim = t.min * 60000, k = 0; for (var i = r.wins.length - 1; i >= 0 && k < t.n; i--) { if (now - r.wins[i] <= lim) k++; else break; }
+        var was = r.best[t.key] || 0; if (k > was) { r.best[t.key] = k; if (k >= t.n && was < t.n) got.push(t.key); }
+      });
+      return got;
+    },
+    count: function (S) { return SPEEDRUN.ensure(S).wins.length; },
+    elapsed: function (S, now) { var r = SPEEDRUN.ensure(S); return r.start && SPEEDRUN.alive(S, now) ? now - r.start : 0; },
+    // next tier not yet done + whether the current run is on pace for it
+    next: function (S, now) { var r = SPEEDRUN.ensure(S); for (var i = 0; i < SR_TIERS.length; i++) { var t = SR_TIERS[i]; if ((r.best[t.key] || 0) < t.n) { var n = r.wins.length, el = SPEEDRUN.elapsed(S, now); return { tier: t, have: n, pace: n ? el / n : 0, onPace: !n || (el / n) * t.n <= t.min * 60000 }; } } return null; },
+    fmt: function (ms) { var s = Math.floor(ms / 1000), m = Math.floor(s / 60); s %= 60; return m + ':' + (s < 10 ? '0' : '') + s; }
+  };
+  function srTest(t) { return function (S) { var b = ((S.sr || {}).best || {})[t.key] || 0; return [Math.min(t.n, b), t.n]; }; }
+  // 3-star streak (consecutive wins with 3 stars) and win streak (consecutive wins with no loss/quit) - see STREAK.
+  var STREAK = {
+    win: function (S, stars) { var k = S.streaks = S.streaks || {}; k.w = (k.w || 0) + 1; k.s3 = stars >= 3 ? (k.s3 || 0) + 1 : 0; k.bestW = Math.max(k.bestW || 0, k.w); k.bestS3 = Math.max(k.bestS3 || 0, k.s3); },
+    fail: function (S) { var k = S.streaks = S.streaks || {}; k.w = 0; k.s3 = 0; }
+  };
+  function stk(S, f) { return ((S.streaks || {})[f]) || 0; }
+
   // ---------------- ACHIEVEMENTS ----------------
   // key matches GAMES_CONFIG.achievements[key] (PGS id; '' = local only). test(S) -> [have, need].
   function totStars(S) { var t = 0; for (var k in (S.stars || {})) t += S.stars[k]; return t; }
@@ -1826,9 +1916,12 @@ window.GAMES_CONFIG = {
       { key: 'level50', icon: '\ud83c\udfd4\ufe0f', name: 'Explorer', desc: 'Beat level 50', test: function (S) { return [Math.min(50, bestLv(S)), 50]; } },
       { key: 'stars150', icon: '\ud83c\udf20', name: 'Star Hoarder', desc: 'Earn 150 stars', test: function (S) { return [Math.min(150, totStars(S)), 150]; } },
       { key: 'perfect25', icon: '\ud83d\udcab', name: 'Flawless', desc: '3 stars on 25 levels', test: function (S) { return [Math.min(25, threes(S)), 25]; } },
-      { key: 'seasonTop', icon: '\ud83c\udfc6', name: 'Season Star', desc: 'Finish a season in the top 5', test: function (S) { var c = S.champClaimed || {}, ok = 0; for (var k in c) if (c[k] <= 5) ok = 1; return [ok, 1]; } }
-    ],
-    status: function (S) { return ACHV.list.map(function (a) { var t = a.test(S); return { key: a.key, icon: a.icon, name: a.name, desc: a.desc, have: t[0], need: t[1], done: t[0] >= t[1] }; }); },
+      { key: 'seasonTop', icon: '\ud83c\udfc6', name: 'Season Star', desc: 'Finish a season in the top 5', test: function (S) { var c = S.champClaimed || {}, ok = 0; for (var k in c) if (c[k] <= 5) ok = 1; return [ok, 1]; } },
+      { key: 'starStreak10', icon: '\ud83c\udf1f', name: 'Starstruck', desc: '3 stars on 10 wins in a row', test: function (S) { return [Math.min(10, stk(S, 'bestS3')), 10]; } },
+      { key: 'starStreak25', icon: '\ud83d\udc8e', name: 'Untouchable Shine', desc: '3 stars on 25 wins in a row', test: function (S) { return [Math.min(25, stk(S, 'bestS3')), 25]; } },
+      { key: 'winStreak50', icon: '\ud83d\udee1\ufe0f', name: 'Iron Paws', desc: 'Win 50 levels in a row without losing or quitting', test: function (S) { return [Math.min(50, stk(S, 'bestW')), 50]; } }
+    ].concat(SR_TIERS.map(function (t) { return { key: t.key, icon: t.icon, name: t.name, desc: 'Speed run: win ' + t.n + ' levels in ' + t.min + ' minutes', speed: true, test: srTest(t) }; })),
+    status: function (S) { return ACHV.list.map(function (a) { var t = a.test(S); return { speed: !!a.speed, key: a.key, icon: a.icon, name: a.name, desc: a.desc, have: t[0], need: t[1], done: t[0] >= t[1] }; }); },
     unlockedKeys: function (S) { return ACHV.status(S).filter(function (x) { return x.done; }).map(function (x) { return x.key; }); }
   };
 
@@ -1889,8 +1982,8 @@ window.GAMES_CONFIG = {
     }
   };
 
-  var API = { CUTSCENE: CUTSCENE, EV: EV, QUEST: QUEST, COSTUMES: COSTUMES, SEASON: SEASON, CHAMP: CHAMP, ACHV: ACHV, SNACKS: SNACKS };
-  root.EV = EV; root.CUTSCENE = CUTSCENE; root.QUEST = QUEST; root.COSTUMES = COSTUMES; root.SEASON = SEASON; root.CHAMP = CHAMP; root.ACHV = ACHV; root.SNACKS = SNACKS;
+  var API = { SPEEDRUN: SPEEDRUN, STREAK: STREAK, CUTSCENE: CUTSCENE, EV: EV, QUEST: QUEST, COSTUMES: COSTUMES, SEASON: SEASON, CHAMP: CHAMP, ACHV: ACHV, SNACKS: SNACKS };
+  root.SPEEDRUN = SPEEDRUN; root.STREAK = STREAK; root.EV = EV; root.CUTSCENE = CUTSCENE; root.QUEST = QUEST; root.COSTUMES = COSTUMES; root.SEASON = SEASON; root.CHAMP = CHAMP; root.ACHV = ACHV; root.SNACKS = SNACKS;
   if (typeof module !== 'undefined') module.exports = API;
 })(typeof window !== 'undefined' ? window : globalThis);
 </script><script>// Adorapets audio: 100% original soft SFX + calm bamboo-flute per-world music in D, synthesized live with WebAudio.
@@ -2388,6 +2481,110 @@ window.GAMES_CONFIG = {
   };
   root.BG = BGAPI;
 })(this);
+</script><script>// Adorapets v12 - SUPER move fireworks. Purely visual: never touches the board, moves or scoring.
+// One fixed full-screen canvas, one requestAnimationFrame loop, particle cap (MAX_P), auto-stops when idle.
+// Flair: thump (shockwave quake), charge (bull dash + dust), breath (dragon fire/frost cone), swoop (flyer dive + feather trail),
+//        rainbow (champion), burst (everyone else). "Reduced effects" = no shake/zoom/flash, few particles, short text.
+(function (root) {
+  'use strict';
+  var BULLS = /highland|bison|goldbull|longhorn|spotbull|bull|ox|yak/i, DRAGONS = /dragon/i;
+  var FLY = /bird|owl|bat|bee|butterfly|moth|pegasus|phoenix|firefly|parrot|griffin|fairy|wing/i;
+  var FX = {
+    MAX_P: 220, MAX_P_REDUCED: 30,
+    // pure: decide flair from a power descriptor {key, kind, fx, champ}
+    flair: function (who) {
+      who = who || {}; var s = [who.key, who.kind].join(' ');
+      if (who.champ) return 'rainbow';
+      if (DRAGONS.test(s)) return 'breath';
+      if (BULLS.test(s)) return 'charge';
+      if (FLY.test(s)) return 'swoop';
+      if (who.fx === 'thump') return 'thump';
+      return 'burst';
+    },
+    // pure: a plan of the timeline (ms offsets) so tests can check it without a DOM
+    plan: function (flair, reduced) {
+      var p = { shake: reduced ? 0 : 14, flash: reduced ? 0 : 0.85, zoom: reduced ? 0 : 1.08, rings: reduced ? 1 : 4, sparks: reduced ? 24 : 160, ms: reduced ? 900 : 1700, title: true, flair: flair };
+      if (flair === 'thump') { p.rings = reduced ? 1 : 6; p.shake = reduced ? 0 : 20; }
+      if (flair === 'charge') p.dash = true;
+      if (flair === 'breath') p.cone = true;
+      if (flair === 'swoop') p.swoop = true;
+      if (flair === 'rainbow') p.sparks = reduced ? 30 : 200;
+      p.sparks = Math.min(p.sparks, reduced ? FX.MAX_P_REDUCED : FX.MAX_P);
+      return p;
+    }
+  };
+  if (typeof document === 'undefined') { if (typeof module !== 'undefined') module.exports = FX; return; }
+
+  var cv, cx, parts = [], rings = [], extras = [], raf = 0, W = 0, H = 0, DPR = 1;
+  function setup() {
+    if (cv) return; cv = document.createElement('canvas'); cv.id = 'superCanvas'; document.body.appendChild(cv); cx = cv.getContext('2d');
+    var fit = function () { DPR = Math.min(2, root.devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; }; fit(); addEventListener('resize', fit);
+  }
+  function hsl(hex, dl) { // hex -> lighter/darker variant
+    var m = /^#?([0-9a-f]{6})$/i.exec(hex || ''); if (!m) return hex || '#fff'; var n = parseInt(m[1], 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+    var f = function (v) { return Math.max(0, Math.min(255, Math.round(v + (dl > 0 ? (255 - v) * dl : v * dl)))); }; return 'rgb(' + f(r) + ',' + f(g) + ',' + f(b) + ')';
+  }
+  function add(p) { if (parts.length < FX.cap) parts.push(p); }
+  function loop(t) {
+    raf = 0; cx.setTransform(DPR, 0, 0, DPR, 0, 0); cx.clearRect(0, 0, W, H); var now = performance.now();
+    rings = rings.filter(function (r) { var k = (now - r.t0) / r.ms; if (k < 0) return true; if (k >= 1) return false; var e = 1 - Math.pow(1 - k, 3);
+      cx.globalAlpha = 1 - k; cx.lineWidth = r.w * (1 - k) + 1; cx.strokeStyle = r.c; cx.beginPath(); cx.arc(r.x, r.y, r.r0 + e * r.r1, 0, 6.283); cx.stroke(); return true; });
+    extras = extras.filter(function (x) { return x.draw(now) !== false; });
+    cx.globalCompositeOperation = 'lighter';
+    parts = parts.filter(function (p) { var age = now - p.t0; if (age < 0) return true; if (age > p.life) return false; var k = age / p.life;
+      p.vx *= p.drag; p.vy = p.vy * p.drag + p.g; p.x += p.vx; p.y += p.vy; cx.globalAlpha = (1 - k) * (p.a || 1); cx.fillStyle = p.c;
+      if (p.star) { var s = p.s * (1 - k * .5); cx.beginPath(); cx.moveTo(p.x, p.y - s); cx.lineTo(p.x + s * .3, p.y - s * .3); cx.lineTo(p.x + s, p.y); cx.lineTo(p.x + s * .3, p.y + s * .3); cx.lineTo(p.x, p.y + s); cx.lineTo(p.x - s * .3, p.y + s * .3); cx.lineTo(p.x - s, p.y); cx.lineTo(p.x - s * .3, p.y - s * .3); cx.fill(); }
+      else { cx.beginPath(); cx.arc(p.x, p.y, p.s * (1 - k * .6), 0, 6.283); cx.fill(); } return true; });
+    cx.globalCompositeOperation = 'source-over'; cx.globalAlpha = 1;
+    if (parts.length || rings.length || extras.length) raf = requestAnimationFrame(loop); else cx.clearRect(0, 0, W, H);
+    FX.frames = (FX.frames || 0) + 1;
+  }
+  function kick() { if (!raf) raf = requestAnimationFrame(loop); }
+  function burst(x, y, n, cols, spd, life, delay, opt) { opt = opt || {}; var t0 = performance.now() + (delay || 0);
+    for (var i = 0; i < n; i++) { var a = opt.ang != null ? opt.ang + (Math.random() - .5) * (opt.spread || 1) : Math.random() * 6.283, v = spd * (.35 + Math.random() * .9);
+      add({ x: x, y: y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, g: opt.g == null ? .06 : opt.g, drag: .965, s: 2 + Math.random() * (opt.size || 4), c: cols[i % cols.length], life: life * (.6 + Math.random() * .6), t0: t0, star: Math.random() < (opt.stars || .25) }); } }
+  function ring(x, y, c, delay, r1, w, ms) { rings.push({ x: x, y: y, c: c, t0: performance.now() + (delay || 0), ms: ms || 650, r0: 10, r1: r1, w: w || 10 }); }
+
+  // Main entry. who = {name, color, key, kind, fx, champ, svg}; board = board element. Returns a Promise (resolves when the big beat is done).
+  FX.play = function (who, opts) {
+    setup(); opts = opts || {}; var reduced = !!opts.reduced, plan = FX.plan(FX.flair(who), reduced), board = opts.board;
+    FX.cap = reduced ? FX.MAX_P_REDUCED : FX.MAX_P; FX.last = plan; FX.frames = 0;
+    var c = who.color || '#ff7ad9', cols = who.champ ? ['#ff5c8a', '#ffd34d', '#7affc9', '#7ac8ff', '#c48bff'] : [c, hsl(c, .45), hsl(c, .75), '#fff', '#ffd36e'];
+    var br = board ? board.getBoundingClientRect() : { left: 0, top: 0, width: W, height: H }, X = br.left + br.width / 2, Y = br.top + br.height / 2, R = Math.max(br.width, br.height);
+    // 1) big move name + pet
+    var t = document.createElement('div'); t.className = 'superTitle fl-' + plan.flair + (reduced ? ' reduced' : ''); t.style.setProperty('--pc', c); t.style.setProperty('--pc2', hsl(c, .6));
+    t.innerHTML = '<div class="stpet">' + (who.svg || '') + '</div><b>' + String(who.name || 'SUPER').toUpperCase() + '!</b><i>SUPER MOVE</i>'; document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, plan.ms + 200);
+    // 2) flash
+    if (plan.flash) { var f = document.createElement('div'); f.className = 'superFlashBg'; f.style.background = 'radial-gradient(circle at 50% 50%, #fff ' + 0 + '%, ' + hsl(c, .5) + ' 40%, transparent 75%)'; document.body.appendChild(f); f.animate([{ opacity: 0 }, { opacity: plan.flash, offset: .12 }, { opacity: 0 }], { duration: 650, easing: 'ease-out' }).onfinish = function () { f.remove(); }; }
+    // 3) shake + zoom pulse (slow-mo feel: a quick zoom-in, then ease back slowly)
+    var shakeEl = document.getElementById('game') || board;
+    if (plan.shake && shakeEl && shakeEl.animate) { var k = [], s = plan.shake; for (var i = 0; i < 12; i++) { var d = s * (1 - i / 12); k.push({ transform: 'translate(' + ((Math.random() - .5) * 2 * d).toFixed(1) + 'px,' + ((Math.random() - .5) * 2 * d).toFixed(1) + 'px)' }); } k.push({ transform: 'translate(0,0)' }); shakeEl.animate(k, { duration: 520, delay: 120 }); }
+    if (plan.zoom && board && board.animate) board.animate([{ transform: 'scale(1)', filter: 'brightness(1)' }, { transform: 'scale(' + plan.zoom + ')', filter: 'brightness(1.5) saturate(1.4)', offset: .18 }, { transform: 'scale(1)', filter: 'brightness(1)' }], { duration: 1100, easing: 'cubic-bezier(.2,.9,.3,1)' });
+    // 4) shockwave rings + central burst + trailing sparkles
+    for (var j = 0; j < plan.rings; j++) ring(X, Y, j % 2 ? '#fff' : cols[j % cols.length], 90 + j * 110, R * (.55 + j * .12), 14 - j, 700);
+    burst(X, Y, Math.round(plan.sparks * .6), cols, 9, 1100, 120, { stars: .35, size: 5 });
+    burst(X, Y, Math.round(plan.sparks * .25), ['#fff', '#ffd36e'], 4, 1600, 380, { g: -.01, stars: .8, size: 3 });
+    // 5) flair
+    if (plan.flair === 'thump') { for (var q = 0; q < 3; q++) ring(X, br.top + br.height * .92, hsl(c, .3), 60 + q * 160, R * .9, 18, 600); burst(X, br.top + br.height * .95, Math.round(plan.sparks * .15), ['#c9a27a', '#fff', c], 7, 900, 80, { ang: -1.57, spread: 2.4, g: .25 }); }
+    if (plan.flair === 'charge' || plan.flair === 'swoop' || plan.flair === 'breath') {
+      var t0 = performance.now() + 100, dur = plan.flair === 'breath' ? 900 : 700, img = new Image(); if (who.svg && /^<svg/.test(who.svg)) img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(who.svg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ').replace(/xmlns="[^"]+"\s+xmlns=/, 'xmlns='));
+      extras.push({ draw: function (now) { var k = (now - t0) / dur; if (k < 0) return true; if (k > 1) return false; var x, y, sz = 90;
+        if (plan.flair === 'charge') { x = -60 + (W + 120) * k; y = Y + Math.sin(k * 40) * 4; if (Math.random() < .8) burst(x - 30, y + 30, 3, ['#d9b38c', '#fff', '#a8865a'], 3, 600, 0, { ang: 3.14, spread: 1.2, g: .05, stars: 0 }); }
+        else if (plan.flair === 'swoop') { x = W * (1.1 - 1.2 * k); y = br.top - 40 + Math.sin(k * 3.14) * br.height * .7; if (Math.random() < .9) burst(x + 20, y, 2, cols, 1.5, 700, 0, { g: .02, stars: .7, size: 3 }); }
+        else { x = br.left - 10; y = Y - br.height * .3 + k * br.height * .3; var fire = /frost/i.test(who.key) ? ['#bfefff', '#7ac8ff', '#fff'] : ['#ff5c2a', '#ffb02e', '#ffe680', '#fff'];
+          for (var b = 0; b < 4; b++) burst(x + 50, y + 10, 1, fire, 11, 700, 0, { ang: .12 + (Math.random() - .5) * .3, spread: .5, g: -.02, stars: 0, size: 9 }); }
+        cx.globalAlpha = 1; if (img.complete && img.naturalWidth) { cx.save(); cx.translate(x, y); if (plan.flair === 'swoop') cx.rotate(-.35 + k * .7); if (plan.flair === 'charge') cx.scale(-1, 1); cx.drawImage(img, -sz / 2, -sz / 2, sz, sz); cx.restore(); } return true; } });
+    }
+    if (plan.flair === 'rainbow') for (var rr = 0; rr < 5; rr++) ring(X, Y, cols[rr], 200 + rr * 70, R * .8, 8, 900);
+    kick();
+    return new Promise(function (res) { setTimeout(res, reduced ? 450 : 900); });
+  };
+  // glow the cells about to be cleared (animated board clear)
+  FX.markCells = function (els, reduced) { els.forEach(function (e, i) { if (!e) return; e.classList.add('sfxClear'); if (!reduced && e.animate) e.animate([{ filter: 'brightness(1)' }, { filter: 'brightness(2.2) drop-shadow(0 0 10px #fff)' }, { filter: 'brightness(1)' }], { duration: 380, delay: (i % 8) * 25 }); setTimeout(function () { e.classList.remove('sfxClear'); }, 600); }); };
+  FX.active = function () { return parts.length + rings.length + extras.length; };
+  root.SUPERFX = FX; if (typeof module !== 'undefined') module.exports = FX;
+})(typeof window !== 'undefined' ? window : globalThis);
 </script><script>// Adorapets - UI, animation, audio, themed worlds, rewards, boosters and ads
 (function () {
   'use strict';
@@ -2725,6 +2922,8 @@ window.GAMES_CONFIG = {
   function refreshAch() {
     var st = ACHV.status(S), done = st.filter(function (x) { return x.done; }).length, on = window.PGS && PGS.available();
     var h = '<div class="rcard seasonhead"><b>\ud83c\udfc5 ' + done + ' / ' + st.length + ' unlocked</b><small>' + (on ? 'Synced with Google Play Games achievements.' : 'Tracked on this device. Google Play achievements sync when their IDs are set.') + '</small></div>';
+    var now = Date.now(), nx = SPEEDRUN.next(S, now), live = SPEEDRUN.alive(S, now) && SPEEDRUN.count(S);
+    h += '<div class="rcard srcard"><b>\u23f1\ufe0f Speed run' + (live ? ': ' + SPEEDRUN.count(S) + ' wins \u00b7 ' + SPEEDRUN.fmt(SPEEDRUN.elapsed(S, now)) : '') + '</b><small>' + (nx ? 'Next: <b>' + nx.tier.name + '</b> \u2014 ' + nx.tier.n + ' levels in ' + nx.tier.min + ' min' + (live ? (nx.onPace ? ' \u00b7 on pace \u2713' : ' \u00b7 behind pace') : '') : 'Every speed run beaten. Legend!') + '<br>Wins in a row count. A loss, quitting, or 3 min idle resets the run. Each level counts once per run.</small></div>';
     h += st.map(function (a) { var pct = Math.round(100 * a.have / a.need); return '<div class="rcard ach' + (a.done ? ' done' : '') + '"><b>' + a.icon + ' ' + a.name + (a.done ? ' \u2713' : '') + '</b><small>' + a.desc + ' \u00b7 ' + a.have + '/' + a.need + '</small><div class="achbar"><i style="width:' + pct + '%"></i></div></div>'; }).join('');
     if (on) h += '<button class="btn small" id="pgsAch">Open Google Play achievements</button>';
     $('achBody').innerHTML = h; if ($('pgsAch')) $('pgsAch').onclick = function () { PGS.showAchievements(); };
@@ -2895,7 +3094,7 @@ window.GAMES_CONFIG = {
 
   // --- settings ------------------------------------------------------------------
   var PRIVACY_URL = 'https://example.com/adorapets-privacy'; // TODO(Kristi): replace with your hosted privacy policy URL
-  function refreshSettings() { $('setSfx').checked = S.sfxOn; $('setMusic').checked = S.music; $('volSfx').value = Math.round((S.sfxVol == null ? .8 : S.sfxVol) * 100); $('volMusic').value = Math.round((S.musVol == null ? .45 : S.musVol) * 100); $('privacyLink').href = PRIVACY_URL; if ($('setEvents')) $('setEvents').checked = !S.eventsOff; }
+  function refreshSettings() { if ($('setSrTimer')) $('setSrTimer').checked = !!S.srTimer; if ($('setReduced')) $('setReduced').checked = !!S.reducedFx; $('setSfx').checked = S.sfxOn; $('setMusic').checked = S.music; $('volSfx').value = Math.round((S.sfxVol == null ? .8 : S.sfxVol) * 100); $('volMusic').value = Math.round((S.musVol == null ? .45 : S.musVol) * 100); $('privacyLink').href = PRIVACY_URL; if ($('setEvents')) $('setEvents').checked = !S.eventsOff; }
   document.querySelectorAll('.setBtn').forEach(function (b) { b.onclick = function () { refreshSettings(); show('settings'); }; });
   $('setBack').onclick = function () { show('title'); };
   $('setSfx').onchange = function () { S.sfxOn = this.checked; if (this.checked) S.muted = false; save(); syncMute(); };
@@ -2904,6 +3103,11 @@ window.GAMES_CONFIG = {
   $('volMusic').oninput = function () { S.musVol = this.value / 100; save(); audioCfg(); };
   if ($('setHow')) $('setHow').onclick = function () { howToPlay(); };
   if ($('helpBtn')) $('helpBtn').onclick = function () { howToPlay(); };
+  if ($('setReduced')) $('setReduced').onchange = function () { S.reducedFx = this.checked; save(); };
+  if ($('setSrTimer')) $('setSrTimer').onchange = function () { S.srTimer = this.checked; save(); srTick(); };
+  // v12 in-level speed-run mini timer (off by default)
+  function srTick() { var el = $('srTimer'); if (!el) return; var on = S.srTimer && curScreen === 'game' && SPEEDRUN.alive(S, Date.now()); el.style.display = on ? '' : 'none'; if (on) el.textContent = '\u23f1 ' + SPEEDRUN.count(S) + ' \u00b7 ' + SPEEDRUN.fmt(SPEEDRUN.elapsed(S, Date.now())); }
+  setInterval(srTick, 1000);
   if ($('setEvents')) $('setEvents').onchange = function () { S.eventsOff = !this.checked; save(); applyEvent(); };
   $('setMusic').onchange = function () { S.music = this.checked; if (this.checked) S.muted = false; save(); syncMute(); };
   $('setReset').onclick = function () { modal('<h2>Reset progress?</h2><p>This deletes your levels, coins and pets on this device.</p><button class="btn" id="rYes">Reset</button><button class="btn alt" id="rNo">Cancel</button>'); $('rNo').onclick = closeModal; $('rYes').onclick = function () { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); }; };
@@ -3024,6 +3228,7 @@ window.GAMES_CONFIG = {
   }
   function startLevel(id, startBoosts, snack, spark) {
     var L = GP.getLevel(id);
+    SPEEDRUN.begin(S, id, Date.now()); save();
     setTheme(L.world);
     G = { L: L, board: GP.makeBoard(L.colors, Math.random, L.obstacles, L.crates, L), moves: L.moves, score: 0, collected: {}, combo: 0, over: false, usedRescue: false, coinsX: 1, boosters: (startBoosts || []).length, specials: 0, bestCombo: 0, powerUses: 0, doneGoals: {}, superSt: { since: S.superSince || 0 }, supers: 0 };
     G.iceStart = GP.iceLeft(G.board);
@@ -3165,10 +3370,10 @@ window.GAMES_CONFIG = {
   var CHAMP_SUPER = { name: 'Champion Rainbow', fx: 'rainbow', n: 4, desc: 'Aurora makes 4 rainbow pets!' };
   function powerFor(key) { return SPECIAL_POWERS[key] || COMP_POWERS[0]; }
   function curPower() {
-    if (S.useChamp && (S.champPets || []).length) return { p: CHAMP_POWER, sup: CHAMP_SUPER, svg: champSVG(), who: CHAMP.pet.name };
-    var sa = activeSpecial(); if (sa) return { p: SPECIAL_POWERS[sa.key], sup: SPECIAL_SUPERS[sa.key], svg: PETS.animalSVG(sa, 0), who: sa.name };
-    var c = COMP.featured(S); if (c) { var bi = ((c.w % COMP_POWERS.length) + COMP_POWERS.length) % COMP_POWERS.length; return { p: COMP_POWERS[bi], sup: COMP_SUPERS[bi], svg: COMP.svg(c), who: c.name }; }
-    return { p: COMP_POWERS[0], sup: COMP_SUPERS[0], svg: '\ud83d\udc30', who: 'Lil Pip' }; // Lil Pip helps everyone until you earn a pet
+    if (S.useChamp && (S.champPets || []).length) return { p: CHAMP_POWER, sup: CHAMP_SUPER, svg: champSVG(), who: CHAMP.pet.name, look: { champ: true, key: 'champ', kind: 'champion', color: CHAMP.pet.c || '#c48bff' } };
+    var sa = activeSpecial(); if (sa) return { p: SPECIAL_POWERS[sa.key], sup: SPECIAL_SUPERS[sa.key], svg: PETS.animalSVG(sa, 0), who: sa.name, look: { key: sa.key, kind: sa.kind, color: sa.c } };
+    var c = COMP.featured(S); if (c) { var bi = ((c.w % COMP_POWERS.length) + COMP_POWERS.length) % COMP_POWERS.length; return { p: COMP_POWERS[bi], sup: COMP_SUPERS[bi], svg: COMP.svg(c), who: c.name, look: { key: c.animal.key, kind: c.kind, color: c.animal.c } }; }
+    return { p: COMP_POWERS[0], sup: COMP_SUPERS[0], svg: '\ud83d\udc30', who: 'Lil Pip', look: { key: 'bunny', kind: 'Bunny', color: '#b48cff' } }; // Lil Pip helps everyone until you earn a pet
   }
   function chargePower(n) { if (!G || G.over || G.inPower) return; var was = S.power.energy >= POWER_FULL; S.power.energy = Math.min(SUPER_FULL, S.power.energy + n); if (was && S.power.energy >= SUPER_FULL && !G.superChimed && G.powerUses < POWER_PER_LEVEL) { G.superChimed = 1; sfx.chime(); banner('\u26a1 SUPER move ready!', 'c4'); } if (!was && S.power.energy >= POWER_FULL && G.powerUses < POWER_PER_LEVEL) { sfx.chime(); } refreshPower(); }
   function refreshPower() {
@@ -3202,8 +3407,13 @@ window.GAMES_CONFIG = {
     if (!G || G.over || busy || S.power.energy < POWER_FULL || (G.powerUses || 0) >= POWER_PER_LEVEL) return;
     var cp = curPower(), isSup = S.power.energy >= SUPER_FULL && !!cp.sup, p = isSup ? cp.sup : cp.p; S.power.energy = 0; G.superChimed = 0; if (isSup) { G.supers = (G.supers || 0) + 1; S.stats.supers = (S.stats.supers || 0) + 1; } G.powerUses = (G.powerUses || 0) + 1; save(); endTutorial(); resetHint(); clearTimeout(hintTimer);
     setBusy(true); refreshPower();
+    if (isSup && window.SUPERFX) { // v12: big SUPER fireworks (visual only; same effect + balance as before)
+      var lk = cp.look || {}; sfx.zap(); window.__lastSuperFx = { name: p.name, flair: SUPERFX.flair({ key: lk.key, kind: lk.kind, fx: p.fx, champ: lk.champ }), reduced: !!S.reducedFx };
+      var done = SUPERFX.play({ name: p.name, color: lk.color, key: lk.key, kind: lk.kind, fx: p.fx, champ: lk.champ, svg: cp.svg }, { board: boardEl, reduced: !!S.reducedFx });
+      await wait(220); sfx.zap(); await done;
+    } else {
     var fl = $('powerFlash'); fl.innerHTML = '<div class="pfpet">' + cp.svg + '</div><b>' + p.name + '!</b>'; fl.className = 'on fx-' + p.fx + (isSup ? ' super' : ''); sfx.zap(); shake(); if (isSup) { await wait(200); sfx.zap(); shake(); }
-    await wait(650); fl.className = '';
+    await wait(650); fl.className = ''; }
     if (p.fx === 'moves') { G.moves += p.n; sfx.happy(); banner('+' + p.n + ' moves!'); updateHud(); setBusy(false); resetHint(); refreshPower(); return; }
     if (p.fx === 'specials' || p.fx === 'bombs' || p.fx === 'rainbow' || p.fx === 'shuffle') {
       if (p.fx === 'shuffle') GP.shuffle(G.board);
@@ -3211,6 +3421,7 @@ window.GAMES_CONFIG = {
       buildBoard(); sfx.happy(); setBusy(false); resetHint(); refreshPower(); checkEnd(); return;
     }
     var cells = cellsFor(p); if (!cells.length) { setBusy(false); refreshPower(); return; }
+    if (isSup && window.SUPERFX) { SUPERFX.markCells(cells.map(function (rc) { var q = G.board.cells[rc[0]][rc[1]]; return q && els[q.id]; }), !!S.reducedFx); await wait(S.reducedFx ? 120 : 300); }
     G.inPower = true; try { var tw0 = twSnap(), res = GP.blast(G.board, cells); await animateSteps(res, true);
     if (res.twist) await animateTwist(res.twist); else refreshPieceArt();
     if (res.shuffled) { buildBoard(); }
@@ -3440,7 +3651,7 @@ window.GAMES_CONFIG = {
       var rr = { movesLeft: movesLeft, score: G.score, bestCombo: G.bestCombo, specials: G.specials, boosters: G.boosters }, bm = GP.bonusMet(G.L, rr);
       var st = GP.starsFor(G.L, rr), id = G.L.id, L = G.L, first = !S.stars[id], prevStars = S.stars[id] || 0;
       S.stars[id] = Math.max(S.stars[id] || 0, st); S.best[id] = Math.max(S.best[id] || 0, G.score);
-      S.unlocked = Math.max(S.unlocked, id + 1); S.stats.wins++; var newComp = L.boss ? COMP.award(S, id) : null;
+      S.unlocked = Math.max(S.unlocked, id + 1); S.stats.wins++; STREAK.win(S, st); SPEEDRUN.win(S, id, Date.now()).forEach(function (k) { var t = SPEEDRUN.tiers.filter(function (x) { return x.key === k; })[0]; toast('\u23f1\ufe0f ' + t.name + '! ' + t.n + ' levels in ' + t.min + ' min'); }); reportAch(); var newComp = L.boss ? COMP.award(S, id) : null;
       if (bm) S.stats.bonus++; trackDaily('wins', 1); trackDaily('stars', Math.max(0, st - prevStars)); if (bm) trackDaily('bonus', 1); checkMilestones();
       try { if (window.PGS) PGS.report(S, { boss: !!L.boss }); } catch (e) {}
       S.failStreak = {}; var gift = null;
@@ -3509,7 +3720,7 @@ window.GAMES_CONFIG = {
     $('fRetry').onclick = function () { loseLife(); closeModal(); if (S.lives <= 0) { refreshMap(); show('mapScreen'); preLevel(id); } else startLevel(id); };
     $('fMap').onclick = function () { loseLife(); closeModal(); refreshMap(); show('mapScreen'); };
   }
-  function loseLife() { tickLives(); if (S.lives >= MAX_LIVES) S.livesAt = Date.now(); S.lives = Math.max(0, S.lives - 1); save(); }
+  function loseLife() { SPEEDRUN.fail(S); STREAK.fail(S); tickLives(); if (S.lives >= MAX_LIVES) S.livesAt = Date.now(); S.lives = Math.max(0, S.lives - 1); save(); }
   function miniChest(L, next) { // v10 #8: first mini-boss win - small chest (2x the usual small prize)
     var bs = ['hammer', 'shuffle', 'row', 'hint'], b1 = bs[L.world % bs.length]; S.boost[b1] = (S.boost[b1] || 0) + 2; S.coins += 60; if (window.SNACKS) SNACKS.give(S, 'cookie', 2); save(); sfx.chest();
     modal('<h2>\u2694\ufe0f Mini-boss chest!</h2><div class="chest">\ud83c\udf81</div><p>You beat ' + L.miniName + '!</p><p><b>+60 coins</b>, 2\u00d7 ' + BICON[b1] + ' ' + BNAME[b1] + (window.SNACKS ? ' and 2\u00d7 \ud83c\udf6a Cookie snack' : '') + '</p><button class="btn" id="cOk">Yay!</button>');
