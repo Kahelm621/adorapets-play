@@ -455,6 +455,37 @@ details.howto{margin:4px 0;padding:6px 10px;border-radius:10px;background:#0003}
 .axo{position:absolute;z-index:7;pointer-events:none;display:flex;align-items:center;justify-content:center;font-size:28px;animation:axob .7s ease-in-out infinite alternate;filter:drop-shadow(0 0 8px #ff9ad5)}.axo small{position:absolute;right:2px;bottom:0;font-size:10px;color:#fff;font-weight:900}@keyframes axob{to{transform:translateY(-4px) rotate(8deg)}}
 .axotip{position:fixed;left:16px;right:16px;bottom:90px;z-index:60;background:#2a1240;border:3px solid #ff9ad5;border-radius:16px;padding:12px;color:#fff;box-shadow:0 8px 24px #0009}.axotip p{margin:6px 0;font-size:13px}
 .superTitle:not(.reduced) b{font-size:clamp(34px,11vw,60px)!important}.superTitle:not(.reduced) .stpet{transform:scale(1.5)}
+/* v13.1 UI fixes: scrollable panels + compact HUD */
+#settings,#shop,#goalsScreen,#collection,#compScreen,#rewards,#seasonScreen,#achScreen{justify-content:flex-start;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;max-height:100vh;max-height:100dvh;padding-bottom:max(24px,calc(env(safe-area-inset-bottom) + 16px))}
+#settings>*,#shop>*,#goalsScreen>*,#collection>*,#compScreen>*,#rewards>*,#seasonScreen>*,#achScreen>*{flex-shrink:0}
+#settings .setlist{gap:6px;margin-top:8px}
+#settings .setrow{padding:10px 12px;font-size:16px;border-radius:12px}
+#settings .diffbox{margin:6px 0;width:100%;max-width:400px;box-sizing:border-box;padding:8px}
+.modal .card{max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#game .topbar{font-size:13px}
+#game .topbar .iconbtn{min-width:34px;min-height:34px;padding:2px 6px}
+#goalLine{font-size:13px;margin:0}
+#twistLine{font-size:11px;min-height:0}
+#hud{margin:2px 0;gap:4px}
+.hudbox{padding:2px 4px;border-radius:10px}
+.hudbox b{font-size:16px;line-height:1.05}.hudbox small{font-size:9px;letter-spacing:.5px}
+#starbar{height:8px;margin:2px 0 3px}
+#starObj{font-size:10px;margin:1px 0;gap:6px}
+#boostBar{gap:5px;margin-top:4px}
+.bb{min-height:44px;max-width:72px;padding:3px 2px 2px;border-radius:12px}
+.bb span{font-size:20px}.bb small{font-size:9px}
+#powerBtn{margin:4px auto 0;padding:2px 10px 2px 2px;gap:6px}
+#powerBtn #powerPet,#powerBtn #powerPet svg{width:30px;height:30px;font-size:22px}
+#powerBtn .pmeter{height:8px}
+@media (min-width:700px) and (min-height:700px){.hudbox b{font-size:18px}.bb{min-height:50px;max-width:80px}.bb span{font-size:24px}}
+#shop .rcard{grid-template-columns:1fr}
+#shop .rcard .qty{grid-column:1/-1;justify-content:flex-start;margin-top:4px}
+#shop .rcard .qty .btn.small{flex:1 1 0;min-width:0;white-space:nowrap;padding-left:4px;padding-right:4px}
+#goals{min-height:22px}.goalbox #goals{gap:5px}.goal .ti,.goal .ti svg{font-size:15px;max-height:18px;max-width:18px}.goal{font-size:13px}
+#shop .rcard .qty .btn.small{flex:1 1 auto;font-size:13px}
+#coinWarn{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(62px + env(safe-area-inset-bottom));z-index:15;background:#ff4f7acc;color:#fff;font-weight:800;font-size:12px;padding:4px 12px;border-radius:999px;pointer-events:none;max-width:92%;text-align:center;box-shadow:0 2px 8px #0008;text-shadow:0 1px 2px #0008}
+#shopCoinWarn{width:100%;max-width:500px;box-sizing:border-box;margin:6px 0;padding:8px 10px;border-radius:12px;background:#ff4f7a33;border:2px solid #ff4f7a;font-size:13px}
+.crrecap{font-size:26px;font-weight:800;text-align:center}
 </style></head>
 <body><div id="bg"><canvas id="bgCanvas"></canvas></div><div id="app">
  <section id="title" class="screen on">
@@ -506,6 +537,7 @@ details.howto{margin:4px 0;padding:6px 10px;border-radius:10px;background:#0003}
   <div class="topbar"><button class="iconbtn" id="setBack">◀</button><span class="pill">Settings</span><span></span></div>
   <div class="diffbox" id="diffBox"><h3>Difficulty</h3><div class="diffseg" id="diffSeg"></div><p class="fine" id="diffNote"></p></div>
   <div class="setlist">
+   <button class="setrow" id="setTag">Gamer tag <b id="tagShow"></b></button>
    <label class="setrow">Sound effects <input type="checkbox" id="setSfx"></label>
    <label class="setrow">Music <input type="checkbox" id="setMusic"></label>
    <label class="setrow">SFX volume <input type="range" id="volSfx" min="0" max="100"></label>
@@ -617,6 +649,54 @@ window.GAMES_CONFIG = {
     current: ''
   }
 };
+</script><script>// =====================================================================
+//  ONLINE LEADERBOARD CONFIG  >>> KRISTI: see LEADERBOARD_SETUP.md <<<
+//  backend: 'local' (default, offline rival pets) or 'supabase'.
+//  url + anonKey come from your Supabase project (Settings > API). The anon key
+//  is a PUBLIC key meant for apps (row-level security protects the table) --
+//  never paste the service_role key here.
+// =====================================================================
+window.LB_CONFIG = {
+  backend: 'local',
+  url: '',
+  anonKey: '',
+  table: 'season_scores'
+};
+</script><script>// v13.1 leaderboard adapter: local-only by default; optional Supabase (free tier) shared board.
+// Sends ONLY: random player id (made on this device), gamer tag, season id, season points. No personal data.
+(function (root) {
+  function cfg() { return root.LB_CONFIG || { backend: 'local' }; }
+  function online() { var c = cfg(); return c.backend === 'supabase' && !!c.url && !!c.anonKey && typeof fetch === 'function'; }
+  function hdr() { var c = cfg(); return { apikey: c.anonKey, Authorization: 'Bearer ' + c.anonKey, 'Content-Type': 'application/json' }; }
+  function base() { var c = cfg(); return c.url.replace(/\/$/, '') + '/rest/v1/' + (c.table || 'season_scores'); }
+  function pid(S) { if (!S.pid) { var a = ''; for (var i = 0; i < 4; i++) a += Math.floor(Math.random() * 0x100000000).toString(16).padStart(8, '0'); S.pid = a; } return S.pid; }
+  var LB = {
+    online: online, pid: pid,
+    // true if tag is free (or we are offline: uniqueness only enforced with a backend)
+    tagFree: function (S, tag) {
+      if (!online()) return Promise.resolve(true);
+      return fetch(base() + '?select=pid&tag_lc=eq.' + encodeURIComponent(tag.toLowerCase()) + '&limit=5', { headers: hdr() }).then(function (r) { return r.ok ? r.json() : []; })
+        .then(function (rows) { return !rows.some(function (x) { return x.pid !== pid(S); }); }).catch(function () { return true; });
+    },
+    submit: function (S) {
+      if (!online() || !S.tag || !S.season) return Promise.resolve(false);
+      var body = { pid: pid(S), tag: S.tag, tag_lc: S.tag.toLowerCase(), season: S.season.id, pts: Math.floor(S.season.pts || 0) };
+      return fetch(base() + '?on_conflict=pid,season', { method: 'POST', headers: Object.assign(hdr(), { Prefer: 'resolution=merge-duplicates' }), body: JSON.stringify(body) }).then(function (r) { return r.ok; }).catch(function () { return false; });
+    },
+    top: function (S, n) {
+      if (!online() || !S.season) return Promise.resolve(null);
+      return fetch(base() + '?select=pid,tag,pts&season=eq.' + encodeURIComponent(S.season.id) + '&hidden=is.false&order=pts.desc&limit=' + (n || 50), { headers: hdr() })
+        .then(function (r) { return r.ok ? r.json() : null; }).then(function (rows) { if (!rows) return null; var hid = S.hiddenTags || {};
+          return rows.filter(function (x) { return !hid[x.pid]; }).map(function (x, i) { return { name: x.tag, pts: x.pts, pid: x.pid, me: x.pid === S.pid, rank: i + 1 }; }); }).catch(function () { return null; });
+    },
+    report: function (S, otherPid) {
+      S.hiddenTags = S.hiddenTags || {}; S.hiddenTags[otherPid] = 1; // hide locally right away
+      if (!online()) return Promise.resolve(false);
+      return fetch(cfg().url.replace(/\/$/, '') + '/rest/v1/reports', { method: 'POST', headers: hdr(), body: JSON.stringify({ reporter: pid(S), target: otherPid }) }).then(function (r) { return r.ok; }).catch(function () { return false; });
+    }
+  };
+  root.LB = LB; if (typeof module !== 'undefined') module.exports = LB;
+})(typeof window !== 'undefined' ? window : globalThis);
 </script><script>// Play Games Services wrapper. Safe no-op when the native plugin is absent
 // (browser, adorapets.html, iOS) or when IDs in games-config.js are empty.
 (function (root) {
@@ -2727,6 +2807,15 @@ window.GAMES_CONFIG = {
   var BOSS = {
     NAMES: BOSS_NAMES, ATTACKS: ATTACKS,
     isMajor: function (L) { return !!(L && L.boss); },
+    // v13.1: mini-boss fights on every 5th level that isn't a 10th (5, 15, 25...). Set BOSS.CONFIG.miniFights=false to turn off.
+    CONFIG: { miniFights: true, miniHp: 0.45 },
+    isMini: function (L) { return !!(L && L.mini && !L.boss && BOSS.CONFIG.miniFights); },
+    forLevel: function (L, dk) { return L && L.boss ? BOSS.init(L, dk) : BOSS.isMini(L) ? BOSS.initMini(L, dk) : null; },
+    initMini: function (L, dk) {
+      var b = BOSS.init(L, dk), hp = Math.max(10, Math.round(b.max * BOSS.CONFIG.miniHp));
+      b.hp = b.max = hp; b.mini = true; b.once = true; b.name = L.miniName || 'Mini-boss'; b.icon = '\u2694\ufe0f';
+      return b;
+    },
     init: function (L, dk) {
       var c = DIFF_CFG[dk] || DIFF_CFG.normal, w = L.world || 0, hp = Math.max(20, Math.round(L.moves * 4.2 * c.bossHp));
       var b = { name: BOSS_NAMES[w % BOSS_NAMES.length], icon: BOSS_ICONS[w % BOSS_ICONS.length], hp: hp, max: hp, every: c.bossEvery, inN: c.bossEvery + 1, step: w % ORDER.length, diff: c.key, attacks: 0, goalHits: 0 };
@@ -2736,9 +2825,9 @@ window.GAMES_CONFIG = {
     power: function (B, kind) { var c = DIFF_CFG[B.diff] || DIFF_CFG.normal; return kind === 'lock' ? { tiles: c.lock, turns: 2 } : kind === 'fog' ? { size: Math.min(5, c.fog), turns: 2 } : kind === 'steal' ? { moves: c.steal } : { }; },
     // call once per player move. Returns {telegraph} one move before, {fire} on the attack move.
     tick: function (B) {
-      if (!B || B.hp <= 0) return {};
+      if (!B || B.hp <= 0 || B.spent) return {};
       B.inN--;
-      if (B.inN <= 0) { var k = B.next; B.attacks++; B.step = (B.step + 1) % ORDER.length; B.next = ORDER[B.step]; B.inN = B.every; return { fire: k, power: BOSS.power(B, k) }; }
+      if (B.inN <= 0) { var k = B.next; B.attacks++; B.step = (B.step + 1) % ORDER.length; B.next = ORDER[B.step]; B.inN = B.every; if (B.once) { B.spent = true; B.next = k; } return { fire: k, power: BOSS.power(B, k) }; }
       if (B.inN === 1) return { telegraph: B.next };
       return {};
     },
@@ -2749,6 +2838,64 @@ window.GAMES_CONFIG = {
     snooze: function (B, n) { if (B) B.inN += n; }
   };
 
+
+  // ---------------- v13.1 SEASON-END COIN RESET ("use it or lose it") ----------------
+  // Seasons = calendar quarters (same as SEASON in extras.js). When a new season starts, soft coins are set to exactly
+  // CFG.amount (500), up or down. There is no premium/IAP currency in the game; boosters, items, cosmetics, pets, stars are kept.
+  // Reminders: banner in the last 14 days, popups once each at 14/7/3/1 days left and on the final day (0), recap after reset.
+  // Clock-rollback guard: monotonic S.coinReset.ts; time going backwards never resets coins or fires popups.
+  var CR_DAY = 864e5;
+  function crId(d) { return d.getFullYear() + '-Q' + (Math.floor(d.getMonth() / 3) + 1); }
+  function crEnd(d) { return new Date(d.getFullYear(), Math.floor(d.getMonth() / 3) * 3 + 3, 1); }
+  var COINRESET = {
+    CFG: { on: true, amount: 500, warnDays: 14, milestones: [14, 7, 3, 1, 0] },
+    seasonId: crId,
+    // whole days left before the reset (0 = final day)
+    daysLeft: function (d) { var e = crEnd(d), d0 = new Date(d.getFullYear(), d.getMonth(), d.getDate()); return Math.round((e - d0) / CR_DAY) - 1; },
+    banner: function (d) { var n = COINRESET.daysLeft(d); if (!COINRESET.CFG.on || n > COINRESET.CFG.warnDays) return null;
+      return n === 0 ? 'Coins reset to ' + COINRESET.CFG.amount + ' TONIGHT - spend them now!' : 'Coins reset to ' + COINRESET.CFG.amount + ' in ' + n + ' day' + (n === 1 ? '' : 's') + ' - use them or lose them!'; },
+    // Call at app open / screen changes. Returns { reset:{before,after,from,to} } | { popup:days } | { clock:true } | {}
+    check: function (S, d) {
+      if (!COINRESET.CFG.on) return {};
+      var now = +d, R = S.coinReset;
+      if (!R) { S.coinReset = { season: crId(d), ts: now, shown: {} }; R = S.coinReset; }
+      if (now < R.ts - 60000) return { clock: true };
+      R.ts = Math.max(R.ts, now); var id = crId(d);
+      if (id > R.season) { var before = S.coins || 0, out = { from: R.season, to: id, before: before, after: COINRESET.CFG.amount };
+        S.coins = COINRESET.CFG.amount; R.season = id; R.shown = {}; R.recap = out; return { reset: out }; }
+      if (id < R.season) return { clock: true };
+      var n = COINRESET.daysLeft(d), hit = null;
+      COINRESET.CFG.milestones.forEach(function (m) { if (n <= m && !R.shown[m]) { R.shown[m] = 1; if (hit === null || m < hit) hit = m; } });
+      return hit === null ? {} : { popup: hit, daysLeft: n };
+    }
+  };
+
+  // ---------------- v13.1 GAMER TAGS ----------------
+  // 3-16 chars: letters, numbers, underscore, single spaces. Blocklist checked after leetspeak folding + removing separators.
+  // Rename cooldown 7 days (first set and reverting a rejected name are free).
+  var TAG_BLOCK = ['fuck', 'shit', 'bitch', 'cunt', 'dick', 'cock', 'pussy', 'nigg', 'fag', 'slut', 'whore', 'rape', 'nazi', 'hitler', 'porn', 'sex', 'penis', 'vagina', 'asshole', 'bastard', 'retard', 'kys', 'kill yourself', 'admin', 'moderator', 'adorapets', 'khaotic', 'official'];
+  function tagFold(s) { return s.toLowerCase().replace(/[0@]/g, 'o').replace(/[1!|]/g, 'i').replace(/3/g, 'e').replace(/[4]/g, 'a').replace(/[5$]/g, 's').replace(/7/g, 't').replace(/[^a-z ]/g, ''); }
+  var TAG = {
+    MIN: 3, MAX: 16, COOLDOWN: 7 * 864e5, BLOCK: TAG_BLOCK,
+    clean: function (s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); },
+    validate: function (raw) {
+      var s = TAG.clean(raw);
+      if (s.length < TAG.MIN) return { ok: false, why: 'Use at least ' + TAG.MIN + ' characters.' };
+      if (s.length > TAG.MAX) return { ok: false, why: 'Use at most ' + TAG.MAX + ' characters.' };
+      if (!/^[A-Za-z0-9_ ]+$/.test(s)) return { ok: false, why: 'Only letters, numbers, _ and spaces.' };
+      var f = tagFold(s), g = f.replace(/ /g, '');
+      for (var i = 0; i < TAG_BLOCK.length; i++) { var b = TAG_BLOCK[i].replace(/ /g, ''); if (g.indexOf(b) >= 0) return { ok: false, why: 'Please pick a different name.' }; }
+      return { ok: true, tag: s };
+    },
+    canRename: function (S, now) { if (!S.tag) return { ok: true }; var left = (S.tagTs || 0) + TAG.COOLDOWN - now; if (now < (S.tagTs || 0)) left = TAG.COOLDOWN; return left > 0 ? { ok: false, days: Math.ceil(left / 864e5) } : { ok: true }; },
+    set: function (S, raw, now) {
+      var v = TAG.validate(raw); if (!v.ok) return v;
+      if (S.tag === v.tag) return { ok: true, tag: v.tag, same: true };
+      var c = TAG.canRename(S, now); if (!c.ok) return { ok: false, why: 'You can rename again in ' + c.days + ' day' + (c.days === 1 ? '' : 's') + '.' };
+      S.tag = v.tag; S.tagTs = now; return { ok: true, tag: v.tag };
+    },
+    shown: function (S) { return S.tag || 'You'; }
+  };
   // ---------------- IMPOSSIBLE QUESTS ----------------
   var IQ_LIST = [
     { id: 'iq_win3', t: 'Win 3 levels on Impossible', m: 'win', n: 3, r: { c: 300 } },
@@ -2904,7 +3051,7 @@ window.GAMES_CONFIG = {
     { k: 'iquest', icon: '\ud83d\udc80', t: 'Impossible Quests', d: 'Only on Impossible difficulty. Finish quests for coins, cosmetics and rare companions. Claim each reward once in the Quests screen.' }
   ];
 
-  var API = { DIFF: DIFF, SUPERUSE: SUPERUSE, BOSS: BOSS, IQUEST: IQUEST, COSM: COSM, ITEM: ITEM, NEWPETS: NEWPETS, BOSSCUT: BOSSCUT, DAILY: DAILY, BULK: BULK, STARWAYS: STARWAYS, AXO: AXO, HOWTO: HOWTO };
+  var API = { DIFF: DIFF, SUPERUSE: SUPERUSE, BOSS: BOSS, IQUEST: IQUEST, COSM: COSM, ITEM: ITEM, NEWPETS: NEWPETS, BOSSCUT: BOSSCUT, DAILY: DAILY, BULK: BULK, STARWAYS: STARWAYS, AXO: AXO, HOWTO: HOWTO, COINRESET: COINRESET, TAG: TAG };
   for (var k in API) root[k] = API[k];
   if (typeof module !== 'undefined') module.exports = API;
 })(typeof window !== 'undefined' ? window : globalThis);
@@ -2991,7 +3138,7 @@ window.GAMES_CONFIG = {
 
   // --- screens / modal ----------------------------------------------------
   var curScreen = 'title';
-  function show(id) { curScreen = id; document.querySelectorAll('.screen').forEach(function (s) { s.classList.toggle('on', s.id === id); }); document.body.classList.toggle('ingame', id === 'game'); Ads.syncBanner(); refreshPills(); if (id === 'title' || id === 'mapScreen') refreshFeatured(); if (id !== 'game') setTheme(id === 'mapScreen' ? Math.floor((S.unlocked - 1) / 10) : 0); }
+  function show(id) { curScreen = id; document.querySelectorAll('.screen').forEach(function (s) { s.classList.toggle('on', s.id === id); }); document.body.classList.toggle('ingame', id === 'game'); try { crBanner(); } catch (e) {} Ads.syncBanner(); refreshPills(); if (id === 'title' || id === 'mapScreen') refreshFeatured(); if (id !== 'game') setTheme(id === 'mapScreen' ? Math.floor((S.unlocked - 1) / 10) : 0); }
   function modal(html, cls) { $('modalCard').className = 'card ' + (cls || ''); $('modalCard').innerHTML = html; $('modal').classList.add('on'); }
   function closeModal() { $('modal').classList.remove('on'); }
 
@@ -3233,16 +3380,20 @@ window.GAMES_CONFIG = {
   }
   // ---- v10 #10/#12 seasonal leaderboard + champion rewards ---------------------
   function refreshSeason() {
-    SEASON.roll(S); var rows = SEASON.board(S, 'You'), me = rows.filter(function (r) { return r.me; })[0], cfg = window.GAMES_CONFIG || {}, gid = SEASON.pgsId(cfg, S.season.id), ev = curEvent();
+    SEASON.roll(S); var rows = SEASON.board(S, TAG.shown(S)), me = rows.filter(function (r) { return r.me; })[0], cfg = window.GAMES_CONFIG || {}, gid = SEASON.pgsId(cfg, S.season.id), ev = curEvent();
     var h = '<div class="rcard seasonhead"><b>Season ' + S.season.id + (ev ? ' \u00b7 ' + ev.emoji + ' ' + ev.name : '') + '</b><small>Resets in ' + SEASON.daysLeft(S) + ' days \u00b7 You: <b>' + S.season.pts + ' pts</b>, rank #' + me.rank + '</small></div>';
     h += '<div class="fine">Earn points by winning: +10 per new star, +5 per win, +20 mini-boss, +50 boss. Top 5 at season end win prizes!</div>';
-    h += '<ol class="lboard">' + rows.map(function (r) { return '<li class="' + (r.me ? 'me' : '') + '"><span>#' + r.rank + '</span><b>' + (r.me ? '\u2b50 You' : r.name) + '</b><i>' + r.pts + '</i></li>'; }).join('') + '</ol>';
+    h += '<ol class="lboard">' + rows.map(function (r) { return '<li class="' + (r.me ? 'me' : '') + '"><span>#' + r.rank + '</span><b>' + (r.me ? '\u2b50 ' + esc(TAG.shown(S)) : esc(r.name)) + '</b><i>' + r.pts + '</i></li>'; }).join('') + '</ol>';
     h += '<div class="fine">' + (gid && PGS.available() ? 'Also posting to the Google Play season leaderboard.' : 'Offline board: you vs. friendly rival pets. (Google Play season leaderboard turns on when its ID is set.)') + '</div>';
     if (gid && PGS.available()) h += '<button class="btn small" id="pgsLb">Open Google Play leaderboards</button>';
     h += '<h3 class="shophead">\ud83c\udfc6 Season prizes</h3>' + [1, 3, 5].map(function (r) { var w = CHAMP.rewardFor(r); return '<div class="rcard"><b>' + w.title + '</b><small>\u25cf ' + w.coins + ' \u00b7 ' + w.sparks + '\u00d7 \u26a1 Champion Spark' + (w.pet ? ' \u00b7 rare pet <b>' + CHAMP.pet.name + ' the ' + CHAMP.pet.kind + '</b>' : '') + '</small></div>'; }).join('');
     if ((S.champPets || []).length) h += '<div class="rcard champ"><div class="champpet">' + champSVG() + '</div><b>' + CHAMP.pet.name + ' the ' + CHAMP.pet.kind + '</b><small>' + CHAMP.pet.desc + '</small><button class="btn small" id="useChamp">' + (S.useChamp ? 'Companion \u2713' : 'Make my companion') + '</button></div>';
     if ((S.seasonHistory || []).length) h += '<h3 class="shophead">Past seasons</h3>' + S.seasonHistory.slice().reverse().map(function (x) { return '<div class="rcard"><b>' + x.id + '</b><small>' + x.pts + ' pts \u00b7 rank #' + x.rank + '</small></div>'; }).join('');
+    if (LB.online()) h = '<div id="lbOnline" class="fine">Loading closed-test leaderboard\u2026</div>' + h;
     $('seasonBody').innerHTML = h;
+    if (LB.online()) LB.submit(S).then(function () { return LB.top(S, 50); }).then(function (rows) { var el = $('lbOnline'); if (!el) return; if (!rows) { el.textContent = 'Online leaderboard unavailable right now.'; return; }
+      el.outerHTML = '<h3 class="shophead">\ud83c\udf0d Players this season</h3><ol class="lboard">' + rows.map(function (r) { return '<li class="' + (r.me ? 'me' : '') + '"><span>#' + r.rank + '</span><b>' + esc(r.name) + '</b><i>' + r.pts + '</i>' + (r.me ? '' : '<button class="btn small lbrep" data-pid="' + esc(r.pid) + '" title="Report / hide">\u2691</button>') + '</li>'; }).join('') + '</ol>';
+      document.querySelectorAll('.lbrep').forEach(function (b) { b.onclick = function () { LB.report(S, b.dataset.pid); save(); toast('Reported and hidden'); refreshSeason(); }; }); });
     if ($('pgsLb')) $('pgsLb').onclick = function () { PGS.showLeaderboards(); };
     if ($('useChamp')) $('useChamp').onclick = function () { S.useChamp = !S.useChamp; save(); refreshSeason(); };
   }
@@ -3592,13 +3743,14 @@ window.GAMES_CONFIG = {
     setTheme(L.world);
     G = { L: L, board: GP.makeBoard(L.colors, Math.random, L.obstacles, L.crates, L), moves: L.moves, score: 0, collected: {}, combo: 0, over: false, usedRescue: false, coinsX: 1, boosters: (startBoosts || []).length, specials: 0, bestCombo: 0, powerUses: 0, doneGoals: {}, superSt: { since: S.superSince || 0 }, supers: 0 };
     G.dk = G.dkMin = DIFF.get(S); G.pFull = SUPERUSE.full(id, G.dk); G.pUses = SUPERUSE.uses(id, G.dk) + (ITEM.use(S, 'battery') ? 1 : 0);
-    G.locks = {}; G.fog = null; G.boss = L.boss ? BOSS.init(L, G.dk) : null; G.bossGoals = 0;
+    G.locks = {}; G.fog = null; G.boss = BOSS.forLevel(L, G.dk); G.bossGoals = 0;
     if (G.boss && ITEM.use(S, 'snooze')) { BOSS.snooze(G.boss, 3); toast('\ud83d\ude34 Boss Snooze: ' + G.boss.name + ' naps 3 extra moves'); }
     G.iceStart = GP.iceLeft(G.board);
     if (snack) { G.snack = snack; if (snack.perk === 'moves') G.moves += snack.n; if (snack.perk === 'power') S.power.energy = Math.min(sFull(), S.power.energy + snack.n); if (snack.perk === 'line') for (var sn = 0; sn < snack.n; sn++) GP.placeSpecial(G.board, Math.random() < .5 ? SP.ROW : SP.COL); }
     if (spark) S.power.energy = sFull(); // v10 #12 Champion Spark: start with a SUPER move ready
     (startBoosts || []).forEach(function (k) { GP.placeSpecial(G.board, k === 'sbomb' ? SP.BOMB : k === 'srainbow' ? SP.COLOR : (Math.random() < .5 ? SP.ROW : SP.COL)); });
     tool = null; show('game'); $('lvlName').textContent = (L.boss ? '\ud83d\udc51 ' : L.mini ? '\u2694\ufe0f ' : '') + 'Level ' + id; $('goalLine').textContent = goalTextFor(L, L.world); renderCheer('');
+    if (G.boss && G.boss.mini) setTimeout(function () { if (G && G.boss && G.boss.mini) banner('\u2694\ufe0f Mini-boss ' + G.boss.name + ' appears! Watch for its ' + BOSS.ATTACKS[G.boss.next].icon + ' ' + BOSS.ATTACKS[G.boss.next].name + '!', 'c3'); }, 600);
     refreshBoostBar(); refreshPower();
     requestAnimationFrame(function () { buildBoard(); updateHud(); if (id === 1 && !S.tutDone) { if (!S.howSeen) howToPlay(tutorial); else tutorial(); } else if (!twistHint(L)) goalIntro(L); resetHint(); });
   }
@@ -3937,7 +4089,7 @@ window.GAMES_CONFIG = {
     var el = $('bossBar'); if (!el) return; var B = G && G.boss; if (!B) { el.style.display = 'none'; return; }
     var A = BOSS.ATTACKS[B.next], pct = Math.round(100 * B.hp / B.max);
     el.style.display = ''; el.className = 'bossbar' + (tele || B.inN === 1 ? ' warn' : '');
-    el.innerHTML = '<span class="bicon">' + B.icon + '</span><div class="bmid"><b>' + B.name + '</b><div class="bhp"><i style="width:' + pct + '%"></i><em>' + B.hp + ' / ' + B.max + '</em></div></div><div class="bnext" title="Next boss move">' + A.icon + '<small>' + (B.inN === 1 ? 'NEXT MOVE!' : 'in ' + B.inN) + '</small></div>' + (ITEM.count(S, 'shield') ? '<span class="bshield" title="Boss Shield ready">\ud83d\udee1\ufe0f' + ITEM.count(S, 'shield') + '</span>' : '');
+    el.innerHTML = '<span class="bicon">' + B.icon + '</span><div class="bmid"><b>' + B.name + '</b><div class="bhp"><i style="width:' + pct + '%"></i><em>' + B.hp + ' / ' + B.max + '</em></div></div><div class="bnext" title="Next boss move">' + A.icon + '<small>' + (B.spent ? 'used' : B.inN === 1 ? 'NEXT MOVE!' : 'in ' + B.inN) + '</small></div>' + (ITEM.count(S, 'shield') ? '<span class="bshield" title="Boss Shield ready">\ud83d\udee1\ufe0f' + ITEM.count(S, 'shield') + '</span>' : '');
   }
   function bossLayer() {
     if (!boardEl) return; boardEl.querySelectorAll('.bfx').forEach(function (e) { e.remove(); }); if (!G) return; var s = cellSize();
@@ -4088,7 +4240,7 @@ window.GAMES_CONFIG = {
       if (G.snack && G.snack.perk === 'coins') coins = Math.round(coins * G.snack.n); // v10 #14 snack perk
       if (ITEM.use(S, 'clover')) { coins = Math.round(coins * 1.5); toast('\ud83c\udf40 Lucky Clover: +50% coins!'); }
       if (L.mini) S.stats.minis = (S.stats.minis || 0) + 1;
-      var seasonPts = 0, snackDrop = null; try { if (lbOK) seasonPts = SEASON.addWin(S, st - prevStars, L); snackDrop = SNACKS.drop(S, st, L, Math.random, ev); } catch (e) {}
+      var seasonPts = 0, snackDrop = null; try { if (lbOK) { seasonPts = SEASON.addWin(S, st - prevStars, L); LB.submit(S); } snackDrop = SNACKS.drop(S, st, L, Math.random, ev); } catch (e) {}
       var candy = 0; try { if (ev && ev.quest) { candy = QUEST.earn(st, L); QUEST.add(S, ev, candy, today()); } } catch (e) {}
       try { if (window.PGS && lbOK) PGS.reportSeason(S); reportAch(); } catch (e) {}
       S.coins += coins; save();
@@ -4180,10 +4332,49 @@ window.GAMES_CONFIG = {
   function refreshAll() { refreshPills(); if (curScreen === 'mapScreen') refreshMap(false); if (curScreen === 'rewards') refreshRewards(); }
   // offline support (web only; the Android app already bundles everything)
   if ('serviceWorker' in navigator && /^https?:/.test(location.protocol) && !(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())) navigator.serviceWorker.register('sw.js').catch(function () {});
+
+
+  function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }); }
+  // ---- v13.1 gamer tag (local now; shared board via LB adapter when LB_CONFIG is set) ----
+  function tagUI(first) {
+    var c = TAG.canRename(S, Date.now());
+    modal('<h2>' + (first ? '\ud83c\udfae Pick your gamer tag' : '\ud83c\udfae Gamer tag') + '</h2><p class="fine">Shown on leaderboards. 3\u201316 letters, numbers, _ or spaces. Don\u2019t use your real name.</p>' +
+      '<input id="tagIn" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" value="' + (S.tag || '') + '" style="font-size:18px;padding:8px;border-radius:10px;width:90%">' +
+      '<p class="fine" id="tagMsg">' + (S.tag && !c.ok ? 'You can rename again in ' + c.days + ' day(s).' : S.tag ? 'You can rename once every 7 days.' : '') + '</p>' +
+      '<button class="btn" id="tagOk">Save</button> <button class="btn ghost" id="tagLater">' + (first ? 'Later' : 'Cancel') + '</button>');
+    $('tagLater').onclick = function () { if (first) S.tagAsked = 1; save(); closeModal(); };
+    $('tagOk').onclick = function () {
+      var v = TAG.validate($('tagIn').value); if (!v.ok) { $('tagMsg').textContent = v.why; return; }
+      LB.tagFree(S, v.tag).then(function (free) {
+        if (!free) { $('tagMsg').textContent = 'That tag is taken \u2014 try another.'; return; }
+        var r = TAG.set(S, v.tag, Date.now()); if (!r.ok) { $('tagMsg').textContent = r.why; return; }
+        S.tagAsked = 1; save(); closeModal(); refreshTagUI(); toast('\ud83c\udfae Hi, ' + S.tag + '!'); LB.submit(S);
+      });
+    };
+  }
+  function refreshTagUI() { if ($('tagShow')) $('tagShow').textContent = S.tag || 'Set \u25b6'; }
+  $('setTag').onclick = function () { tagUI(false); };
+  // ---- v13.1 season-end coin reset reminders (rules in v13.js COINRESET) ----
+  function crNow() { var q = location.search.match(/[?&]crnow=(\d{4})-(\d\d)-(\d\d)/); return q ? new Date(+q[1], +q[2] - 1, +q[3], 12) : new Date(); }
+  function crBanner() {
+    var t = COINRESET.banner(crNow()), el = $('coinWarn');
+    if (!el) { el = document.createElement('div'); el.id = 'coinWarn'; document.body.appendChild(el); }
+    el.textContent = t ? '\u23f3 ' + t : ''; el.style.display = t && curScreen !== 'game' ? '' : 'none';
+    var sl = $('shopList'); if (sl) { var sb = $('shopCoinWarn'); if (t && !sb) { sb = document.createElement('div'); sb.id = 'shopCoinWarn'; sl.parentNode.insertBefore(sb, sl); } if (sb) { sb.style.display = t ? '' : 'none'; if (t) sb.innerHTML = '<b>\u23f3 Season ends soon!</b> ' + t + ' Boosters, items and cosmetics you buy are kept.'; } }
+  }
+  function crCheck() {
+    var r = COINRESET.check(S, crNow()); save();
+    if (r.reset) modal('<h2>\ud83c\udf1f New season!</h2><p>Last season (' + r.reset.from + ') ended, so coins were reset for everyone.</p><p class="crrecap">\u25cf ' + fmt(r.reset.before) + ' \u2192 \u25cf ' + fmt(r.reset.after) + '</p><p class="fine">Your pets, boosters, items, cosmetics and stars are all kept.</p><button class="btn" onclick="closeModal()">OK</button>');
+    else if (r.popup !== undefined) modal('<h2>\u23f3 ' + (r.popup === 0 ? 'Final day of the season!' : r.daysLeft + ' day' + (r.daysLeft === 1 ? '' : 's') + ' left this season') + '</h2><p>At the end of the season your coins reset to \u25cf ' + COINRESET.CFG.amount + '. You have \u25cf ' + fmt(S.coins) + '.</p><p><b>Use them or lose them</b> \u2014 boosters, items and cosmetics you buy are kept.</p><button class="btn" id="crShop">Go to Shop</button> <button class="btn ghost" onclick="closeModal()">Later</button>');
+    var b = $('crShop'); if (b) b.onclick = function () { closeModal(); refreshShop(); show('shop'); };
+    refreshPills(); crBanner(); return r;
+  }
   // test hook
-  window.__glow = { event: function () { return curEvent(); }, power: function () { return { energy: S.power.energy, uses: G && G.powerUses, p: curPower().p }; }, usePower: function () { return usePower(); }, fillSuper: function () { S.power.energy = sFull(); refreshPower(); }, fill: function () { S.power.energy = pFull(); refreshPower(); }, recover: recover, busy: function () { return busy; }, tool: function () { return tool; }, start: startLevel, preLevel: preLevel, state: function () { return G; }, S: S, show: show, refreshCollection: refreshCollection, refreshSettings: refreshSettings, refreshMap: refreshMap, refreshRewards: refreshRewards, refreshShop: refreshShop, worldIntro: worldIntro, setTheme: setTheme, Ads: Ads, save: save, FRIEND_AT: FRIEND_AT, ACH: ACH, refreshGoals: refreshGoals, refreshComp: refreshComp, compModal: compModal, refreshFeatured: refreshFeatured, COMP: COMP, toast: toast, cutscene: cutscene, applyEvent: applyEvent, eventModal: eventModal, trackDaily: trackDaily, goalList: function () { return goalList(G.L, G); }, checkEnd: checkEnd, superFire: function (r, c) { return superFire([r, c]); }, failScreen: failScreen, move: function (a, c) { return tryMove(a, c); }, axoTurn: axoTurn, applySkins: applySkins, refreshGoals: refreshGoals };
+  window.__glow = { tagUI: function (f) { tagUI(f); }, crCheck: function () { return crCheck(); }, crBanner: function () { crBanner(); }, event: function () { return curEvent(); }, power: function () { return { energy: S.power.energy, uses: G && G.powerUses, p: curPower().p }; }, usePower: function () { return usePower(); }, fillSuper: function () { S.power.energy = sFull(); refreshPower(); }, fill: function () { S.power.energy = pFull(); refreshPower(); }, recover: recover, busy: function () { return busy; }, tool: function () { return tool; }, start: startLevel, preLevel: preLevel, state: function () { return G; }, S: S, show: show, refreshCollection: refreshCollection, refreshSettings: refreshSettings, refreshMap: refreshMap, refreshRewards: refreshRewards, refreshShop: refreshShop, worldIntro: worldIntro, setTheme: setTheme, Ads: Ads, save: save, FRIEND_AT: FRIEND_AT, ACH: ACH, refreshGoals: refreshGoals, refreshComp: refreshComp, compModal: compModal, refreshFeatured: refreshFeatured, COMP: COMP, toast: toast, cutscene: cutscene, applyEvent: applyEvent, eventModal: eventModal, trackDaily: trackDaily, goalList: function () { return goalList(G.L, G); }, checkEnd: checkEnd, superFire: function (r, c) { return superFire([r, c]); }, failScreen: failScreen, move: function (a, c) { return tryMove(a, c); }, axoTurn: axoTurn, applySkins: applySkins, refreshGoals: refreshGoals };
   syncMute(); Ads.init(); try { if (window.PGS) PGS.init().then(function (ok) { if (ok) { PGS.report(S, {}); PGS.reportSeason(S); reportAch(); } }); } catch (e) {} setTheme(0); refreshPills();
-  applyEvent(); seasonCheck();
+  applyEvent(); seasonCheck(); try { crCheck(); } catch (e) {} refreshTagUI();
+  if (!S.tag && !S.tagAsked && S.tutDone && !$('modal').classList.contains('on')) setTimeout(function () { if (!$('modal').classList.contains('on')) tagUI(true); }, 1500);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) try { crCheck(); } catch (e) {} });
 })();
 </script>
 </body></html>
