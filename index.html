@@ -433,6 +433,28 @@ body[data-theme="spooky"] .cellbg.alt{background:#b06cff14}
 @keyframes stInR{0%{opacity:0}15%{opacity:1}80%{opacity:1}100%{opacity:0}}
 .piece.sfxClear{z-index:3}
 @media (prefers-reduced-motion:reduce){.superTitle{animation:stInR 1s ease forwards}.superTitle .stpet{animation:none!important}}
+/* ---- v13 ---- */
+.diffbox{margin:8px 12px;padding:10px;border-radius:14px;background:#0003}.diffbox h3{margin:0 0 6px}
+.diffseg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.dbtn{border:2px solid #0006;border-radius:12px;padding:6px 2px;background:#fff2;color:#fff;font:inherit;display:flex;flex-direction:column;align-items:center;font-size:20px}.dbtn b{font-size:12px}.dbtn.on{background:#ffd34d;color:#2a1240;border-color:#000}
+.lbwarn{color:#ffb3b3}
+.bossbar{position:relative;display:flex;align-items:center;gap:8px;margin:4px 8px;padding:6px 10px;border-radius:14px;background:linear-gradient(90deg,#3a0b4a,#6a1a3a);border:2px solid #000;color:#fff}
+.bossbar.warn{animation:bwarn .5s ease-in-out infinite alternate;box-shadow:0 0 14px #ff4a4a}@keyframes bwarn{to{background:linear-gradient(90deg,#8a0b1a,#c2283a)}}
+.bossbar .bicon{font-size:30px}.bossbar .bmid{flex:1}.bossbar .bhp{position:relative;height:14px;background:#0008;border-radius:8px;overflow:hidden}.bossbar .bhp i{display:block;height:100%;background:linear-gradient(90deg,#ff4a6a,#ffb02e)}.bossbar .bhp em{position:absolute;inset:0;font-size:10px;text-align:center;font-style:normal;line-height:14px}
+.bossbar .bnext{display:flex;flex-direction:column;align-items:center;font-size:22px}.bossbar .bnext small{font-size:9px}
+.bfx{position:absolute;pointer-events:none;z-index:6;display:flex;align-items:center;justify-content:center}.bfx.block{background:#0007;border:2px dashed #ffd34d;border-radius:8px;font-size:18px}.bfx.block small{font-size:10px;color:#ffd34d}
+.bfx.bfog{background:radial-gradient(circle,#ccd8 0,#99a9 60%,#778a 100%);border-radius:18px;backdrop-filter:blur(4px)}.bfx.bfog span{font-size:12px;color:#222;font-weight:900}
+.bshake{animation:bshk .45s}@keyframes bshk{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+#cutscene.cs-boss .cs-prop{font-size:64px;filter:drop-shadow(0 0 12px #ff4a4a)}
+.qty{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}.qty .q10{background:#ffd34d;color:#2a1240}
+.cosgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0}.coscard{border:2px solid #0006;border-radius:12px;background:#fff2;color:#fff;font:inherit;padding:6px;display:flex;flex-direction:column;align-items:center;gap:2px}.coscard.on{border-color:#ffd34d;box-shadow:0 0 10px #ffd34d}.coscard:disabled{opacity:.55}.coscard b{font-size:11px}.coscard small{font-size:10px}
+.coscard .sw{display:block;width:56px;height:40px;border-radius:8px;border:2px solid #000}.coscard .sw.cos{border:0}.coscard .sw.cos svg{width:100%;height:100%}.tdemo{display:block;width:60%;height:70%;margin:12% auto;border-radius:8px;background:#ff9ac0}
+.tskin-gold .pc,.tskin-gold .tdemo{filter:drop-shadow(0 0 5px #ffd34d)}.tskin-bubble .pc,.tskin-bubble .tdemo{border-radius:50%;box-shadow:inset 0 0 8px #fff,0 0 4px #7ac8ff}
+.tskin-neon .pc,.tskin-neon .tdemo{filter:drop-shadow(0 0 3px #7affc9) drop-shadow(0 0 3px #ff7ad9)}.tskin-sticker .pc,.tskin-sticker .tdemo{filter:drop-shadow(2px 2px 0 #fff) drop-shadow(-2px -2px 0 #fff)}
+.goalsBtn.iqready{box-shadow:0 0 0 3px #ffd34d}
+details.howto{margin:4px 0;padding:6px 10px;border-radius:10px;background:#0003}details.howto summary{font-weight:800;cursor:pointer}details.howto p{margin:6px 0 0;font-size:13px}
+.axo{position:absolute;z-index:7;pointer-events:none;display:flex;align-items:center;justify-content:center;font-size:28px;animation:axob .7s ease-in-out infinite alternate;filter:drop-shadow(0 0 8px #ff9ad5)}.axo small{position:absolute;right:2px;bottom:0;font-size:10px;color:#fff;font-weight:900}@keyframes axob{to{transform:translateY(-4px) rotate(8deg)}}
+.axotip{position:fixed;left:16px;right:16px;bottom:90px;z-index:60;background:#2a1240;border:3px solid #ff9ad5;border-radius:16px;padding:12px;color:#fff;box-shadow:0 8px 24px #0009}.axotip p{margin:6px 0;font-size:13px}
+.superTitle:not(.reduced) b{font-size:clamp(34px,11vw,60px)!important}.superTitle:not(.reduced) .stpet{transform:scale(1.5)}
 </style></head>
 <body><div id="bg"><canvas id="bgCanvas"></canvas></div><div id="app">
  <section id="title" class="screen on">
@@ -482,6 +504,7 @@ body[data-theme="spooky"] .cellbg.alt{background:#b06cff14}
  </section>
  <section id="settings" class="screen">
   <div class="topbar"><button class="iconbtn" id="setBack">◀</button><span class="pill">Settings</span><span></span></div>
+  <div class="diffbox" id="diffBox"><h3>Difficulty</h3><div class="diffseg" id="diffSeg"></div><p class="fine" id="diffNote"></p></div>
   <div class="setlist">
    <label class="setrow">Sound effects <input type="checkbox" id="setSfx"></label>
    <label class="setrow">Music <input type="checkbox" id="setMusic"></label>
@@ -501,6 +524,7 @@ body[data-theme="spooky"] .cellbg.alt{background:#b06cff14}
   <div id="goalLine"></div><div id="twistLine"></div>
   <div id="hud"><div class="hudbox"><small>Moves</small><b id="moves">0</b></div><div class="hudbox" style="position:relative"><small>Score</small><b id="score">0</b><div id="srTimer" class="srtimer" style="display:none"></div></div><div class="hudbox goalbox"><small>Goals</small><div id="goals"></div></div></div>
   <div id="starbar"><div id="starfill"></div></div><div id="starObj"></div>
+  <div id="bossBar" class="bossbar" style="display:none"></div>
   <div id="boardWrap"><div id="toolTip"></div><div id="board"></div><div id="cheer"></div></div>
   <div id="boostBar"></div>
   <button id="powerBtn" disabled><span id="powerPet"></span><span class="pm"><span class="pmeter"><i id="powerFill"></i></span><small id="powerName"></small></span></button>
@@ -638,7 +662,8 @@ window.GAMES_CONFIG = {
       safe(P.submitScore({ leaderboardId: id, score: Math.floor(S.season.pts) }));
     },
     keysFor: function (S, info) {
-      var tot = 0, best = 0; for (var id in (S.stars || {})) { tot += S.stars[id]; if (S.stars[id] > 0) best = Math.max(best, +id); }
+      // v13: leaderboards count only wins on Normal or harder (S.lbStars); old saves fall back to S.stars.
+      var ST = S.lbStars || S.stars || {}, tot = 0, best = 0; for (var id in ST) { tot += ST[id]; if (ST[id] > 0) best = Math.max(best, +id); }
       var u = [];
       if (best >= 1) u.push('firstWin');
       for (var j in S.stars) if (S.stars[j] >= 3) { u.push('perfect'); break; }
@@ -889,7 +914,14 @@ window.GAMES_CONFIG = {
   ];
   var SPECIAL_ANIMALS = [];
   SPECIAL.forEach(function (Sx) { Sx.animals.forEach(function (a) { a.world = -2; a.section = Sx.key; a.rarity = Sx.rarity; if (a.c2) a.c = a.c2; if (a.l2) a.l = a.l2; SPECIAL_ANIMALS.push(a); }); });
-  var BY_KEY = {}; ANIMALS.concat(SPECIAL_ANIMALS).forEach(function (a) { BY_KEY[a.key] = a; });
+  // ---- v13 Champion Corral: 2 bulls + 2 dragons bought in the Shop or won from Impossible quests (no egg, no board tile) ----
+  var V13 = [
+    A('rodeobull', 'Bruno', 'Rodeo Bull', 'rodeo bulls', 'orange', 'bull', 'wide', ['tuft'], ['cowmuzzle'], { my: 80, c: '#b5532a', l: '#ffd9b8' }),
+    A('cosmicbull', 'Nova', 'Cosmic Bull', 'cosmic bulls', 'purple', 'longhorn', 'wide', ['sprinkles'], ['cowmuzzle'], { my: 80, c: '#4b3a9a', l: '#d9d0ff' }),
+    A('skydragon', 'Zephyr', 'Storm Dragon', 'storm dragons', 'mint', 'dragon', 'blob', ['belly'], ['snout'], { my: 76, c: '#2fb59a', l: '#d4fff3' }),
+    A('shadowdragon', 'Onyx', 'Shadow Dragon', 'shadow dragons', 'purple', 'dragon', 'blob', ['spots'], ['snout'], { my: 76, c: '#3a2f55', l: '#b9a8ff' })];
+  V13.forEach(function (a) { a.world = -2; a.section = 'champ13'; a.rarity = 'legendary'; if (a.c2) a.c = a.c2; if (a.l2) a.l = a.l2; });
+  var BY_KEY = {}; ANIMALS.concat(SPECIAL_ANIMALS, V13).forEach(function (a) { BY_KEY[a.key] = a; });
 
   // ---- world visual themes: sky gradient, board tint, ambient effect, scenery ----
   var THEMES = {
@@ -941,7 +973,7 @@ window.GAMES_CONFIG = {
   function crateSVG(hp) { return '<svg viewBox="0 0 100 100" class="crate"><rect x="8" y="10" width="84" height="82" rx="14" fill="#c98a4b" stroke="#7a4a22" stroke-width="5"/><path d="M8 38 H92 M8 64 H92" stroke="#7a4a22" stroke-width="5"/>' + (hp > 1 ? '<path d="M20 20 L80 82 M80 20 L20 82" stroke="#5a3214" stroke-width="7" stroke-linecap="round" opacity=".55"/>' : '') + '<path d="M38 50 Q50 40 62 50 Q50 62 38 50Z" fill="#ff7aa8"/><ellipse cx="32" cy="22" rx="12" ry="4" fill="#fff" opacity=".35"/></svg>'; }
   // legacy helper: petSVG(i, sp) = tile i of world 1
   function petSVG(i, sp) { return tileSVG(0, i, sp); }
-  var api = { HUE: HUE, WORLDS: WORLDS, THEMES: THEMES, ANIMALS: ANIMALS, BY_KEY: BY_KEY, SPECIAL: SPECIAL, SPECIAL_ANIMALS: SPECIAL_ANIMALS, RARE: RARE, animalSVG: animalSVG, tileSVG: tileSVG, tileAnimal: tileAnimal, worldOf: worldOf, crateSVG: crateSVG, petSVG: petSVG, PETS: WORLDS[0].animals.concat([RARE]) };
+  var api = { HUE: HUE, WORLDS: WORLDS, THEMES: THEMES, ANIMALS: ANIMALS, BY_KEY: BY_KEY, SPECIAL: SPECIAL, SPECIAL_ANIMALS: SPECIAL_ANIMALS, V13: V13, RARE: RARE, animalSVG: animalSVG, tileSVG: tileSVG, tileAnimal: tileAnimal, worldOf: worldOf, crateSVG: crateSVG, petSVG: petSVG, PETS: WORLDS[0].animals.concat([RARE]) };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.PETS = api;
 })(this);
 </script><script>// Adorapets - core board logic (pure, no DOM). Works in browser and Node.
@@ -1328,7 +1360,12 @@ window.GAMES_CONFIG = {
   // inside each world so a hard level is always followed by an easier one.
   var WAVE = [0, .15, .3, .05, .4, .55, .2, .65, .8, 1];
   var COLOR_NAMES = ['Ruby', 'Sunny', 'Minty', 'Sky', 'Grape', 'Peach'];
-  function difficulty(n) { var base = 1 - 1 / (1 + (n - 1) / 45), k = (n - 1) % 10; return Math.min(1, base * .62 + WAVE[k] * .38 * Math.min(1, .35 + base)); }
+  // v13 #9 "eliminate waves": CONFIG.difficultyWave = false clips the in-world difficulty spikes (levels 6, 8, 9, 10 of every
+  // world jumped well above the rest) down to the wave's average. Breather levels stay as they were. Flip to true to restore.
+  var CONFIG = { difficultyWave: false };
+  var WAVE_AVG = WAVE.reduce(function (a, b) { return a + b; }, 0) / WAVE.length;
+  function difficulty(n) { var base = 1 - 1 / (1 + (n - 1) / 45), k = (n - 1) % 10, wv = CONFIG.difficultyWave ? WAVE[k] : Math.min(WAVE[k], WAVE_AVG); return Math.min(1, base * .62 + wv * .38 * Math.min(1, .35 + base)); }
+  function setWave(on) { CONFIG.difficultyWave = !!on; for (var key in cache) delete cache[key]; }
   function pickCells(r, count, rowMin, used) { var out = [], guard = 0; while (out.length < count && guard++ < 500) { var rr = rowMin + Math.floor(r() * (N - rowMin)), cc = Math.floor(r() * N), k = rr + ',' + cc; if (used[k]) continue; used[k] = 1; out.push([rr, cc]); } return out; }
   var cache = {};
   var MINI_BOSSES = ['Grumpy Gopher', 'Crabby Crab', 'Prickly Cactus', 'Snowball Yeti', 'Snoring Owl', 'Thorny Bramble', 'Muddy Pig', 'Pebble Golem', 'Shadow Moth', 'Lantern Ghost', 'Candy Goblin'];
@@ -1412,7 +1449,7 @@ window.GAMES_CONFIG = {
   var MIN_MOVES = 12;
   function curveRow(n) {
     if (n < CURVE.length) return CURVE[n];
-    var t = Math.min(1, (n - 20) / CURVE_LATE.span), wave = ((n - 1) % 10) / 9; // small in-world wave
+    var t = Math.min(1, (n - 20) / CURVE_LATE.span), wave = CONFIG.difficultyWave ? ((n - 1) % 10) / 9 : Math.min(((n - 1) % 10) / 9, .5); // small in-world wave (off in v13)
     return { moves: CURVE_LATE.movesFrom + (CURVE_LATE.movesTo - CURVE_LATE.movesFrom) * t + (n % 10 === 1 ? .06 : 0) - wave * .02, goal: CURVE_LATE.goalFrom + (CURVE_LATE.goalTo - CURVE_LATE.goalFrom) * t };
   }
   var SCALE_GOALS = ['wake', 'glow', 'bubbles', 'echoes', 'snacks', 'buddies'];
@@ -1439,6 +1476,7 @@ window.GAMES_CONFIG = {
 
   // Twist layer: stage 0-2 teach the world's twist alone, 3-5 mix it with classic goals,
   // 6-8 add a twist from an earlier world, 9 = boss with a unique combo + the boss's caged friend.
+  var FORCE_SLEEPY = { 27: 1, 29: 1, 30: 1 };
   function addTwists(lv, r, used) {
     var n = lv.id, k = lv.stage, w = lv.world, wk = w % WORLD_TWISTS.length, lapN = Math.floor(w / WORLD_TWISTS.length), d = lv.difficulty;
     var list = [];
@@ -1449,6 +1487,8 @@ window.GAMES_CONFIG = {
         if (pool.length) list.push(pool[Math.floor(r() * pool.length)]);
       }
     }
+    // v13 (Kristi's list): levels 27, 29 and 30 must always have sleepy pets.
+    if (FORCE_SLEEPY[n] && list.indexOf('sleepy') < 0) { if (list.length >= 2) list[list.length - 1] = 'sleepy'; else list.push('sleepy'); }
     lv.twists = list; lv.tw = {};
     if (list.length) {
       var f = k <= 2 ? .55 + k * .15 : k <= 5 ? .85 : lv.boss ? .8 : .75;
@@ -1554,7 +1594,7 @@ window.GAMES_CONFIG = {
   function cp(p) { if (!p) return p; var o = {}; for (var k in p) o[k] = p[k]; return o; }
   function clone(b) { var o = { n: N, colors: b.colors, rand: b.rand, ice: b.ice.map(function (r) { return r.slice(); }), cells: b.cells.map(function (r) { return r.map(cp); }) }; if (b.tw) { var t = JSON.parse(JSON.stringify(b.tw)); t.cfg = b.tw.cfg; t.trail = b.tw.trail; o.tw = t; } o.lv = b.lv; return o; }
 
-  var api = { feasible: feasible, refillTwists: refillTwists, CURVE: CURVE, CURVE_LATE: CURVE_LATE, curveRow: curveRow, botRandom: botRandom, SUPER: SUPER, superChance: superChance, rollSuper: rollSuper, superCells: superCells, plainCells: plainCells, N: N, SP: SP, rng: rng, makeBoard: makeBoard, findMatches: findMatches, findMove: findMove, hasMove: hasMove, hasMatchAfterSwap: hasMatchAfterSwap, shuffle: shuffle, collapse: collapse, playMove: playMove, swap: swap, adj: adj, piece: piece, LEVELS: LEVELS, COLOR_NAMES: COLOR_NAMES, getLevel: getLevel, difficulty: difficulty, WAVE: WAVE, blast: blast, placeSpecial: placeSpecial, cascade: cascade, crate: crate, isCrate: isCrate, cratesLeft: cratesLeft, iceLeft: iceLeft, goalsMet: goalsMet, botPlay: botPlay, clone: clone, TWISTS: TWISTS, WORLD_TWISTS: WORLD_TWISTS, afterTurn: afterTurn, isNight: isNight, starsFor: starsFor, bonusMet: bonusMet, inert: inert, setupTwists: setupTwists, count: count };
+  var api = { CONFIG: CONFIG, setWave: setWave, feasible: feasible, refillTwists: refillTwists, CURVE: CURVE, CURVE_LATE: CURVE_LATE, curveRow: curveRow, botRandom: botRandom, SUPER: SUPER, superChance: superChance, rollSuper: rollSuper, superCells: superCells, plainCells: plainCells, N: N, SP: SP, rng: rng, makeBoard: makeBoard, findMatches: findMatches, findMove: findMove, hasMove: hasMove, hasMatchAfterSwap: hasMatchAfterSwap, shuffle: shuffle, collapse: collapse, playMove: playMove, swap: swap, adj: adj, piece: piece, LEVELS: LEVELS, COLOR_NAMES: COLOR_NAMES, getLevel: getLevel, difficulty: difficulty, WAVE: WAVE, blast: blast, placeSpecial: placeSpecial, cascade: cascade, crate: crate, isCrate: isCrate, cratesLeft: cratesLeft, iceLeft: iceLeft, goalsMet: goalsMet, botPlay: botPlay, clone: clone, TWISTS: TWISTS, WORLD_TWISTS: WORLD_TWISTS, afterTurn: afterTurn, isNight: isNight, starsFor: starsFor, bonusMet: bonusMet, inert: inert, setupTwists: setupTwists, count: count };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.GP = api;
 })(this);
 </script><script>// Adorapets v5 - Companions: beat a world's boss (every 10th level) to earn that world's companion.
@@ -1646,7 +1686,13 @@ window.GAMES_CONFIG = {
     { m: 'specials', t: 'Make {n} special pets', lo: 4, hi: 8, c: 40 },
     { m: 'combo3', t: 'Make {n} chain reactions (3+ in one move)', lo: 2, hi: 4, c: 45 },
     { m: 'twist', t: 'Make {n} twist progress (wake, feed, find, reunite...)', lo: 8, hi: 16, c: 45 },
-    { m: 'bonus', t: 'Complete {n} bonus star goals', lo: 1, hi: 3, c: 55 }
+    { m: 'bonus', t: 'Complete {n} bonus star goals', lo: 1, hi: 3, c: 55 },
+    // v13 more missions
+    { m: 'supers', t: 'Fire {n} SUPER moves', lo: 1, hi: 2, c: 60 },
+    { m: 'powers', t: 'Use your companion power {n} times', lo: 2, hi: 4, c: 45 },
+    { m: 'perfect', t: 'Get \u2605\u2605\u2605 on {n} levels', lo: 1, hi: 3, c: 60 },
+    { m: 'clean', t: 'Win {n} levels without boosters', lo: 1, hi: 3, c: 50 },
+    { m: 'wild', t: 'Spot {n} Wild Axolotl', lo: 1, hi: 1, c: 70 }
   ];
   var DAILY_BOOST = ['hint', 'shuffle', 'hammer', 'moves5', 'sline', 'row', 'sbomb'];
   function hash(str) { var h = 2166136261; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h >>> 0; }
@@ -2491,6 +2537,15 @@ window.GAMES_CONFIG = {
   var FLY = /bird|owl|bat|bee|butterfly|moth|pegasus|phoenix|firefly|parrot|griffin|fairy|wing/i;
   var FX = {
     MAX_P: 220, MAX_P_REDUCED: 30,
+    // v13: the move NAME picks a matching visual motif (anchor drops, herds stampede, fire roars...). Order matters.
+    MOTIFS: [
+      ['anchor', /anchor/i], ['stampede', /stampede|herd|rush|charge|domino/i], ['frost', /frost|blizzard|snow|ice|freeze|avalanche/i],
+      ['storm', /thunder|storm|twister|lightning/i], ['fire', /fire|inferno|flare|sun|phoenix|rebirth|dawn|burst/i],
+      ['rock', /rock|boulder|quake|thump|stomp|bash|slide/i], ['water', /tidal|mud|flood|splash|wave/i],
+      ['star', /star|meteor|sparkle|aurora/i], ['moon', /moon|lullaby|eclipse|lantern|gloom|shadow|night|time/i],
+      ['horn', /horn|claw|quill|tails|trick/i], ['rainbow', /rainbow/i]
+    ],
+    motif: function (name) { for (var i = 0; i < FX.MOTIFS.length; i++) if (FX.MOTIFS[i][1].test(name || '')) return FX.MOTIFS[i][0]; return 'sparkle'; },
     // pure: decide flair from a power descriptor {key, kind, fx, champ}
     flair: function (who) {
       who = who || {}; var s = [who.key, who.kind].join(' ');
@@ -2509,7 +2564,7 @@ window.GAMES_CONFIG = {
       if (flair === 'breath') p.cone = true;
       if (flair === 'swoop') p.swoop = true;
       if (flair === 'rainbow') p.sparks = reduced ? 30 : 200;
-      p.sparks = Math.min(p.sparks, reduced ? FX.MAX_P_REDUCED : FX.MAX_P);
+      p.sparks = Math.min(p.sparks, reduced ? FX.MAX_P_REDUCED : FX.MAX_P); p.scale = reduced ? 1 : 1.7; // v13: bigger supers
       return p;
     }
   };
@@ -2545,6 +2600,33 @@ window.GAMES_CONFIG = {
       add({ x: x, y: y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, g: opt.g == null ? .06 : opt.g, drag: .965, s: 2 + Math.random() * (opt.size || 4), c: cols[i % cols.length], life: life * (.6 + Math.random() * .6), t0: t0, star: Math.random() < (opt.stars || .25) }); } }
   function ring(x, y, c, delay, r1, w, ms) { rings.push({ x: x, y: y, c: c, t0: performance.now() + (delay || 0), ms: ms || 650, r0: 10, r1: r1, w: w || 10 }); }
 
+
+  function glyph(ch, x, y, size, rot, alpha) { cx.save(); cx.globalAlpha = alpha == null ? 1 : alpha; cx.translate(x, y); if (rot) cx.rotate(rot); cx.font = Math.round(size) + 'px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif'; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.fillText(ch, 0, 0); cx.restore(); }
+  function motif(m, X, Y, br, R, cols, who, reduced) {
+    var t0 = performance.now() + 150, dur = reduced ? 700 : 1300, big = reduced ? R * .35 : R * .7, img = null;
+    if (who.svg && /^<svg/.test(who.svg)) { img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(who.svg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')); }
+    var sprite = function (x, y, sz, flip) { if (img && img.complete && img.naturalWidth) { cx.save(); cx.globalAlpha = 1; cx.translate(x, y); if (flip) cx.scale(-1, 1); cx.drawImage(img, -sz / 2, -sz / 2, sz, sz); cx.restore(); } };
+    var splashed = false;
+    extras.push({ draw: function (now) {
+      var k = (now - t0) / dur; if (k < 0) return true; if (k > 1) return false; var e = 1 - Math.pow(1 - Math.min(1, k * 1.6), 3), fade = k > .8 ? (1 - k) / .2 : 1;
+      if (m === 'anchor') { // the anchor plunges from the sky onto the board, chain trailing, then a big splash
+        var ay = br.top - big + (Y - br.top + big * .6) * Math.min(1, k * 2.2); cx.globalAlpha = fade; cx.strokeStyle = '#9aa7b8'; cx.lineWidth = 6; cx.setLineDash([10, 6]); cx.beginPath(); cx.moveTo(X, -20); cx.lineTo(X, ay - big * .45); cx.stroke(); cx.setLineDash([]);
+        glyph('\u2693', X, ay, big, Math.sin(k * 12) * .08 * (1 - k), fade); sprite(X - big * .45, ay - big * .55, big * .45);
+        if (k > .45 && !splashed) { splashed = true; burst(X, Y + big * .3, reduced ? 12 : 70, ['#7ac8ff', '#bfefff', '#fff', '#3a8ad8'], 10, 900, 0, { ang: -1.57, spread: 2.4, g: .25, stars: 0, size: 6 }); ring(X, Y + big * .3, '#bfefff', 0, R * .9, 14, 700); }
+      } else if (m === 'stampede') { // a whole herd thunders across the board, kicking up dust
+        var n = reduced ? 2 : 5; for (var i = 0; i < n; i++) { var lag = i * .09, kk = Math.max(0, Math.min(1, (k - lag) / (1 - .4))), x = -big * .5 + (innerWidth + big) * kk, y = br.top + br.height * (.2 + .6 * (i / Math.max(1, n - 1))) + Math.abs(Math.sin(kk * 30)) * -10; if (img && img.complete && img.naturalWidth) sprite(x, y, big * .55, true); else glyph('\ud83d\udc02', x, y, big * .5, 0, 1); if (!reduced && Math.random() < .6) burst(x - big * .25, y + big * .2, 2, ['#d9b38c', '#a8865a', '#fff'], 3, 600, 0, { ang: 3.14, spread: 1.2, g: .05, stars: 0 }); }
+      } else if (m === 'fire') { glyph('\ud83d\udd25', X, Y + big * .3 - e * big * .3, big * (.4 + e * .7), 0, fade); if (!reduced) for (var f = 0; f < 3; f++) burst(X + (Math.random() - .5) * br.width * .8, br.top + br.height, 1, ['#ff5c2a', '#ffb02e', '#ffe680'], 8, 700, 0, { ang: -1.57, spread: .5, g: -.05, stars: 0, size: 8 });
+      } else if (m === 'frost') { glyph('\u2744\ufe0f', X, Y, big * (.3 + e * .6), k * 3, fade); if (!reduced && Math.random() < .7) burst(X + (Math.random() - .5) * br.width, br.top, 2, ['#bfefff', '#fff', '#7ac8ff'], 2, 1100, 0, { ang: 1.57, spread: .6, g: .03, stars: .6, size: 4 });
+      } else if (m === 'storm') { if (Math.floor(k * 10) % 3 === 0) { var bx = br.left + Math.random() * br.width; cx.globalAlpha = fade; cx.strokeStyle = '#fff9a8'; cx.lineWidth = reduced ? 3 : 7; cx.beginPath(); cx.moveTo(bx, br.top - 30); var yy = br.top; while (yy < br.top + br.height) { yy += 30; bx += (Math.random() - .5) * 40; cx.lineTo(bx, yy); } cx.stroke(); } glyph('\ud83c\udf29\ufe0f', X, br.top + big * .1, big * .8, 0, fade);
+      } else if (m === 'rock') { var ry = br.top - big * .3 + (Y - br.top + big * .3) * Math.min(1, k * 2); glyph('\ud83e\udea8', X, ry, big * .8, k * 6, fade); if (k > .5 && !splashed) { splashed = true; for (var q = 0; q < 3; q++) ring(X, Y, '#c9a27a', q * 120, R, 16, 600); burst(X, Y, reduced ? 10 : 60, ['#c9a27a', '#8a6a4a', '#fff'], 9, 900, 0, { g: .3, stars: 0, size: 6 }); }
+      } else if (m === 'water') { cx.globalAlpha = .55 * fade; cx.fillStyle = '#3aa0e8'; var wx = -innerWidth + innerWidth * 2.2 * k; cx.beginPath(); cx.moveTo(wx, br.top + br.height); for (var w = 0; w <= 20; w++) cx.lineTo(wx + w * innerWidth / 20, br.top + br.height * .4 + Math.sin(w + k * 20) * 18); cx.lineTo(wx + innerWidth, br.top + br.height); cx.fill(); glyph('\ud83c\udf0a', wx + innerWidth * .8, br.top + br.height * .4, big * .6, 0, fade);
+      } else if (m === 'star') { if (!reduced || Math.random() < .3) glyph('\u2b50', br.left + Math.random() * br.width, br.top + k * br.height * Math.random(), big * .25, 0, fade); glyph('\ud83c\udf1f', X, Y, big * (.3 + e * .5), k * 2, fade);
+      } else if (m === 'moon') { glyph('\ud83c\udf19', X, Y - big * .2, big * (.3 + e * .6), 0, fade); glyph('\u2728', X + big * .4, Y + big * .2, big * .3 * e, 0, fade);
+      } else if (m === 'horn') { glyph('\u2694\ufe0f', X - big * .4 + e * big * .4, Y, big * .7, -.6 + e * .6, fade); sprite(X, Y + big * .1, big * .6);
+      } else if (m === 'rainbow') { cx.globalAlpha = fade; cx.lineWidth = reduced ? 8 : 16; ['#ff5c8a', '#ffb02e', '#ffd34d', '#7affc9', '#7ac8ff', '#c48bff'].forEach(function (c, j) { cx.strokeStyle = c; cx.beginPath(); cx.arc(X, br.top + br.height, br.width * .55 - j * (reduced ? 9 : 17), Math.PI, Math.PI + Math.PI * e); cx.stroke(); });
+      } else { glyph('\u2728', X, Y, big * (.3 + e * .5), k * 4, fade); }
+      return true; } });
+  }
   // Main entry. who = {name, color, key, kind, fx, champ, svg}; board = board element. Returns a Promise (resolves when the big beat is done).
   FX.play = function (who, opts) {
     setup(); opts = opts || {}; var reduced = !!opts.reduced, plan = FX.plan(FX.flair(who), reduced), board = opts.board;
@@ -2569,7 +2651,7 @@ window.GAMES_CONFIG = {
     if (plan.flair === 'thump') { for (var q = 0; q < 3; q++) ring(X, br.top + br.height * .92, hsl(c, .3), 60 + q * 160, R * .9, 18, 600); burst(X, br.top + br.height * .95, Math.round(plan.sparks * .15), ['#c9a27a', '#fff', c], 7, 900, 80, { ang: -1.57, spread: 2.4, g: .25 }); }
     if (plan.flair === 'charge' || plan.flair === 'swoop' || plan.flair === 'breath') {
       var t0 = performance.now() + 100, dur = plan.flair === 'breath' ? 900 : 700, img = new Image(); if (who.svg && /^<svg/.test(who.svg)) img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(who.svg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ').replace(/xmlns="[^"]+"\s+xmlns=/, 'xmlns='));
-      extras.push({ draw: function (now) { var k = (now - t0) / dur; if (k < 0) return true; if (k > 1) return false; var x, y, sz = 90;
+      extras.push({ draw: function (now) { var k = (now - t0) / dur; if (k < 0) return true; if (k > 1) return false; var x, y, sz = 90 * (plan.scale || 1);
         if (plan.flair === 'charge') { x = -60 + (W + 120) * k; y = Y + Math.sin(k * 40) * 4; if (Math.random() < .8) burst(x - 30, y + 30, 3, ['#d9b38c', '#fff', '#a8865a'], 3, 600, 0, { ang: 3.14, spread: 1.2, g: .05, stars: 0 }); }
         else if (plan.flair === 'swoop') { x = W * (1.1 - 1.2 * k); y = br.top - 40 + Math.sin(k * 3.14) * br.height * .7; if (Math.random() < .9) burst(x + 20, y, 2, cols, 1.5, 700, 0, { g: .02, stars: .7, size: 3 }); }
         else { x = br.left - 10; y = Y - br.height * .3 + k * br.height * .3; var fire = /frost/i.test(who.key) ? ['#bfefff', '#7ac8ff', '#fff'] : ['#ff5c2a', '#ffb02e', '#ffe680', '#fff'];
@@ -2577,6 +2659,8 @@ window.GAMES_CONFIG = {
         cx.globalAlpha = 1; if (img.complete && img.naturalWidth) { cx.save(); cx.translate(x, y); if (plan.flair === 'swoop') cx.rotate(-.35 + k * .7); if (plan.flair === 'charge') cx.scale(-1, 1); cx.drawImage(img, -sz / 2, -sz / 2, sz, sz); cx.restore(); } return true; } });
     }
     if (plan.flair === 'rainbow') for (var rr = 0; rr < 5; rr++) ring(X, Y, cols[rr], 200 + rr * 70, R * .8, 8, 900);
+    // v13 name motif: a big drawn action that matches the move's name (skipped heavy parts in Reduced effects)
+    plan.motif = FX.motif(who.name); FX.last = plan; motif(plan.motif, X, Y, br, R, cols, who, reduced);
     kick();
     return new Promise(function (res) { setTimeout(res, reduced ? 450 : 900); });
   };
@@ -2584,6 +2668,245 @@ window.GAMES_CONFIG = {
   FX.markCells = function (els, reduced) { els.forEach(function (e, i) { if (!e) return; e.classList.add('sfxClear'); if (!reduced && e.animate) e.animate([{ filter: 'brightness(1)' }, { filter: 'brightness(2.2) drop-shadow(0 0 10px #fff)' }, { filter: 'brightness(1)' }], { duration: 380, delay: (i % 8) * 25 }); setTimeout(function () { e.classList.remove('sfxClear'); }, 600); }); };
   FX.active = function () { return parts.length + rings.length + extras.length; };
   root.SUPERFX = FX; if (typeof module !== 'undefined') module.exports = FX;
+})(typeof window !== 'undefined' ? window : globalThis);
+</script><script>// Adorapets v13 - pure game rules for: difficulty + leaderboard eligibility, super usage scaling, major boss fights,
+// Impossible-mode quests, coin cosmetics (boards / tile skins / costumes), helpful shop items, the boss-intro cutscene
+// plan and an idempotent daily-reward claim. No DOM here: everything is unit-tested in test.js.
+(function (root) {
+  'use strict';
+  // ---------------- DIFFICULTY ----------------
+  // rank < 1 (Easy) = easier than Normal = no leaderboard submissions. Changeable any time (applies from the next level).
+  var DIFF_CFG = {
+    easy:       { key: 'easy', rank: 0, label: 'Easy', icon: '\ud83c\udf3c', moves: 5, goal: 0.85, bossHp: 0.6, bossEvery: 6, steal: 1, lock: 2, fog: 2, superMul: 0.85, blurb: '+5 moves, smaller goals, gentle bosses. Leaderboards off.' },
+    normal:     { key: 'normal', rank: 1, label: 'Normal', icon: '\u2b50', moves: 0, goal: 1, bossHp: 0.85, bossEvery: 4, steal: 1, lock: 3, fog: 3, superMul: 1, blurb: 'The game as designed.' },
+    hard:       { key: 'hard', rank: 2, label: 'Hard', icon: '\ud83d\udd25', moves: -2, goal: 1.1, bossHp: 1, bossEvery: 3, steal: 2, lock: 5, fog: 4, superMul: 1.15, blurb: '-2 moves, bigger goals, meaner bosses.' },
+    impossible: { key: 'impossible', rank: 3, label: 'Impossible', icon: '\ud83d\udc80', moves: -4, goal: 1.25, bossHp: 1.2, bossEvery: 2, steal: 3, lock: 7, fog: 5, superMul: 1.3, blurb: '-4 moves, huge goals, brutal bosses. Unlocks Impossible Quests.' }
+  };
+  var DIFF = {
+    KEYS: ['easy', 'normal', 'hard', 'impossible'], CFG: DIFF_CFG,
+    get: function (S) { return DIFF_CFG[S && S.difficulty] ? S.difficulty : 'normal'; },
+    cfg: function (S) { return DIFF_CFG[DIFF.get(S)]; },
+    set: function (S, k) { if (!DIFF_CFG[k]) return false; S.difficulty = k; return true; },
+    lbEligible: function (S) { return DIFF.cfg(S).rank >= 1; },
+    // Level as played at this difficulty. Normal returns the SAME object (beta levels unchanged).
+    applyLevel: function (L, k) {
+      var c = DIFF_CFG[k] || DIFF_CFG.normal; if (c.key === 'normal') return L;
+      var o = JSON.parse(JSON.stringify(L)); o.diff = c.key;
+      o.moves = Math.max(10, L.moves + c.moves);
+      if (o.goals.collect) for (var col in o.goals.collect) o.goals.collect[col] = Math.max(3, Math.round(o.goals.collect[col] * c.goal));
+      if (o.collect) o.collect = o.goals.collect;
+      if (o.goals.score) { o.goals.score = Math.round(o.goals.score * c.goal / 50) * 50; o.target = o.goals.score; }
+      return o;
+    },
+    // Leaderboard stars only count wins at Normal or harder. Old saves: everything was Normal.
+    recordWin: function (S, id, stars) { S.lbStars = S.lbStars || {}; if (DIFF.lbEligible(S)) S.lbStars[id] = Math.max(S.lbStars[id] || 0, stars); },
+    migrate: function (S) { if (!S.lbStars) { S.lbStars = {}; for (var k in (S.stars || {})) S.lbStars[k] = S.stars[k]; } if (!DIFF_CFG[S.difficulty]) S.difficulty = 'normal'; }
+  };
+
+  // ---------------- SUPER USAGE ----------------
+  // full(level, diff)  = round(45 x (1 + min(0.6, (level-1)/250)) x superMul)   energy (pets popped) for one power use
+  //                      SUPER needs 2 x full. Level 1 Normal = 45 (unchanged), level 151+ Normal = 72, Impossible x1.3.
+  // uses(level, diff)  = power uses per level: Easy 2 always; Normal 2 until level 99 then 1;
+  //                      Hard 2 until level 49 then 1; Impossible 1.
+  var SUPERUSE = {
+    BASE_FULL: 45,
+    full: function (level, dk) { var c = DIFF_CFG[dk] || DIFF_CFG.normal; return Math.round(45 * (1 + Math.min(0.6, Math.max(0, level - 1) / 250)) * c.superMul); },
+    uses: function (level, dk) { var r = (DIFF_CFG[dk] || DIFF_CFG.normal).rank; if (r === 0) return 2; if (r === 1) return level < 100 ? 2 : 1; if (r === 2) return level < 50 ? 2 : 1; return 1; }
+  };
+
+  // ---------------- BOSS FIGHTS (major boss = every 10th level) ----------------
+  var BOSS_NAMES = ['Grumble the Badger King', 'Kraken Kid', 'Sandstorm Scorpion', 'Frostjaw Walrus', 'Vine Viper', 'The Night Mare', 'Rooster Rex', 'Avalanche Ram', 'Bog Witch Toad', 'Abyss Angler', 'The Sugar Tyrant'];
+  var BOSS_ICONS = ['\ud83e\udda1', '\ud83d\udc19', '\ud83e\udd82', '\ud83e\uddad', '\ud83d\udc0d', '\ud83d\udc34', '\ud83d\udc13', '\ud83d\udc0f', '\ud83d\udc38', '\ud83d\udc1f', '\ud83d\udc7e'];
+  var ATTACKS = {
+    lock: { icon: '\ud83d\udd12', name: 'Tile Lock', say: 'locks tiles in chains!' },
+    shuffle: { icon: '\ud83c\udf00', name: 'Board Scramble', say: 'scrambles the board!' },
+    steal: { icon: '\ud83e\uddb9', name: 'Move Thief', say: 'steals your moves!' },
+    fog: { icon: '\ud83c\udf2b\ufe0f', name: 'Fog Cloud', say: 'fogs part of the board!' }
+  };
+  var ORDER = ['lock', 'fog', 'steal', 'shuffle'];
+  var BOSS = {
+    NAMES: BOSS_NAMES, ATTACKS: ATTACKS,
+    isMajor: function (L) { return !!(L && L.boss); },
+    init: function (L, dk) {
+      var c = DIFF_CFG[dk] || DIFF_CFG.normal, w = L.world || 0, hp = Math.max(20, Math.round(L.moves * 4.2 * c.bossHp));
+      var b = { name: BOSS_NAMES[w % BOSS_NAMES.length], icon: BOSS_ICONS[w % BOSS_ICONS.length], hp: hp, max: hp, every: c.bossEvery, inN: c.bossEvery + 1, step: w % ORDER.length, diff: c.key, attacks: 0, goalHits: 0 };
+      b.next = ORDER[b.step]; return b;
+    },
+    // what the attack does at this difficulty (pure numbers; game.js applies them)
+    power: function (B, kind) { var c = DIFF_CFG[B.diff] || DIFF_CFG.normal; return kind === 'lock' ? { tiles: c.lock, turns: 2 } : kind === 'fog' ? { size: Math.min(5, c.fog), turns: 2 } : kind === 'steal' ? { moves: c.steal } : { }; },
+    // call once per player move. Returns {telegraph} one move before, {fire} on the attack move.
+    tick: function (B) {
+      if (!B || B.hp <= 0) return {};
+      B.inN--;
+      if (B.inN <= 0) { var k = B.next; B.attacks++; B.step = (B.step + 1) % ORDER.length; B.next = ORDER[B.step]; B.inN = B.every; return { fire: k, power: BOSS.power(B, k) }; }
+      if (B.inN === 1) return { telegraph: B.next };
+      return {};
+    },
+    hit: function (B, n) { if (!B) return 0; var d = Math.max(0, Math.round(n)); B.hp = Math.max(0, B.hp - d); return d; },
+    goalHit: function (B) { if (!B) return 0; B.goalHits++; return BOSS.hit(B, Math.ceil(B.max * 0.25)); },
+    defeated: function (B) { return !!B && B.hp <= 0; },
+    // stuns delay the next attack (Boss Snooze item)
+    snooze: function (B, n) { if (B) B.inN += n; }
+  };
+
+  // ---------------- IMPOSSIBLE QUESTS ----------------
+  var IQ_LIST = [
+    { id: 'iq_win3', t: 'Win 3 levels on Impossible', m: 'win', n: 3, r: { c: 300 } },
+    { id: 'iq_star5', t: 'Get \u2605\u2605\u2605 on 5 levels on Impossible', m: 'star3', n: 5, r: { c: 500, cos: 'cos_crown' } },
+    { id: 'iq_super10', t: 'Fire 10 SUPER moves on Impossible', m: 'super', n: 10, r: { c: 400, cos: 'board_galaxy' } },
+    { id: 'iq_boss1', t: 'Beat a major boss on Impossible', m: 'boss', n: 1, r: { c: 600, cos: 'tile_gold' } },
+    { id: 'iq_win15', t: 'Win 15 levels on Impossible', m: 'win', n: 15, r: { c: 1000, pet: 'cosmicbull' } },
+    { id: 'iq_boss3', t: 'Beat 3 major bosses on Impossible', m: 'boss', n: 3, r: { c: 1500, pet: 'shadowdragon' } }
+  ];
+  var IQUEST = {
+    list: IQ_LIST,
+    st: function (S) { S.iq = S.iq || {}; S.iq.p = S.iq.p || {}; S.iq.got = S.iq.got || {}; return S.iq; },
+    // progress counts ONLY while playing on Impossible
+    track: function (S, metric, n) { if (DIFF.get(S) !== 'impossible' || !(n > 0)) return false; var q = IQUEST.st(S); q.p[metric] = (q.p[metric] || 0) + n; return true; },
+    state: function (S) { var q = IQUEST.st(S); return IQ_LIST.map(function (x) { var have = Math.min(x.n, q.p[x.m] || 0); return { id: x.id, t: x.t, n: x.n, have: have, done: have >= x.n, claimed: !!q.got[x.id], r: x.r }; }); },
+    claimable: function (S) { return IQUEST.state(S).filter(function (x) { return x.done && !x.claimed; }); },
+    // idempotent: second claim returns null. Marks claimed BEFORE granting.
+    claim: function (S, id) {
+      var x = IQUEST.state(S).filter(function (y) { return y.id === id; })[0]; if (!x || !x.done || x.claimed) return null;
+      var q = IQUEST.st(S); q.got[id] = Date.now();
+      S.coins = (S.coins || 0) + (x.r.c || 0);
+      if (x.r.cos) COSM.give(S, x.r.cos);
+      if (x.r.pet) { S.adopt = S.adopt || { owned: {} }; S.adopt.owned = S.adopt.owned || {}; S.adopt.owned[x.r.pet] = Date.now(); }
+      return x.r;
+    }
+  };
+
+  // ---------------- COSMETICS (coins) ----------------
+  var SV = function (b) { return '<svg viewBox="0 0 100 70">' + b + '</svg>'; };
+  var COSM_LIST = [
+    { key: 'board_galaxy', cat: 'board', name: 'Galaxy Board', price: 0, quest: 'iq_super10', sw: 'linear-gradient(135deg,#1a0b4a,#4b1a8a,#0b2a5a)' },
+    { key: 'board_sunset', cat: 'board', name: 'Sunset Board', price: 300, sw: 'linear-gradient(160deg,#ff8a5c,#c2448a,#3a1a5a)' },
+    { key: 'board_candy', cat: 'board', name: 'Candy Stripe Board', price: 300, sw: 'repeating-linear-gradient(45deg,#ffb3e0 0 14px,#fff0fa 14px 28px)' },
+    { key: 'board_wood', cat: 'board', name: 'Cozy Wood Board', price: 250, sw: 'repeating-linear-gradient(90deg,#8a5a34 0 22px,#9e6a40 22px 44px)' },
+    { key: 'board_ocean', cat: 'board', name: 'Ocean Glass Board', price: 350, sw: 'linear-gradient(180deg,#5fd7ff,#1a6ab8,#062a5a)' },
+    { key: 'tile_gold', cat: 'tile', name: 'Golden Glow Tiles', price: 0, quest: 'iq_boss1' },
+    { key: 'tile_bubble', cat: 'tile', name: 'Bubble Tiles', price: 250 },
+    { key: 'tile_neon', cat: 'tile', name: 'Neon Outline Tiles', price: 300 },
+    { key: 'tile_sticker', cat: 'tile', name: 'Sticker Tiles', price: 250 },
+    { key: 'cos_crown', cat: 'costume', slot: 'hat', name: 'Royal Crown', price: 0, quest: 'iq_star5', svg: SV('<path d="M14 56 L8 18 L32 36 L50 8 L68 36 L92 18 L86 56 Z" fill="#ffd34d" stroke="#000" stroke-width="3" stroke-linejoin="round"/><circle cx="50" cy="40" r="6" fill="#ff5a8a" stroke="#000" stroke-width="2"/><circle cx="28" cy="46" r="4" fill="#5fd7ff" stroke="#000" stroke-width="2"/><circle cx="72" cy="46" r="4" fill="#7affc9" stroke="#000" stroke-width="2"/>') },
+    { key: 'cos_party', cat: 'costume', slot: 'hat', name: 'Party Hat', price: 150, svg: SV('<path d="M50 4 L28 62 L72 62 Z" fill="#7ac8ff" stroke="#000" stroke-width="3" stroke-linejoin="round"/><path d="M38 36 L62 36 M33 50 L67 50" stroke="#ff7ad9" stroke-width="5"/><circle cx="50" cy="6" r="6" fill="#ffd34d" stroke="#000" stroke-width="2"/>') },
+    { key: 'cos_cowboy', cat: 'costume', slot: 'hat', name: 'Cowboy Hat', price: 200, svg: SV('<ellipse cx="50" cy="54" rx="46" ry="10" fill="#a8693a" stroke="#000" stroke-width="3"/><path d="M28 54 C28 20 36 14 50 22 C64 14 72 20 72 54 Z" fill="#c07a44" stroke="#000" stroke-width="3"/><path d="M29 46 H71" stroke="#5a2a10" stroke-width="5"/>') },
+    { key: 'cos_shades', cat: 'costume', slot: 'face', name: 'Cool Shades', price: 200, svg: SV('<path d="M6 22 H94" stroke="#000" stroke-width="5"/><rect x="12" y="20" width="32" height="22" rx="9" fill="#1b0b33" stroke="#000" stroke-width="3"/><rect x="56" y="20" width="32" height="22" rx="9" fill="#1b0b33" stroke="#000" stroke-width="3"/><path d="M18 26 l8 0" stroke="#fff" stroke-width="3"/>') },
+    { key: 'cos_bowtie', cat: 'costume', slot: 'neck', name: 'Bow Tie', price: 150, svg: SV('<path d="M50 35 L14 14 L14 56 Z M50 35 L86 14 L86 56 Z" fill="#ff5a8a" stroke="#000" stroke-width="3" stroke-linejoin="round"/><circle cx="50" cy="35" r="9" fill="#ff9ac0" stroke="#000" stroke-width="3"/>') },
+    { key: 'cos_scarf', cat: 'costume', slot: 'neck', name: 'Cozy Scarf', price: 200, svg: SV('<path d="M8 22 Q50 46 92 22 L92 36 Q50 60 8 36 Z" fill="#ff8a3c" stroke="#000" stroke-width="3"/><path d="M66 40 L72 68 L84 64 L78 36" fill="#ff8a3c" stroke="#000" stroke-width="3"/><path d="M30 34 v8 M50 40 v8 M70 34 v8" stroke="#fff" stroke-width="3"/>') },
+    { key: 'cos_cape', cat: 'costume', slot: 'back', name: 'Hero Cape', price: 300, svg: '<svg viewBox="0 0 200 80"><path d="M70 6 Q100 16 130 6 L170 76 Q100 60 30 76 Z" fill="#d8334a" stroke="#000" stroke-width="3" stroke-linejoin="round"/><path d="M100 22 l6 12 13 2 -10 9 3 13 -12 -7 -12 7 3 -13 -10 -9 13 -2 Z" fill="#ffd34d" stroke="#000" stroke-width="2"/></svg>' }
+  ];
+  var COSM = {
+    list: COSM_LIST,
+    get: function (k) { for (var i = 0; i < COSM_LIST.length; i++) if (COSM_LIST[i].key === k) return COSM_LIST[i]; return null; },
+    st: function (S) { S.cosm = S.cosm || {}; S.cosm.owned = S.cosm.owned || {}; S.cosm.eq = S.cosm.eq || {}; return S.cosm; },
+    owned: function (S, k) { return !!COSM.st(S).owned[k]; },
+    give: function (S, k) { var c = COSM.get(k); if (!c) return false; COSM.st(S).owned[k] = 1; return true; },
+    buy: function (S, k) { var c = COSM.get(k); if (!c || c.quest || COSM.owned(S, k) || (S.coins || 0) < c.price) return false; S.coins -= c.price; COSM.give(S, k); COSM.equip(S, k); return true; },
+    slotOf: function (c) { return c.cat === 'costume' ? 'c_' + c.slot : c.cat; },
+    equip: function (S, k) { var c = COSM.get(k); if (!c || !COSM.owned(S, k)) return false; var e = COSM.st(S).eq, s = COSM.slotOf(c); e[s] = e[s] === k ? '' : k; return e[s] === k; },
+    worn: function (S, cat) { var e = COSM.st(S).eq; return e[cat] || ''; },
+    costumes: function (S) { var e = COSM.st(S).eq, out = []; for (var s in e) if (s.indexOf('c_') === 0 && e[s]) { var c = COSM.get(e[s]); if (c && COSM.owned(S, c.key)) out.push(c); } return out; }
+  };
+
+  // ---------------- HELPFUL ITEMS ----------------
+  var ITEMS = [
+    { key: 'shield', icon: '\ud83d\udee1\ufe0f', name: 'Boss Shield', price: 120, desc: 'Blocks the next boss attack (used automatically).' },
+    { key: 'snooze', icon: '\ud83d\ude34', name: 'Boss Snooze', price: 100, desc: 'The boss naps for 3 extra moves at the start of its fight.' },
+    { key: 'clover', icon: '\ud83c\udf40', name: 'Lucky Clover', price: 150, desc: '+50% coins on your next win.' },
+    { key: 'battery', icon: '\ud83d\udd0c', name: 'Spare Battery', price: 180, desc: '+1 power use in your next level.' }
+  ];
+  var ITEM = {
+    list: ITEMS,
+    count: function (S, k) { return (S.items && S.items[k]) || 0; },
+    give: function (S, k, n) { S.items = S.items || {}; S.items[k] = (S.items[k] || 0) + (n || 1); },
+    use: function (S, k) { if (ITEM.count(S, k) <= 0) return false; S.items[k]--; return true; },
+    buy: function (S, k) { var it = ITEMS.filter(function (x) { return x.key === k; })[0]; if (!it || (S.coins || 0) < it.price) return false; S.coins -= it.price; ITEM.give(S, k, 1); return true; }
+  };
+
+  // ---------------- NEW COMPANIONS (shop or quest) ----------------
+  var NEWPETS = {
+    shop: { rodeobull: 800, skydragon: 1200 },
+    quest: { cosmicbull: 'iq_win15', shadowdragon: 'iq_boss3' },
+    buy: function (S, key) { var p = NEWPETS.shop[key]; S.adopt = S.adopt || { owned: {} }; S.adopt.owned = S.adopt.owned || {}; if (!p || S.adopt.owned[key] || (S.coins || 0) < p) return false; S.coins -= p; S.adopt.owned[key] = Date.now(); S.adopt.active = key; return true; }
+  };
+
+  // ---------------- BOSS INTRO CUTSCENE ----------------
+  var BOSSCUT = {
+    plan: function (petName, B, ev) {
+      var lines = ['{p} spots {b} up ahead. "You won\u2019t mess with MY friends!"', '{p} stretches, sniffs the air... "{b}, it\u2019s showtime!"', '{p} puffs up big and brave. "Ready when you are, {b}!"'];
+      var i = (petName.length + B.name.length) % lines.length;
+      return { act: 'chase', prop: B.icon, line: lines[i].replace('{p}', petName).replace(/\{b\}/g, B.name), ms: 3800, spooky: !!(ev && ev.id === 'halloween'), boss: true };
+    }
+  };
+
+  // ---------------- DAILY REWARD (auto-clicker fix) ----------------
+  // Pure. Marks the day claimed and records a monotonic timestamp BEFORE the caller grants anything.
+  // Rejects: same calendar day, clock rolled back past the last claim. (Busy re-entry is blocked in game.js.)
+  var DAILY = {
+    claim: function (S, nowMs, day, yday, nRewards) {
+      if (S.lastDaily === day) return { ok: false, why: 'claimed' };
+      if (S.lastDailyTs && nowMs < S.lastDailyTs) return { ok: false, why: 'clock' };
+      if (S.lastDaily && day < S.lastDaily) return { ok: false, why: 'clock' };
+      var streak = S.lastDaily === yday ? (S.streak || 0) : 0, idx = streak % (nRewards || 7);
+      S.streak = streak + 1; S.lastDaily = day; S.lastDailyTs = nowMs;
+      return { ok: true, idx: idx, streak: S.streak };
+    }
+  };
+
+
+  // ---------------- BULK BUY (Kristi: "5x, 10x (max) buy abilities") ----------------
+  // 1x full price, 5x = 5% off, 10x (max per tap) = 10% off. Pure: returns cost; caller grants.
+  var BULK = {
+    QTY: [1, 5, 10], MAX: 10,
+    cost: function (price, n) { n = Math.max(1, Math.min(BULK.MAX, n | 0)); return Math.round(price * n * (n >= 10 ? 0.9 : n >= 5 ? 0.95 : 1)); },
+    can: function (S, price, n) { return (S.coins || 0) >= BULK.cost(price, n); },
+    pay: function (S, price, n) { var c = BULK.cost(price, n); if ((S.coins || 0) < c) return false; S.coins -= c; return c; }
+  };
+
+  // ---------------- EXTRA WAYS TO EARN 3 STARS ----------------
+  // Base rule unchanged (1 for winning, +1 moves left, +1 bonus goal). NEW: any ONE of these can replace one missing
+  // star (cap: +1 star, max 3): fire a SUPER, catch the Wild Axolotl, beat a boss level, win without boosters.
+  var STARWAYS = {
+    list: [
+      { k: 'super', t: 'Fire a SUPER move', ok: function (r) { return (r.supers || 0) > 0; } },
+      { k: 'axo', t: 'Catch the Wild Axolotl', ok: function (r) { return !!r.axo; } },
+      { k: 'boss', t: 'Defeat a boss', ok: function (r) { return !!r.bossWin; } },
+      { k: 'clean', t: 'Win with no boosters', ok: function (r) { return !r.boosters; } }
+    ],
+    met: function (r) { return STARWAYS.list.filter(function (w) { return w.ok(r || {}); }).map(function (w) { return w.k; }); },
+    stars: function (base, r) { return Math.min(3, base + (base < 3 && STARWAYS.met(r).length ? 1 : 0)); }
+  };
+
+  // ---------------- WILD AXOLOTL EVENT ----------------
+  // Rare: from move 3 onward, 6% per move (max once per level, never on boss levels' first 2 moves). It hides on a tile
+  // for 3 moves; pop that tile to catch it: +3 moves, +40 coins, counts as a star way. Pure roll so it is testable.
+  var AXO = {
+    CHANCE: 0.06, STAY: 3, COINS: 40, MOVES: 3,
+    explain: 'A Wild Axolotl wandered onto your board! Pop the tile it is hiding on within 3 moves to catch it: +3 moves, +40 coins and it can earn you a bonus star.',
+    roll: function (G, rand) { if (!G || G.axoSeen || G.over || (G.movesMade || 0) < 3) return false; if (rand() >= AXO.CHANCE) return false; G.axoSeen = 1; return true; },
+    tick: function (A) { if (!A) return null; A.left--; return A.left <= 0 ? 'gone' : null; }
+  };
+
+  // ---------------- HOW-TO for quest/twist mechanics ----------------
+  var HOWTO = [
+    { k: 'sleepy', icon: '\ud83d\udca4', t: 'Sleepy pets', d: 'Pets with ZZ are napping. Pop a pet right next to one to wake it. Each wake counts for the goal. If nobody wakes it, it rolls over into a different pet (still asleep).' },
+    { k: 'trail', icon: '\ud83d\udc3e', t: 'Paw prints', d: 'A trail of paw prints is on the board. Pop the pets sitting on the prints, starting from the bottom, to follow the trail to the end.' },
+    { k: 'snack', icon: '\ud83c\udf6a', t: 'Snack delivery', d: 'Snacks drop in from the top. Clear the pets under a snack until it reaches the bottom row to deliver it.' },
+    { k: 'hide', icon: '\ud83c\udf3f', t: 'Hide and seek', d: 'Baby pets hide in bushes. Pop pets next to a bush to rustle it and find the baby.' },
+    { k: 'tides', icon: '\ud83c\udf0a', t: 'Tides', d: 'Every few moves the bottom row slides one step right. Plan around it to get free matches.' },
+    { k: 'night', icon: '\ud83c\udf19', t: 'Day and night', d: 'At night glowing pets score double and count toward the moonlight goal.' },
+    { k: 'buddy', icon: '\ud83e\udd1d', t: 'Buddies', d: 'Make a match that touches two buddy pets at once to reunite them.' },
+    { k: 'echo', icon: '\ud83d\udd0a', t: 'Echoes', d: 'Some matches echo and pop again two moves later. Echo matches count for the goal.' },
+    { k: 'bubble', icon: '\ud83e\udee7', t: 'Bubbles', d: 'Pets in bubbles must be matched to pop the bubble.' },
+    { k: 'boss', icon: '\ud83d\udc7e', t: 'Boss fights', d: 'Every match hurts the boss. Finishing a goal hits for 25%. Watch the warning: the boss telegraphs its super move one turn early (locks, fog, move theft, scramble). A Boss Shield blocks one attack.' },
+    { k: 'axo', icon: '\ud83e\udd8e', t: 'Wild Axolotl', d: 'Sometimes a Wild Axolotl appears. Pop its tile within 3 moves for +3 moves, +40 coins and a bonus star chance.' },
+    { k: 'iquest', icon: '\ud83d\udc80', t: 'Impossible Quests', d: 'Only on Impossible difficulty. Finish quests for coins, cosmetics and rare companions. Claim each reward once in the Quests screen.' }
+  ];
+
+  var API = { DIFF: DIFF, SUPERUSE: SUPERUSE, BOSS: BOSS, IQUEST: IQUEST, COSM: COSM, ITEM: ITEM, NEWPETS: NEWPETS, BOSSCUT: BOSSCUT, DAILY: DAILY, BULK: BULK, STARWAYS: STARWAYS, AXO: AXO, HOWTO: HOWTO };
+  for (var k in API) root[k] = API[k];
+  if (typeof module !== 'undefined') module.exports = API;
 })(typeof window !== 'undefined' ? window : globalThis);
 </script><script>// Adorapets - UI, animation, audio, themed worlds, rewards, boosters and ads
 (function () {
@@ -2623,7 +2946,7 @@ window.GAMES_CONFIG = {
   }
   var FRIEND_AT = 30; // v8: rescue this many of an animal to befriend it (was 20)
   var OLD_FRIEND_AT = 20;
-  migrate();
+  migrate(); DIFF.migrate(S);
   // v8 migration: anyone who was already a friend under the old 20-rescue rule stays a friend.
   if (!S.v8) { S.v8 = 1; S.grand = S.grand || {}; for (var gk in (S.rescued || {})) if (S.rescued[gk] >= OLD_FRIEND_AT) S.grand[gk] = 1; }
   S.grand = S.grand || {};
@@ -2759,12 +3082,18 @@ window.GAMES_CONFIG = {
   var PRICE = { hammer: 70, row: 90, shuffle: 45, moves5: 90, hint: 20, sbomb: 60, sline: 50, srainbow: 140 }; // v10: ~40% cheaper (Kristi's list #1)
   function rewardText(r) { return r.c + ' coins' + (r.b ? ' + ' + BNAME[r.b] : '') + (r.life ? ' + full lives' : ''); }
   function dailyState() { var claimed = S.lastDaily === today(), streak = claimed ? S.streak : (S.lastDaily === yesterday() ? S.streak : 0); return { claimed: claimed, streak: streak, idx: claimed ? (streak - 1) % 7 : streak % 7 }; }
+  var dailyClaiming = false;
   function dailyModal(after) {
     var d = dailyState();
     var days = REWARDS.map(function (r, i) { return '<div class="day ' + (i < d.idx || (d.claimed && i === d.idx) ? 'done ' : '') + (i === d.idx ? 'today' : '') + '">Day ' + (i + 1) + '<br><b>' + r.c + '</b>' + (r.b ? '<br>' + BICON[r.b] : '') + '</div>'; }).join('');
     modal('<h2>Daily Reward</h2><div>Streak: ' + d.streak + ' day' + (d.streak === 1 ? '' : 's') + '</div><div class="days">' + days + '</div>' + (d.claimed ? '<p>Come back tomorrow!</p><button class="btn" id="dClose">OK</button>' : '<button class="btn" id="dClaim">Claim ' + rewardText(REWARDS[d.idx]) + '</button>'));
     if (d.claimed) $('dClose').onclick = function () { closeModal(); if (after) after(); };
-    else $('dClaim').onclick = function () { var r = REWARDS[d.idx]; S.streak = d.streak + 1; S.lastDaily = today(); S.coins += r.c; if (r.b) S.boost[r.b]++; if (r.life) S.lives = Math.max(S.lives, MAX_LIVES); save(); sfx.coin(); closeModal(); refreshAll(); if (after) after(); };
+    // v13 #10 auto-clicker fix: one guarded claim per calendar day. Button disabled + re-entry lock, claim recorded and
+    // SAVED before anything is granted, clock rollbacks rejected (monotonic S.lastDailyTs). See DAILY.claim in v13.js.
+    else $('dClaim').onclick = function () { var btn = this; if (dailyClaiming || btn.disabled) return; dailyClaiming = true; btn.disabled = true;
+      try { var res = DAILY.claim(S, Date.now(), today(), yesterday(), REWARDS.length); if (!res.ok) { if (res.why === 'clock') toast('⏰ Your clock looks off - daily reward paused'); closeModal(); refreshAll(); if (after) after(); return; }
+        save(); var r = REWARDS[res.idx]; S.coins += r.c; if (r.b) S.boost[r.b] = (S.boost[r.b] || 0) + 1; if (r.life) S.lives = Math.max(S.lives, MAX_LIVES); save(); sfx.coin(); closeModal(); refreshAll(); if (after) after(); }
+      finally { setTimeout(function () { dailyClaiming = false; }, 400); } };
   }
 
   // --- achievements / milestones -------------------------------------------------
@@ -2790,13 +3119,16 @@ window.GAMES_CONFIG = {
   function refreshGoals() {
     var D = daily(), h = '<div class="gsec">\ud83c\udfaf Today\u2019s goals <span class="gtimer" id="gTimer"></span></div>';
     GOALS.dailyFor(D.day).forEach(function (g) { var v = Math.min(g.n, D.prog[g.m] || 0), done = D.done[g.id]; h += '<div class="rcard' + (done ? ' done' : '') + '"><b>' + (done ? '\u2705 ' : '') + g.t + '</b><small>' + v + ' / ' + g.n + ' \u00b7 reward ' + g.c + ' coins' + (g.b ? ' + ' + BICON[g.b] + ' ' + BNAME[g.b] : '') + '</small><div class="pbar"><i style="width:' + (v / g.n * 100) + '%"></i></div></div>'; });
+    h += '<div class="gsec">\ud83d\udc80 Impossible Quests' + (DIFF.get(S) === 'impossible' ? '' : ' <small>(switch to Impossible in Settings to make progress)</small>') + '</div>';
+    IQUEST.state(S).forEach(function (q) { var r = q.r, rw = (r.c ? r.c + ' coins' : '') + (r.cos ? ' + ' + COSM.get(r.cos).name : '') + (r.pet && PETS.BY_KEY[r.pet] ? ' + ' + PETS.BY_KEY[r.pet].name + ' companion' : ''); h += '<div class="rcard iq' + (q.claimed ? ' done' : '') + '"><b>' + (q.claimed ? '\u2705 ' : '') + q.t + '</b><small>' + q.have + ' / ' + q.n + ' \u00b7 ' + rw + '</small>' + (q.done && !q.claimed ? '<button class="btn small" data-iq="' + q.id + '">Claim</button>' : '') + '</div>'; });
+    h += '<div class="gsec">\ud83d\udcd6 How it works</div>'; HOWTO.forEach(function (x) { h += '<details class="howto"><summary>' + x.icon + ' ' + x.t + '</summary><p>' + x.d + '</p></details>'; });
     h += '<div class="fine">Finish all 3 for a bonus +75 coins + \ud83d\udca1. Rewards are added automatically \u2013 no ads needed.</div>';
     syncDerived();
     ['Journey', 'Collection', 'Pets', 'Twists', 'Skills'].forEach(function (cat) {
       h += '<div class="gsec">' + { Journey: '\ud83d\uddfa Journey', Collection: '\ud83d\udc96 Companion Collection', Pets: '\ud83d\udcd6 Pet Book (animals seen)', Twists: '\u2728 Twist master', Skills: '\u2b50 Skills' }[cat] + '</div>';
       ACH.filter(function (x) { return x.cat === cat; }).forEach(function (x) { var v = Math.min(x.v(), x.goal), done = S.ach[x.id]; h += '<div class="rcard' + (done ? ' done' : '') + '"><b>' + x.t + '</b><small>' + (done ? 'Claimed' : v + ' / ' + x.goal + ' \u00b7 ' + x.c + ' coins' + (x.b ? ' + ' + BICON[x.b] : '')) + '</small>' + (!done && v >= x.goal ? '<button class="btn small" data-ach="' + x.id + '">Claim</button>' : '') + '<div class="pbar"><i style="width:' + (v / x.goal * 100) + '%"></i></div></div>'; });
     });
-    $('goalsList').innerHTML = h; bindAch(refreshGoals); tickTimer(); refreshPills();
+    $('goalsList').innerHTML = h; bindAch(refreshGoals); document.querySelectorAll('[data-iq]').forEach(function (b) { b.onclick = function () { b.disabled = true; var r = IQUEST.claim(S, b.dataset.iq); if (r) { save(); sfx.chest(); toast('\ud83d\udc80 Quest reward: +' + (r.c || 0) + ' coins'); } refreshGoals(); }; }); tickTimer(); refreshPills();
   }
   function tickTimer() { var e = $('gTimer'); if (!e) return; var ms = GOALS.msToMidnight(), hh = Math.floor(ms / 36e5), mm = Math.floor(ms / 6e4) % 60; e.textContent = '\u00b7 new goals in ' + hh + 'h ' + mm + 'm'; }
   setInterval(function () { if (curScreen === 'goalsScreen') tickTimer(); }, 30000);
@@ -2851,7 +3183,9 @@ window.GAMES_CONFIG = {
     try { refreshFeatured(); } catch (e) {}
   }
   function LITE_NO_DECO() { return /[?&]nodeco=1/.test(location.search); }
-  function costumeHTML() { var ev = curEvent(); return COSTUMES.visible(S, ev).map(function (c) { return '<div class="costume ' + c.slot + '">' + c.svg + '</div>'; }).join(''); }
+  function costumeHTML() { var ev = curEvent(), list = COSTUMES.visible(S, ev).concat(COSM.costumes(S).map(function (c) { return { slot: c.slot, svg: c.svg }; })); return list.map(function (c) { return '<div class="costume ' + c.slot + '">' + c.svg + '</div>'; }).join(''); }
+  // v13 board + tile skins
+  function applySkins() { var bw = $('boardWrap'); if (!bw) return; var bk = COSM.worn(S, 'board'), tk = COSM.worn(S, 'tile'), bc = bk && COSM.get(bk); bw.style.background = bc ? bc.sw : ''; bw.className = bw.className.replace(/\s?tskin-\S+/g, '') + (tk ? ' tskin-' + tk.replace('tile_', '') : ''); }
   function eventModal() {
     var ev = curEvent(); if (!ev) return; var d = today(), w = EV.window(ev, d) || { start: d, end: d }, dl = EV.daysLeft(ev, d);
     var fmt = function (x) { return x.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }, last = new Date(w.end.getTime() - 864e5);
@@ -2880,12 +3214,12 @@ window.GAMES_CONFIG = {
   // ---- v11 snack cutscene after a major boss win ------------------------------------
   var LEAF = '<svg viewBox="0 0 40 40"><path d="M6 34 C6 14 20 4 36 4 C36 22 26 34 6 34 Z" fill="#ff9a3c" stroke="#000" stroke-width="2.5"/><path d="M6 34 L28 12" stroke="#000" stroke-width="2"/></svg>';
   var SPARK = '<svg viewBox="0 0 40 40"><path d="M20 2 L24 16 L38 20 L24 24 L20 38 L16 24 L2 20 L16 16 Z" fill="#ffd36e" stroke="#000" stroke-width="2"/></svg>';
-  function cutscene(snack, done) {
+  function cutscene(snack, done, bossPreview) {
     var c = activeSpecial() || COMP.featured(S); if (!c) { done(); return; }
-    var ev = curEvent(), plan = CUTSCENE.pick(c.special ? c.special : c, ev, snack), svg = c.special ? PETS.animalSVG(c.special, 0) : c.svg ? PETS.animalSVG(c, 0) : COMP.svg(c);
+    var ev = curEvent(), plan = bossPreview ? BOSSCUT.plan(c.name || 'Your pet', bossPreview, ev) : CUTSCENE.pick(c.special ? c.special : c, ev, snack), svg = c.special ? PETS.animalSVG(c.special, 0) : c.svg ? PETS.animalSVG(c, 0) : COMP.svg(c);
     try { svg = activeSpecial() ? PETS.animalSVG(activeSpecial(), 0) : COMP.svg(c); } catch (e) {}
     var propSVG = plan.prop === 'bat' ? SPOOK.bat : plan.prop === 'leaf' ? LEAF : plan.prop === 'pumpkin' ? SPOOK.pumpkin : plan.prop === 'moon' ? SPOOK.moon : plan.prop === 'sparkle' ? SPARK : '<span class="cs-food">' + plan.prop + '</span>';
-    var d = document.createElement('div'); d.id = 'cutscene'; d.className = 'cs-' + plan.act + (plan.spooky ? ' spooky' : '');
+    var d = document.createElement('div'); d.id = 'cutscene'; d.className = 'cs-' + plan.act + (plan.spooky ? ' spooky' : '') + (plan.boss ? ' cs-boss' : '');
     d.innerHTML = '<div class="cs-stage"><div class="cs-prop">' + propSVG + '</div><div class="cs-pet">' + costumeHTML() + '<div class="fpsvg">' + svg + '</div></div><div class="cs-crumbs"></div></div><div class="cs-line">' + plan.line + '</div><div class="cs-skip">Tap to skip \u25b6</div>';
     document.body.appendChild(d); sfx.happy(); var fin = false, t;
     function end() { if (fin) return; fin = true; clearTimeout(t); d.classList.add('out'); setTimeout(function () { d.remove(); done(); }, 250); }
@@ -3012,7 +3346,10 @@ window.GAMES_CONFIG = {
       Sx.animals.forEach(function (a) { h += specialCard(a); });
       h += '</div></div>';
     });
-    return h;
+    var gotC = PETS.V13.filter(function (a) { return S.adopt.owned[a.key]; }).length;
+    h += '<div class="colworld special champ13" style="--wa:#3a2f55;--wb:#ff9a2e"><h3>\ud83c\udfc6 Champion Corral <span class="rar legendary">CHAMPION</span></h3><p class="fine">' + gotC + '/' + PETS.V13.length + ' \u00b7 Bruno &amp; Zephyr are in the Shop; Nova &amp; Onyx are Impossible-quest rewards.</p><div class="colrow">';
+    PETS.V13.forEach(function (a) { h += specialCard(a); });
+    return h + '</div></div>';
   }
   function specialCard(a) {
     var own = !!S.adopt.owned[a.key], act = S.adopt.active === a.key;
@@ -3021,7 +3358,7 @@ window.GAMES_CONFIG = {
   function bindAdopt() {
     document.querySelectorAll('[data-egg]').forEach(function (b) { b.onclick = function () { hatch(b.dataset.egg); }; });
     document.querySelectorAll('[data-skey]').forEach(function (b) { b.onclick = function () {
-      var a = PETS.BY_KEY[b.dataset.skey]; if (!S.adopt.owned[a.key]) { modal('<h2>Mystery friend</h2><div class="petbig locked">' + PETS.animalSVG(a, 0) + '</div><p>Hatch a ' + (a.rarity === 'rare' ? 'Ranch Egg' : 'Star Egg') + ' to find this ' + (a.rarity === 'rare' ? 'rare' : 'legendary') + ' pet!</p><button class="btn" id="sOk">OK</button>'); $('sOk').onclick = closeModal; return; }
+      var a = PETS.BY_KEY[b.dataset.skey]; if (!S.adopt.owned[a.key]) { modal('<h2>Mystery friend</h2><div class="petbig locked">' + PETS.animalSVG(a, 0) + '</div><p>' + (a.section === 'champ13' ? (NEWPETS.shop[a.key] ? 'Buy this champion in the Shop for \u25cf ' + NEWPETS.shop[a.key] + '!' : 'Win this champion from an Impossible quest!') : 'Hatch a ' + (a.rarity === 'rare' ? 'Ranch Egg' : 'Star Egg') + ' to find this ' + (a.rarity === 'rare' ? 'rare' : 'legendary') + ' pet!') + '</p><button class="btn" id="sOk">OK</button>'); $('sOk').onclick = closeModal; return; }
       var pw = powerFor(a.key);
       modal('<h2>' + a.name + '</h2><div class="petbig">' + PETS.animalSVG(a, 0) + '</div><p class="fine">' + a.kind + '</p><p>\u26a1 <b>' + pw.name + '</b>: ' + pw.desc + '</p>' + (S.adopt.active === a.key ? '<button class="btn alt" disabled>\u2b50 Already your pet</button>' : '<button class="btn" id="sSet">\u2b50 Set as my pet</button>') + '<button class="btn alt small" id="sOk">Close</button>');
       if ($('sSet')) $('sSet').onclick = function () { S.adopt.active = a.key; save(); sfx.happy(); closeModal(); refreshCollection(); refreshFeatured(); };
@@ -3070,12 +3407,12 @@ window.GAMES_CONFIG = {
     { key: 'starter', icon: '\ud83d\ude80', name: 'Starter Bundle', price: 200, desc: 'Start Bomb + Line Pet + Rainbow (save 50)', give: function () { ['sbomb', 'sline', 'srainbow'].forEach(function (k) { S.boost[k] = (S.boost[k] || 0) + 1; }); } },
     { key: 'hints5', icon: '\ud83d\udca1', name: '5 Hints', price: 80, desc: 'Five hints (save 20)', give: function () { S.boost.hint = (S.boost.hint || 0) + 5; } },
     { key: 'snackbox', icon: '\ud83e\uddfa', name: 'Snack Basket', price: 150, desc: '1 Cookie, 1 Carrot, 1 Fishy Treat, 1 Berry', give: function () { ['cookie', 'carrot', 'fish', 'berry'].forEach(function (k) { SNACKS.give(S, k, 1); }); } },
-    { key: 'charge', icon: '\ud83d\udd0b', name: 'Power Charge', price: 100, desc: 'Fill your companion\u2019s power meter', can: function () { return S.power.energy < POWER_FULL; }, give: function () { S.power.energy = Math.max(S.power.energy, POWER_FULL); } },
+    { key: 'charge', icon: '\ud83d\udd0b', name: 'Power Charge', price: 100, desc: 'Fill your companion\u2019s power meter', can: function () { return S.power.energy < pFull(); }, give: function () { S.power.energy = Math.max(S.power.energy, pFull()); } },
     { key: 'spark', icon: '\u26a1', name: 'Super Spark', price: 250, desc: 'Start any level with the SUPER move ready', give: function () { S.sparks = (S.sparks || 0) + 1; } }
   ];
   function refreshShop() {
     var h = '<div class="fine">Boosters are also earned from daily rewards, chests, bosses and milestones.</div>';
-    Object.keys(PRICE).forEach(function (k) { h += '<div class="rcard"><b>' + BICON[k] + ' ' + BNAME[k] + '</b><small>' + boostDesc(k) + ' \u00b7 you have ' + (S.boost[k] || 0) + '</small><button class="btn small" data-buy="' + k + '" ' + (S.coins >= PRICE[k] ? '' : 'disabled') + '>\u25cf ' + PRICE[k] + '</button></div>'; });
+    Object.keys(PRICE).forEach(function (k) { h += '<div class="rcard"><b>' + BICON[k] + ' ' + BNAME[k] + '</b><small>' + boostDesc(k) + ' \u00b7 you have ' + (S.boost[k] || 0) + '</small><span class="qty">' + BULK.QTY.map(function (n) { return '<button class="btn small q' + n + '" data-buy="' + k + '" data-n="' + n + '" ' + (BULK.can(S, PRICE[k], n) ? '' : 'disabled') + '>' + (n > 1 ? (n === 10 ? 'x10 MAX ' : 'x' + n + ' ') : '') + '\u25cf ' + BULK.cost(PRICE[k], n) + '</button>'; }).join('') + '</span></div>'; });
     h += '<div class="rcard"><b>\u2764 Refill lives</b><small>Back to ' + MAX_LIVES + ' lives</small><button class="btn small" id="buyLives" ' + (S.coins >= 200 && S.lives < MAX_LIVES ? '' : 'disabled') + '>\u25cf 200</button></div>';
     // v10 #9 more shop items: snacks, bundles, power charges
     var ev = curEvent();
@@ -3083,18 +3420,41 @@ window.GAMES_CONFIG = {
     SNACKS.forSale(ev).forEach(function (x) { h += '<div class="rcard' + (x.event ? ' evitem' : '') + '"><b>' + x.icon + ' ' + x.name + (x.event ? ' <em>' + (ev ? ev.emoji : '') + ' event</em>' : '') + '</b><small>' + x.desc + ' \u00b7 you have ' + SNACKS.count(S, x.key) + '</small><button class="btn small" data-snackbuy="' + x.key + '" ' + (S.coins >= x.price ? '' : 'disabled') + '>\u25cf ' + x.price + '</button></div>'; });
     h += '<h3 class="shophead">\ud83c\udf81 Bundles & extras</h3>';
     EXTRA_ITEMS.forEach(function (x) { var ok = S.coins >= x.price && (!x.can || x.can()); h += '<div class="rcard"><b>' + x.icon + ' ' + x.name + '</b><small>' + x.desc + '</small><button class="btn small" data-xbuy="' + x.key + '" ' + (ok ? '' : 'disabled') + '>\u25cf ' + x.price + '</button></div>'; });
+    // v13: helpful boss items, x5 / x10 bulk buys, cosmetics and new companions
+    var QB = function (attr, key, price) { return '<span class="qty">' + BULK.QTY.map(function (n) { return '<button class="btn small q' + n + '" data-' + attr + '="' + key + '" data-n="' + n + '" ' + (BULK.can(S, price, n) ? '' : 'disabled') + '>' + (n > 1 ? (n === 10 ? 'x10 MAX ' : 'x' + n + ' ') : '') + '\u25cf ' + BULK.cost(price, n) + '</button>'; }).join('') + '</span>'; };
+    h += '<h3 class="shophead">\ud83d\udee1\ufe0f Helpful items</h3><div class="fine">Used automatically when they help. x5 saves 5%, x10 (max) saves 10%.</div>';
+    ITEM.list.forEach(function (x) { h += '<div class="rcard"><b>' + x.icon + ' ' + x.name + '</b><small>' + x.desc + ' \u00b7 you have ' + ITEM.count(S, x.key) + '</small>' + QB('ibuy', x.key, x.price) + '</div>'; });
+    h += '<h3 class="shophead">\ud83c\udfa8 Customize</h3><div class="fine">Boards, tile skins and costumes. Tap an owned one to wear it (tap again to take it off).</div><div class="cosgrid">';
+    COSM.list.forEach(function (c) { var own = COSM.owned(S, c.key), on = COSM.worn(S, COSM.slotOf(c)) === c.key, sw = c.cat === 'board' ? '<i class="sw" style="background:' + c.sw + '"></i>' : c.cat === 'tile' ? '<i class="sw tskin-' + c.key.replace('tile_', '') + '"><span class="tdemo"></span></i>' : '<i class="sw cos">' + c.svg + '</i>';
+      h += '<button class="coscard' + (on ? ' on' : '') + (own ? ' own' : '') + '" data-cos="' + c.key + '" ' + (!own && (c.quest || S.coins < c.price) ? 'disabled' : '') + '>' + sw + '<b>' + c.name + '</b><small>' + (on ? '\u2714 wearing' : own ? 'owned' : c.quest ? '\ud83d\udc80 Impossible Quest' : '\u25cf ' + c.price) + '</small></button>'; });
+    h += '</div><h3 class="shophead">\ud83d\udc02\ud83d\udc09 Champion companions</h3>';
+    Object.keys(NEWPETS.shop).forEach(function (k) { var a = PETS.BY_KEY[k]; if (!a) return; var own = S.adopt && S.adopt.owned && S.adopt.owned[k]; h += '<div class="rcard"><b>' + a.name + ' the ' + a.kind + '</b><small>' + (own ? 'In your team!' : 'Own power + SUPER move') + '</small><button class="btn small" data-npet="' + k + '" ' + (!own && S.coins >= NEWPETS.shop[k] ? '' : 'disabled') + '>' + (own ? '\u2714' : '\u25cf ' + NEWPETS.shop[k]) + '</button></div>'; });
+    Object.keys(NEWPETS.quest).forEach(function (k) { var a = PETS.BY_KEY[k]; if (!a) return; var own = S.adopt && S.adopt.owned && S.adopt.owned[k]; h += '<div class="rcard"><b>' + a.name + ' the ' + a.kind + '</b><small>' + (own ? 'In your team!' : '\ud83d\udc80 Reward for an Impossible Quest') + '</small></div>'; });
     $('shopList').innerHTML = h;
+    document.querySelectorAll('[data-ibuy]').forEach(function (b) { b.onclick = function () { var it = ITEM.list.filter(function (x) { return x.key === b.dataset.ibuy; })[0], n = +b.dataset.n; if (!it || !BULK.pay(S, it.price, n)) return; ITEM.give(S, it.key, n); save(); sfx.coin(); toast(it.icon + ' ' + it.name + ' x' + n); refreshShop(); }; });
+    document.querySelectorAll('[data-cos]').forEach(function (b) { b.onclick = function () { var k = b.dataset.cos; if (COSM.owned(S, k)) COSM.equip(S, k); else if (!COSM.buy(S, k)) return; save(); sfx.coin(); applySkins(); refreshShop(); }; });
+    document.querySelectorAll('[data-npet]').forEach(function (b) { b.onclick = function () { if (NEWPETS.buy(S, b.dataset.npet)) { save(); sfx.chest(); toast('New companion!'); refreshShop(); } }; });
     document.querySelectorAll('[data-snackbuy]').forEach(function (b) { b.onclick = function () { if (SNACKS.buy(S, b.dataset.snackbuy)) { save(); sfx.coin(); refreshShop(); } }; });
     document.querySelectorAll('[data-xbuy]').forEach(function (b) { b.onclick = function () { var x = EXTRA_ITEMS.filter(function (i) { return i.key === b.dataset.xbuy; })[0]; if (!x || S.coins < x.price || (x.can && !x.can())) return; S.coins -= x.price; x.give(); save(); sfx.coin(); toast(x.icon + ' ' + x.name + '!'); refreshShop(); }; });
-    document.querySelectorAll('[data-buy]').forEach(function (b) { b.onclick = function () { var k = b.dataset.buy; if (S.coins < PRICE[k]) return; S.coins -= PRICE[k]; S.boost[k] = (S.boost[k] || 0) + 1; save(); sfx.coin(); refreshShop(); }; });
+    document.querySelectorAll('[data-buy]').forEach(function (b) { b.onclick = function () { var k = b.dataset.buy, n = +b.dataset.n || 1; if (!BULK.pay(S, PRICE[k], n)) return; S.boost[k] = (S.boost[k] || 0) + n; save(); sfx.coin(); refreshShop(); }; });
     $('buyLives').onclick = function () { if (S.coins < 200) return; S.coins -= 200; S.lives = MAX_LIVES; save(); sfx.coin(); refreshShop(); };
     refreshPills();
   }
   function boostDesc(k) { return { hammer: 'Smash any one tile', row: 'Clear a whole row', shuffle: 'Mix up the board', moves5: '+5 moves', hint: 'Show a good move', sbomb: 'Start with a bomb pet', sline: 'Start with a line pet', srainbow: 'Start with a Rainbow Axo' }[k]; }
 
+  function refreshQuestBtn() { var n = IQUEST.claimable(S).length; document.querySelectorAll('.goalsBtn').forEach(function (b) { b.classList.toggle('iqready', n > 0); }); }
   // --- settings ------------------------------------------------------------------
   var PRIVACY_URL = 'https://example.com/adorapets-privacy'; // TODO(Kristi): replace with your hosted privacy policy URL
-  function refreshSettings() { if ($('setSrTimer')) $('setSrTimer').checked = !!S.srTimer; if ($('setReduced')) $('setReduced').checked = !!S.reducedFx; $('setSfx').checked = S.sfxOn; $('setMusic').checked = S.music; $('volSfx').value = Math.round((S.sfxVol == null ? .8 : S.sfxVol) * 100); $('volMusic').value = Math.round((S.musVol == null ? .45 : S.musVol) * 100); $('privacyLink').href = PRIVACY_URL; if ($('setEvents')) $('setEvents').checked = !S.eventsOff; }
+  // v13 #1 difficulty: Easy/Normal/Hard/Impossible, saved in S.difficulty, changeable any time (even mid-level: the new
+  // setting applies from the next level start, but the leaderboard check uses the EASIEST setting seen during a level).
+  function refreshDiff() {
+    var seg = $('diffSeg'); if (!seg) return; var cur = DIFF.get(S);
+    seg.innerHTML = DIFF.KEYS.map(function (k) { var c = DIFF.CFG[k]; return '<button class="dbtn' + (k === cur ? ' on' : '') + '" data-diff="' + k + '">' + c.icon + '<b>' + c.label + '</b></button>'; }).join('');
+    var c = DIFF.CFG[cur]; $('diffNote').innerHTML = c.blurb + (DIFF.lbEligible(S) ? '' : '<br><b class="lbwarn">\ud83d\udeab Easier than Normal: wins on Easy don\u2019t count for leaderboards or season points.</b>') + (cur === 'impossible' ? '<br>\ud83d\udd25 Impossible Quests are live!' : '') + (G && !G.over ? '<br><small>\u23ed Level in progress: moves & boss strength change from your next level' + (G.dkMin && DIFF.CFG[G.dkMin].rank < DIFF.CFG.normal.rank ? '; this run no longer counts for leaderboards.' : '.') + '</small>' : '') + (G && !G.over && curScreen === 'game' ? '<br><i>Applies from your next level.</i>' : '');
+    seg.querySelectorAll('[data-diff]').forEach(function (b) { b.onclick = function () { setDifficulty(b.dataset.diff); }; });
+  }
+  function setDifficulty(k) { if (!DIFF.set(S, k)) return; if (G && !G.over && DIFF.CFG[k].rank < DIFF.CFG[G.dkMin || G.dk || 'normal'].rank) G.dkMin = k; save(); sfx.pop(2); refreshDiff(); if (typeof refreshQuestBtn === 'function') refreshQuestBtn(); }
+  function refreshSettings() { refreshDiff(); if ($('setSrTimer')) $('setSrTimer').checked = !!S.srTimer; if ($('setReduced')) $('setReduced').checked = !!S.reducedFx; $('setSfx').checked = S.sfxOn; $('setMusic').checked = S.music; $('volSfx').value = Math.round((S.sfxVol == null ? .8 : S.sfxVol) * 100); $('volMusic').value = Math.round((S.musVol == null ? .45 : S.musVol) * 100); $('privacyLink').href = PRIVACY_URL; if ($('setEvents')) $('setEvents').checked = !S.eventsOff; }
   document.querySelectorAll('.setBtn').forEach(function (b) { b.onclick = function () { refreshSettings(); show('settings'); }; });
   $('setBack').onclick = function () { show('title'); };
   $('setSfx').onchange = function () { S.sfxOn = this.checked; if (this.checked) S.muted = false; save(); syncMute(); };
@@ -3175,7 +3535,7 @@ window.GAMES_CONFIG = {
       if ($('adLife')) $('adLife').onclick = function () { Ads.showRewarded('extra_life', function () { S.lives++; save(); refreshPills(); preLevel(id); }, '+1 life'); };
       return;
     }
-    var L = GP.getLevel(id), w = L.world;
+    var L = DIFF.applyLevel(GP.getLevel(id), DIFF.get(S)), w = L.world;
     if (L.stage === 0 && !S.introSeen[w]) return worldIntro(w, function () { preLevel(id); });
     setTheme(w);
     var chosen = {}, freeBoost = null, snackK = null, useSpark = false;
@@ -3187,7 +3547,7 @@ window.GAMES_CONFIG = {
       $('pClose').onclick = closeModal;
       document.querySelectorAll('[data-snack]').forEach(function (b) { b.onclick = function () { var k = b.dataset.snack; snackK = snackK === k ? null : k; render(); }; });
       if ($('sparkBtn')) $('sparkBtn').onclick = function () { useSpark = !useSpark; render(); };
-      $('goBtn').onclick = function () { var use = []; START.forEach(function (k) { if (chosen[k]) { if (freeBoost !== k) S.boost[k]--; use.push(k); } }); var sn = snackK ? SNACKS.feed(S, snackK) : null; if (useSpark && S.sparks > 0) S.sparks--; else useSpark = false; save(); closeModal(); if (sn) toast(curPower().who + ' loved the ' + sn.name + '! ' + sn.desc); startLevel(id, use, sn, useSpark); };
+      $('goBtn').onclick = function () { var use = []; START.forEach(function (k) { if (chosen[k]) { if (freeBoost !== k) S.boost[k]--; use.push(k); } }); var sn = snackK ? SNACKS.feed(S, snackK) : null; if (useSpark && S.sparks > 0) S.sparks--; else useSpark = false; save(); closeModal(); if (sn) toast(curPower().who + ' loved the ' + sn.name + '! ' + sn.desc); if (L.boss) cutscene(null, function () { startLevel(id, use, sn, useSpark); }, BOSS.init(L, DIFF.get(S))); else startLevel(id, use, sn, useSpark); };
     }
     render();
   }
@@ -3227,13 +3587,16 @@ window.GAMES_CONFIG = {
     var changed = px !== lastFit; lastFit = px; return changed;
   }
   function startLevel(id, startBoosts, snack, spark) {
-    var L = GP.getLevel(id);
+    var L = DIFF.applyLevel(GP.getLevel(id), DIFF.get(S));
     SPEEDRUN.begin(S, id, Date.now()); save();
     setTheme(L.world);
     G = { L: L, board: GP.makeBoard(L.colors, Math.random, L.obstacles, L.crates, L), moves: L.moves, score: 0, collected: {}, combo: 0, over: false, usedRescue: false, coinsX: 1, boosters: (startBoosts || []).length, specials: 0, bestCombo: 0, powerUses: 0, doneGoals: {}, superSt: { since: S.superSince || 0 }, supers: 0 };
+    G.dk = G.dkMin = DIFF.get(S); G.pFull = SUPERUSE.full(id, G.dk); G.pUses = SUPERUSE.uses(id, G.dk) + (ITEM.use(S, 'battery') ? 1 : 0);
+    G.locks = {}; G.fog = null; G.boss = L.boss ? BOSS.init(L, G.dk) : null; G.bossGoals = 0;
+    if (G.boss && ITEM.use(S, 'snooze')) { BOSS.snooze(G.boss, 3); toast('\ud83d\ude34 Boss Snooze: ' + G.boss.name + ' naps 3 extra moves'); }
     G.iceStart = GP.iceLeft(G.board);
-    if (snack) { G.snack = snack; if (snack.perk === 'moves') G.moves += snack.n; if (snack.perk === 'power') S.power.energy = Math.min(POWER_FULL * 2, S.power.energy + snack.n); if (snack.perk === 'line') for (var sn = 0; sn < snack.n; sn++) GP.placeSpecial(G.board, Math.random() < .5 ? SP.ROW : SP.COL); }
-    if (spark) S.power.energy = POWER_FULL * 2; // v10 #12 Champion Spark: start with a SUPER move ready
+    if (snack) { G.snack = snack; if (snack.perk === 'moves') G.moves += snack.n; if (snack.perk === 'power') S.power.energy = Math.min(sFull(), S.power.energy + snack.n); if (snack.perk === 'line') for (var sn = 0; sn < snack.n; sn++) GP.placeSpecial(G.board, Math.random() < .5 ? SP.ROW : SP.COL); }
+    if (spark) S.power.energy = sFull(); // v10 #12 Champion Spark: start with a SUPER move ready
     (startBoosts || []).forEach(function (k) { GP.placeSpecial(G.board, k === 'sbomb' ? SP.BOMB : k === 'srainbow' ? SP.COLOR : (Math.random() < .5 ? SP.ROW : SP.COL)); });
     tool = null; show('game'); $('lvlName').textContent = (L.boss ? '\ud83d\udc51 ' : L.mini ? '\u2694\ufe0f ' : '') + 'Level ' + id; $('goalLine').textContent = goalTextFor(L, L.world); renderCheer('');
     refreshBoostBar(); refreshPower();
@@ -3286,7 +3649,7 @@ window.GAMES_CONFIG = {
     var c = $('cheer'); c.className = mode;
     c.innerHTML = cheerSquad().map(function (a, k) { return '<div class="cpet ' + mode + '" style="animation-delay:' + (k * .1) + 's">' + PETS.animalSVG(a, 0) + '</div>'; }).join('');
   }
-  function updateHud() {
+  function updateHud() { if (G && G.boss !== undefined) bossHud();
     $('moves').textContent = G.moves; $('score').textContent = G.score;
     var L = G.L, h = '', gl = goalList(L, G), t = G.board.tw;
     gl.forEach(function (x) { h += '<span class="goal' + (x.done ? ' done' : '') + '" data-g="' + x.key + '" title="' + x.label + '">' + x.icon + '<i>' + (x.done ? '\u2713' : x.have + '/' + x.need) + '</i></span>'; });
@@ -3309,7 +3672,7 @@ window.GAMES_CONFIG = {
   var SNACK_ICONS = ['\ud83c\udf30', '\ud83d\udc1f', '\ud83c\udf35', '\ud83c\udf66', '\ud83c\udf4c', '\u2b50', '\ud83e\udd55', '\ud83c\udf53', '\ud83c\udf44', '\ud83d\udc1a', '\ud83c\udf6d'];
   function SNACK() { return SNACK_ICONS[curWorld % SNACK_ICONS.length]; }
   // --- v8 power moves ---------------------------------------------------------------
-  // Energy: +1 per pet popped (any way). Full at POWER_FULL. Max POWER_PER_LEVEL uses per level.
+  // Energy: +1 per pet popped (any way). Full at POWER_FULL (scaled per level in v13, see pFull). Max POWER_PER_LEVEL uses per level (see pUses).
   var POWER_FULL = 45, POWER_PER_LEVEL = 2;
   var COMP_POWERS = [ // by companion base world (0..10)
     { name: 'Power Thump', fx: 'thump', desc: 'Lil Pip thumps the ground and shakes loose stuck crates, icy tiles, caged friends and sleepy pets.' },
@@ -3325,6 +3688,10 @@ window.GAMES_CONFIG = {
     { name: 'Sugar Sparkle', fx: 'rainbow', n: 1, desc: 'Princess Sprinkle makes a rainbow pet.' }
   ];
   var SPECIAL_POWERS = {
+    rodeobull: { name: 'Horn Hook', fx: 'rows', n: 2, desc: 'Bruno hooks 2 rows with his horns.' },
+    cosmicbull: { name: 'Star Stomp', fx: 'box', n: 2, desc: 'Nova stomps two starry 3x3 patches.' },
+    skydragon: { name: 'Storm Puff', fx: 'x', desc: 'Zephyr puffs a windy X across the board.' },
+    shadowdragon: { name: 'Shadow Claw', fx: 'cross', desc: 'Onyx slashes a big plus shape.' },
     highland: { name: 'Shaggy Stampede', fx: 'cols', n: 2, desc: 'Shaggy charges down 2 columns!' },
     bison: { name: 'Boulder Bash', fx: 'box', n: 2, desc: 'Boulder bashes two 3x3 patches.' },
     goldbull: { name: 'Golden Horns', fx: 'rows', n: 2, desc: 'Goldie sweeps 2 rows with shiny horns.' },
@@ -3340,6 +3707,12 @@ window.GAMES_CONFIG = {
   // v10 #3: every companion has a SUPER move. Keep matching after the meter is full: it overcharges to 2x and the
   // button turns into SUPER. Supers reuse the power effects (fx) and can stack extra shapes via `also`.
   var SUPER_FULL = POWER_FULL * 2;
+  // v13 #4: supers get rarer as levels + difficulty rise. Per-level meter size and use cap come from SUPERUSE (v13.js):
+  //   full = round(45 * (1 + min(0.6, (level-1)/250)) * superMul[difficulty])   (super = 2x full)
+  //   uses = Easy 2 | Normal 2 (<L100) else 1 | Hard 2 (<L50) else 1 | Impossible 1   (+1 with a Spare Battery)
+  function pFull() { return (G && G.pFull) || POWER_FULL; }
+  function sFull() { return pFull() * 2; }
+  function pUses() { return G && G.pUses != null ? G.pUses : POWER_PER_LEVEL; }
   var COMP_SUPERS = [
     { name: 'Mega Thump', fx: 'thump', also: [{ fx: 'cross' }], desc: 'Lil Pip does a MEGA thump: frees every stuck thing and blasts a big plus.' },
     { name: 'Tidal Anchor', fx: 'cols', n: 3, desc: 'Captain Nori clears 3 whole columns.' },
@@ -3354,6 +3727,10 @@ window.GAMES_CONFIG = {
     { name: 'Sugar Rush', fx: 'rainbow', n: 3, desc: 'Princess Sprinkle makes 3 rainbow pets.' }
   ];
   var SPECIAL_SUPERS = {
+    rodeobull: { name: 'Bull Rush', fx: 'cols', n: 2, also: [{ fx: 'rows', n: 2 }], desc: 'Bruno rushes 2 columns AND 2 rows!' },
+    cosmicbull: { name: 'Meteor Stampede', fx: 'bombs', n: 5, desc: 'Nova calls 5 meteors down on the board.' },
+    skydragon: { name: 'Thunder Breath', fx: 'fire', also: [{ fx: 'x' }], desc: 'Zephyr breathes lightning: a fire stripe plus an X.' },
+    shadowdragon: { name: 'Eclipse Roar', fx: 'color', also: [{ fx: 'fire' }], desc: 'Onyx roars: one color vanishes and a fire stripe blazes.' },
     highland: { name: 'Thundering Herd', fx: 'cols', n: 4, desc: 'Shaggy and friends charge down 4 columns!' },
     bison: { name: 'Prairie Quake', fx: 'box', n: 5, desc: 'Boulder bashes five 3x3 patches.' },
     goldbull: { name: 'Golden Rush', fx: 'rows', n: 4, desc: 'Goldie sweeps 4 rows.' },
@@ -3375,12 +3752,12 @@ window.GAMES_CONFIG = {
     var c = COMP.featured(S); if (c) { var bi = ((c.w % COMP_POWERS.length) + COMP_POWERS.length) % COMP_POWERS.length; return { p: COMP_POWERS[bi], sup: COMP_SUPERS[bi], svg: COMP.svg(c), who: c.name, look: { key: c.animal.key, kind: c.kind, color: c.animal.c } }; }
     return { p: COMP_POWERS[0], sup: COMP_SUPERS[0], svg: '\ud83d\udc30', who: 'Lil Pip', look: { key: 'bunny', kind: 'Bunny', color: '#b48cff' } }; // Lil Pip helps everyone until you earn a pet
   }
-  function chargePower(n) { if (!G || G.over || G.inPower) return; var was = S.power.energy >= POWER_FULL; S.power.energy = Math.min(SUPER_FULL, S.power.energy + n); if (was && S.power.energy >= SUPER_FULL && !G.superChimed && G.powerUses < POWER_PER_LEVEL) { G.superChimed = 1; sfx.chime(); banner('\u26a1 SUPER move ready!', 'c4'); } if (!was && S.power.energy >= POWER_FULL && G.powerUses < POWER_PER_LEVEL) { sfx.chime(); } refreshPower(); }
+  function chargePower(n) { if (!G || G.over || G.inPower) return; var was = S.power.energy >= pFull(); S.power.energy = Math.min(sFull(), S.power.energy + n); if (was && S.power.energy >= sFull() && !G.superChimed && G.powerUses < pUses()) { G.superChimed = 1; sfx.chime(); banner('\u26a1 SUPER move ready!', 'c4'); } if (!was && S.power.energy >= pFull() && G.powerUses < pUses()) { sfx.chime(); } refreshPower(); }
   function refreshPower() {
-    var b = $('powerBtn'); if (!b || !G) return; var cp = curPower(), full = S.power.energy >= POWER_FULL, left = POWER_PER_LEVEL - (G.powerUses || 0);
-    var sup = S.power.energy >= SUPER_FULL && cp.sup;
+    var b = $('powerBtn'); if (!b || !G) return; var cp = curPower(), full = S.power.energy >= pFull(), left = pUses() - (G.powerUses || 0);
+    var sup = S.power.energy >= sFull() && cp.sup;
     $('powerPet').innerHTML = cp.svg; $('powerName').textContent = left > 0 ? (sup ? '\u26a1 ' + cp.sup.name : cp.p.name) : 'Resting\u2026';
-    $('powerFill').style.width = Math.round(100 * Math.min(S.power.energy, POWER_FULL) / POWER_FULL) + '%';
+    $('powerFill').style.width = Math.round(100 * Math.min(S.power.energy, pFull()) / pFull()) + '%';
     b.classList.toggle('ready', full && left > 0); b.classList.toggle('super', !!sup && left > 0); b.disabled = !(full && left > 0);
     b.title = sup ? 'SUPER: ' + cp.sup.desc : cp.p.desc + (cp.sup ? ' Keep charging for SUPER: ' + cp.sup.name + '.' : '');
   }
@@ -3404,8 +3781,8 @@ window.GAMES_CONFIG = {
     return out;
   }
   var usePower = guard(async function () {
-    if (!G || G.over || busy || S.power.energy < POWER_FULL || (G.powerUses || 0) >= POWER_PER_LEVEL) return;
-    var cp = curPower(), isSup = S.power.energy >= SUPER_FULL && !!cp.sup, p = isSup ? cp.sup : cp.p; S.power.energy = 0; G.superChimed = 0; if (isSup) { G.supers = (G.supers || 0) + 1; S.stats.supers = (S.stats.supers || 0) + 1; } G.powerUses = (G.powerUses || 0) + 1; save(); endTutorial(); resetHint(); clearTimeout(hintTimer);
+    if (!G || G.over || busy || S.power.energy < pFull() || (G.powerUses || 0) >= pUses()) return;
+    var cp = curPower(), isSup = S.power.energy >= sFull() && !!cp.sup, p = isSup ? cp.sup : cp.p; S.power.energy = 0; G.superChimed = 0; if (isSup) { G.supers = (G.supers || 0) + 1; IQUEST.track(S, 'super', G.dk === 'impossible' ? 1 : 0); S.stats.supers = (S.stats.supers || 0) + 1; } G.powerUses = (G.powerUses || 0) + 1; trackDaily('powers', 1); if (isSup) trackDaily('supers', 1); save(); endTutorial(); resetHint(); clearTimeout(hintTimer);
     setBusy(true); refreshPower();
     if (isSup && window.SUPERFX) { // v12: big SUPER fireworks (visual only; same effect + balance as before)
       var lk = cp.look || {}; sfx.zap(); window.__lastSuperFx = { name: p.name, flair: SUPERFX.flair({ key: lk.key, kind: lk.kind, fx: p.fx, champ: lk.champ }), reduced: !!S.reducedFx };
@@ -3476,7 +3853,7 @@ window.GAMES_CONFIG = {
       if (b.ice[r][c]) { var ice = document.createElement('div'); ice.className = 'ice' + (b.ice[r][c] > 1 ? ' l2' : ''); ice.id = 'ice' + r + '_' + c; ice.style.cssText = bg.style.cssText; boardEl.appendChild(ice); }
     }
     for (r = 0; r < N; r++) for (c = 0; c < N; c++) addPieceEl(b.cells[r][c], r, c);
-    drawTrail();
+    drawTrail(); bossLayer(); axoLayer(); applySkins();
   }
   function art(p) {
     if (p.snack) return '<div class="sn">' + SNACK() + '</div>';
@@ -3552,9 +3929,55 @@ window.GAMES_CONFIG = {
     hintTimer = setTimeout(showHint, 6000);
   }
 
+  // ---- v13 #8 real boss fights (major bosses, every 10th level). Mini-bosses (every 5) are unchanged. ----
+  // The boss has an HP bar. Popped pets damage it (power/super pops x1.5) and each finished goal knocks off 25%.
+  // Win = boss HP 0 OR all goals met. Every few moves it fires a super move (telegraphed 1 move ahead):
+  // lock tiles, scramble the board, steal moves, or fog part of the board. Numbers per difficulty live in v13.js.
+  function bossHud(tele) {
+    var el = $('bossBar'); if (!el) return; var B = G && G.boss; if (!B) { el.style.display = 'none'; return; }
+    var A = BOSS.ATTACKS[B.next], pct = Math.round(100 * B.hp / B.max);
+    el.style.display = ''; el.className = 'bossbar' + (tele || B.inN === 1 ? ' warn' : '');
+    el.innerHTML = '<span class="bicon">' + B.icon + '</span><div class="bmid"><b>' + B.name + '</b><div class="bhp"><i style="width:' + pct + '%"></i><em>' + B.hp + ' / ' + B.max + '</em></div></div><div class="bnext" title="Next boss move">' + A.icon + '<small>' + (B.inN === 1 ? 'NEXT MOVE!' : 'in ' + B.inN) + '</small></div>' + (ITEM.count(S, 'shield') ? '<span class="bshield" title="Boss Shield ready">\ud83d\udee1\ufe0f' + ITEM.count(S, 'shield') + '</span>' : '');
+  }
+  function bossLayer() {
+    if (!boardEl) return; boardEl.querySelectorAll('.bfx').forEach(function (e) { e.remove(); }); if (!G) return; var s = cellSize();
+    for (var k in (G.locks || {})) { var rc = k.split('_'), d = document.createElement('div'); d.className = 'bfx block'; d.innerHTML = '\ud83d\udd12<small>' + G.locks[k] + '</small>'; d.style.cssText = 'left:' + (rc[1] * s) + 'px;top:' + (rc[0] * s) + 'px;width:' + s + 'px;height:' + s + 'px'; boardEl.appendChild(d); }
+    if (G.fog) { var f = document.createElement('div'); f.className = 'bfx bfog'; f.style.cssText = 'left:' + (G.fog.c * s) + 'px;top:' + (G.fog.r * s) + 'px;width:' + (G.fog.size * s) + 'px;height:' + (G.fog.size * s) + 'px'; f.innerHTML = '<span>\ud83c\udf2b\ufe0f ' + G.fog.turns + '</span>'; boardEl.appendChild(f); }
+  }
+  function bossTickStatus() { for (var k in G.locks) if (--G.locks[k] <= 0) delete G.locks[k]; if (G.fog && --G.fog.turns <= 0) G.fog = null; }
+  async function bossTurn() {
+    var B = G.boss; if (!B || B.hp <= 0) { bossHud(); return; }
+    var done = goalList(G.L, G).filter(function (x) { return x.done; }).length; while (G.bossGoals < done) { G.bossGoals++; BOSS.goalHit(B); banner('\ud83d\udca5 Goal hit! -25% boss HP', 'c4'); }
+    if (BOSS.defeated(B)) { bossHud(); return; }
+    bossTickStatus(); var r = BOSS.tick(B);
+    if (r.telegraph) { var A = BOSS.ATTACKS[r.telegraph]; banner('\u26a0\ufe0f ' + B.name + ' is charging ' + A.icon + ' ' + A.name + '!', 'c3'); sfx.callout(0); }
+    if (r.fire) await bossAttack(r.fire, r.power);
+    bossHud(r.telegraph); bossLayer(); window.__lastBoss = { hp: B.hp, max: B.max, last: r.fire || null, tele: r.telegraph || null, attacks: B.attacks };
+  }
+  async function bossAttack(k, pw) {
+    var B = G.boss, A = BOSS.ATTACKS[k];
+    if (ITEM.use(S, 'shield')) { save(); banner('\ud83d\udee1\ufe0f Shield blocked ' + A.name + '!', 'c4'); sfx.chime(); return; }
+    banner(B.icon + ' ' + B.name + ' ' + A.say, 'c3'); sfx.thud(); if (!S.reducedFx) { var bw = $('boardWrap'); bw.classList.add('bshake'); setTimeout(function () { bw.classList.remove('bshake'); }, 500); }
+    if (k === 'steal') { G.moves = Math.max(1, G.moves - pw.moves); updateHud(); }
+    else if (k === 'shuffle') { GP.shuffle(G.board); await wait(250); buildBoard(); }
+    else if (k === 'lock') { var free = []; for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) if (!G.locks[r + '_' + c] && !G.board.cells[r][c].crate) free.push(r + '_' + c); for (var i = 0; i < pw.tiles && free.length; i++) G.locks[free.splice(Math.floor(Math.random() * free.length), 1)[0]] = pw.turns + 1; }
+    else if (k === 'fog') { var sz = Math.min(N, pw.size); G.fog = { r: Math.floor(Math.random() * (N - sz + 1)), c: Math.floor(Math.random() * (N - sz + 1)), size: sz, turns: pw.turns + 1 }; }
+    await wait(300);
+  }
+  // v13 Wild Axolotl event: rare visitor hides on one tile for 3 moves; pop it to catch it.
+  function axoLayer() { if (!boardEl) return; boardEl.querySelectorAll('.axo').forEach(function (e) { e.remove(); }); var A = G && G.axo; if (!A) return; var s = cellSize(), d = document.createElement('div'); d.className = 'axo'; d.innerHTML = '\ud83e\udd8e<small>' + A.left + '</small>'; d.style.cssText = 'left:' + (A.c * s) + 'px;top:' + (A.r * s) + 'px;width:' + s + 'px;height:' + s + 'px'; boardEl.appendChild(d); }
+  function axoTurn() {
+    G.movesMade = (G.movesMade || 0) + 1; var A = G.axo;
+    if (A) { var p = G.board.cells[A.r][A.c]; if (!p || p.id !== A.id) { G.axo = null; G.axoCaught = 1; G.moves += AXO.MOVES; S.coins += AXO.COINS; trackDaily('wild', 1); save(); banner('\ud83e\udd8e Caught the Wild Axolotl! +' + AXO.MOVES + ' moves, +' + AXO.COINS + ' coins', 'c4'); sfx.chest(); updateHud(); refreshPills(); }
+      else if (AXO.tick(A) === 'gone') { G.axo = null; banner('\ud83e\udd8e The Wild Axolotl swam away...'); } }
+    else if (AXO.roll(G, Math.random)) { var cand = []; for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) { var q = G.board.cells[r][c]; if (q && !q.crate && !q.snack && !(G.locks && G.locks[r + '_' + c])) cand.push([r, c]); } if (cand.length) { var at = cand[Math.floor(Math.random() * cand.length)]; G.axo = { r: at[0], c: at[1], id: G.board.cells[at[0]][at[1]].id, left: AXO.STAY }; axoExplain(); } }
+    axoLayer();
+  }
+  function axoExplain() { sfx.happy(); if (S.axoSeen) { banner('\ud83e\udd8e A Wild Axolotl appeared!', 'c4'); return; } S.axoSeen = 1; save(); var d = document.createElement('div'); d.id = 'axoTip'; d.className = 'axotip'; d.innerHTML = '<b>\ud83e\udd8e Wild Axolotl!</b><p>' + AXO.explain + '</p><button class="btn small">Got it</button>'; document.body.appendChild(d); d.querySelector('button').onclick = function () { d.remove(); }; setTimeout(function () { if (d.parentNode) d.remove(); }, 9000); }
   var tryMove = guard(async function (a, c) {
     if (busy || G.over) return; var b = G.board, pa = b.cells[a[0]][a[1]], pc = b.cells[c[0]][c[1]];
     if (pa.crate || pc.crate || (pa.snack && pc.snack)) { sfx.bad(); return; }
+    if (G.locks && (G.locks[a[0] + '_' + a[1]] || G.locks[c[0] + '_' + c[1]])) { sfx.bad(); banner('\ud83d\udd12 Locked by the boss!', 'c3'); return; }
     endTutorial(); setBusy(true); resetHint(); clearTimeout(hintTimer);
     pos(els[pa.id], c[0], c[1]); pos(els[pc.id], a[0], a[1]); sfx.swap(); await wait(180);
     var tw0 = twSnap(), res = GP.playMove(b, a, c);
@@ -3570,6 +3993,8 @@ window.GAMES_CONFIG = {
     if (res.shuffled) { banner('No moves - Shuffle!'); await wait(500); buildBoard(); }
     twTally(tw0);
     await superAfterMove();
+    if (G.boss && !G.over) await bossTurn();
+    if (!G.over) axoTurn();
     setBusy(false); checkEnd(); resetHint();
   });
   // v9 SUPER BONUS: a rare glowing Super Star pet. Match/clear it -> +5 moves AND its whole row + column pop.
@@ -3618,7 +4043,7 @@ window.GAMES_CONFIG = {
       G.score += gained;
       if (st.creates.length) { S.stats.specials += st.creates.length; G.specials += st.creates.length; trackDaily('specials', st.creates.length); }
       if (G.combo > G.bestCombo) G.bestCombo = G.combo; if (G.combo === 3) trackDaily('combo3', 1);
-      var nm = st.removed.filter(function (x) { return x.color >= 0; }).length; if (nm) { chargePower(nm); S.stats.matched += nm; trackDaily('matched', nm); }
+      var nm = st.removed.filter(function (x) { return x.color >= 0; }).length; if (nm) { chargePower(nm); S.stats.matched += nm; trackDaily('matched', nm); if (G.boss) { BOSS.hit(G.boss, nm * (G.inPower ? 1.5 : 1)); bossHud(); } }
       if (st.delivered) { banner(SNACK() + ' Yum! Delivered!', 'c4'); sfx.coin(); }
       if (st.creates.some(function (x) { return x.sp === SP.COLOR; })) addRescue(PETS.RARE, 1);
       if (st.removed.some(function (x) { return x.sp === SP.COLOR; })) { sfx.color(); shake(); } else if (st.removed.some(function (x) { return x.sp; })) { sfx.special(); shake(); } else sfx.pop(G.combo);
@@ -3646,24 +4071,26 @@ window.GAMES_CONFIG = {
 
   function checkEnd() {
     if (!G || G.over) return;
-    if (GP.goalsMet(G.L, G.board, G.score, G.collected)) {
-      G.over = true; var movesLeft = G.moves; G.score += G.moves * 100; updateHud();
+    if (GP.goalsMet(G.L, G.board, G.score, G.collected) || BOSS.defeated(G.boss)) {
+      G.over = true; var lbOK = DIFF.CFG[G.dkMin || G.dk || 'normal'].rank >= 1; var movesLeft = G.moves; G.score += G.moves * 100; updateHud();
       var rr = { movesLeft: movesLeft, score: G.score, bestCombo: G.bestCombo, specials: G.specials, boosters: G.boosters }, bm = GP.bonusMet(G.L, rr);
-      var st = GP.starsFor(G.L, rr), id = G.L.id, L = G.L, first = !S.stars[id], prevStars = S.stars[id] || 0;
-      S.stars[id] = Math.max(S.stars[id] || 0, st); S.best[id] = Math.max(S.best[id] || 0, G.score);
+      rr.supers = G.supers || 0; rr.axo = !!G.axoCaught; rr.bossWin = !!G.boss; var st0 = GP.starsFor(G.L, rr), st = STARWAYS.stars(st0, rr), id = G.L.id, L = G.L, first = !S.stars[id], prevStars = S.stars[id] || 0;
+      S.stars[id] = Math.max(S.stars[id] || 0, st); if (lbOK) { S.lbStars = S.lbStars || {}; S.lbStars[id] = Math.max(S.lbStars[id] || 0, st); }
+      var dkW = G.dk; IQUEST.track(S, 'win', dkW === 'impossible' ? 1 : 0); if (st >= 3) IQUEST.track(S, 'star3', dkW === 'impossible' ? 1 : 0); if (L.boss) IQUEST.track(S, 'boss', dkW === 'impossible' ? 1 : 0); S.best[id] = Math.max(S.best[id] || 0, G.score);
       S.unlocked = Math.max(S.unlocked, id + 1); S.stats.wins++; STREAK.win(S, st); SPEEDRUN.win(S, id, Date.now()).forEach(function (k) { var t = SPEEDRUN.tiers.filter(function (x) { return x.key === k; })[0]; toast('\u23f1\ufe0f ' + t.name + '! ' + t.n + ' levels in ' + t.min + ' min'); }); reportAch(); var newComp = L.boss ? COMP.award(S, id) : null;
-      if (bm) S.stats.bonus++; trackDaily('wins', 1); trackDaily('stars', Math.max(0, st - prevStars)); if (bm) trackDaily('bonus', 1); checkMilestones();
-      try { if (window.PGS) PGS.report(S, { boss: !!L.boss }); } catch (e) {}
+      if (bm) S.stats.bonus++; trackDaily('wins', 1); trackDaily('stars', Math.max(0, st - prevStars)); if (bm) trackDaily('bonus', 1); if (st >= 3) trackDaily('perfect', 1); if (!G.boosters) trackDaily('clean', 1); if (st > st0) toast('\u2b50 Bonus star: ' + STARWAYS.list.filter(function (w) { return STARWAYS.met(rr).indexOf(w.k) >= 0; })[0].t + '!'); checkMilestones(); refreshQuestBtn();
+      try { if (window.PGS && lbOK) PGS.report(S, { boss: !!L.boss }); } catch (e) {}
       S.failStreak = {}; var gift = null;
       if (first) { S.firstClears = (S.firstClears || 0) + 1; if (S.firstClears % 3 === 0) { var GB = ['moves5', 'hammer', 'moves5', 'shuffle', 'row']; gift = GB[(S.firstClears / 3) % GB.length]; S.boost[gift] = (S.boost[gift] || 0) + 1; } }
       var coins = st * 10 + Math.floor(id / 10) * 2 + (L.boss ? 50 : 0);
       var dbl = !!(L.boss || L.mini); if (dbl) coins *= 2; // v10 #5: beating a boss (or mini-boss) = double rewards
       var ev = curEvent(); if (ev) coins = Math.round(coins * (1 + ev.bonus)); // v10 #6 event bonus
       if (G.snack && G.snack.perk === 'coins') coins = Math.round(coins * G.snack.n); // v10 #14 snack perk
+      if (ITEM.use(S, 'clover')) { coins = Math.round(coins * 1.5); toast('\ud83c\udf40 Lucky Clover: +50% coins!'); }
       if (L.mini) S.stats.minis = (S.stats.minis || 0) + 1;
-      var seasonPts = 0, snackDrop = null; try { seasonPts = SEASON.addWin(S, st - prevStars, L); snackDrop = SNACKS.drop(S, st, L, Math.random, ev); } catch (e) {}
+      var seasonPts = 0, snackDrop = null; try { if (lbOK) seasonPts = SEASON.addWin(S, st - prevStars, L); snackDrop = SNACKS.drop(S, st, L, Math.random, ev); } catch (e) {}
       var candy = 0; try { if (ev && ev.quest) { candy = QUEST.earn(st, L); QUEST.add(S, ev, candy, today()); } } catch (e) {}
-      try { if (window.PGS) PGS.reportSeason(S); reportAch(); } catch (e) {}
+      try { if (window.PGS && lbOK) PGS.reportSeason(S); reportAch(); } catch (e) {}
       S.coins += coins; save();
       sfx.win(); spookBurst(12); banner(L.boss ? 'Boss beaten!' : L.mini ? L.miniName + ' beaten!' : 'Level Clear!'); renderCheer('cheering'); document.querySelectorAll('.pc').forEach(function (p) { p.classList.add('happy'); });
       var thisGame = G;
@@ -3701,7 +4128,7 @@ window.GAMES_CONFIG = {
   var TRADE = ['hammer', 'row', 'shuffle', 'hint'];
   function failScreen() {
     var L = G.L, id = L.id, gl = goalList(L, G), m5 = S.boost.moves5 || 0, trade = TRADE.filter(function (k) { return (S.boost[k] || 0) > 0; })[0];
-    var gift = (S.failStreak[id] || 0) >= 3 && !G.gotGift, pw = S.power.energy >= POWER_FULL;
+    var gift = (S.failStreak[id] || 0) >= 3 && !G.gotGift, pw = S.power.energy >= pFull();
     var opts = '';
     if (gift) opts += '<button class="btn gold" id="fGift">\ud83c\udf81 Free +5 moves (tough level gift)</button>';
     if (m5) opts += '<button class="btn" id="fM5">\u2795 Use bonus: +5 moves (' + m5 + ')</button>';
@@ -3754,7 +4181,7 @@ window.GAMES_CONFIG = {
   // offline support (web only; the Android app already bundles everything)
   if ('serviceWorker' in navigator && /^https?:/.test(location.protocol) && !(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())) navigator.serviceWorker.register('sw.js').catch(function () {});
   // test hook
-  window.__glow = { event: function () { return curEvent(); }, power: function () { return { energy: S.power.energy, uses: G && G.powerUses, p: curPower().p }; }, usePower: function () { return usePower(); }, fillSuper: function () { S.power.energy = SUPER_FULL; refreshPower(); }, fill: function () { S.power.energy = POWER_FULL; refreshPower(); }, recover: recover, busy: function () { return busy; }, tool: function () { return tool; }, start: startLevel, preLevel: preLevel, state: function () { return G; }, S: S, show: show, refreshCollection: refreshCollection, refreshSettings: refreshSettings, refreshMap: refreshMap, refreshRewards: refreshRewards, refreshShop: refreshShop, worldIntro: worldIntro, setTheme: setTheme, Ads: Ads, save: save, FRIEND_AT: FRIEND_AT, ACH: ACH, refreshGoals: refreshGoals, refreshComp: refreshComp, compModal: compModal, refreshFeatured: refreshFeatured, COMP: COMP, toast: toast, cutscene: cutscene, applyEvent: applyEvent, eventModal: eventModal, trackDaily: trackDaily, goalList: function () { return goalList(G.L, G); }, checkEnd: checkEnd, superFire: function (r, c) { return superFire([r, c]); }, failScreen: failScreen, move: function (a, c) { return tryMove(a, c); } };
+  window.__glow = { event: function () { return curEvent(); }, power: function () { return { energy: S.power.energy, uses: G && G.powerUses, p: curPower().p }; }, usePower: function () { return usePower(); }, fillSuper: function () { S.power.energy = sFull(); refreshPower(); }, fill: function () { S.power.energy = pFull(); refreshPower(); }, recover: recover, busy: function () { return busy; }, tool: function () { return tool; }, start: startLevel, preLevel: preLevel, state: function () { return G; }, S: S, show: show, refreshCollection: refreshCollection, refreshSettings: refreshSettings, refreshMap: refreshMap, refreshRewards: refreshRewards, refreshShop: refreshShop, worldIntro: worldIntro, setTheme: setTheme, Ads: Ads, save: save, FRIEND_AT: FRIEND_AT, ACH: ACH, refreshGoals: refreshGoals, refreshComp: refreshComp, compModal: compModal, refreshFeatured: refreshFeatured, COMP: COMP, toast: toast, cutscene: cutscene, applyEvent: applyEvent, eventModal: eventModal, trackDaily: trackDaily, goalList: function () { return goalList(G.L, G); }, checkEnd: checkEnd, superFire: function (r, c) { return superFire([r, c]); }, failScreen: failScreen, move: function (a, c) { return tryMove(a, c); }, axoTurn: axoTurn, applySkins: applySkins, refreshGoals: refreshGoals };
   syncMute(); Ads.init(); try { if (window.PGS) PGS.init().then(function (ok) { if (ok) { PGS.report(S, {}); PGS.reportSeason(S); reportAch(); } }); } catch (e) {} setTheme(0); refreshPills();
   applyEvent(); seasonCheck();
 })();
