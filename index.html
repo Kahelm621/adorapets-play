@@ -486,6 +486,30 @@ details.howto{margin:4px 0;padding:6px 10px;border-radius:10px;background:#0003}
 #coinWarn{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(62px + env(safe-area-inset-bottom));z-index:15;background:#ff4f7acc;color:#fff;font-weight:800;font-size:12px;padding:4px 12px;border-radius:999px;pointer-events:none;max-width:92%;text-align:center;box-shadow:0 2px 8px #0008;text-shadow:0 1px 2px #0008}
 #shopCoinWarn{width:100%;max-width:500px;box-sizing:border-box;margin:6px 0;padding:8px 10px;border-radius:12px;background:#ff4f7a33;border:2px solid #ff4f7a;font-size:13px}
 .crrecap{font-size:26px;font-weight:800;text-align:center}
+
+/* v13.2 (A) tutorial cards */
+.tut .till{margin:8px auto 4px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.tgrid{display:inline-flex;flex-direction:column;gap:3px;background:rgba(0,0,0,.08);padding:6px;border-radius:12px}
+.trow{display:flex;gap:3px;align-items:center;justify-content:center}
+.tc{width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#fff;border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.tc.hi{background:#fff3b0;box-shadow:0 0 0 3px #ffb300}.tc.dim{opacity:.45}
+.tmir{width:4px;align-self:stretch;margin:0 4px;background:repeating-linear-gradient(#7aa7ff 0 5px,transparent 5px 9px);border-radius:2px}
+.tcap{font-size:12px;opacity:.8}
+.tcount{display:inline-block;padding:6px 12px;border-radius:999px;background:#2b3a67;color:#fff;font-weight:700}
+.tbar{width:200px;height:14px;border-radius:7px;background:#ddd;overflow:hidden}.tbar i{display:block;height:100%;background:linear-gradient(90deg,#ff5d5d,#ff9f43)}
+.tbar.pw i{background:linear-gradient(90deg,#7b61ff,#00d4ff)}
+.tqty{display:flex;gap:6px}.tqty span{padding:4px 10px;border-radius:8px;background:#ffd166;font-weight:700}
+.tdots{display:flex;gap:6px;justify-content:center;margin:6px 0}.tdots i{width:8px;height:8px;border-radius:50%;background:#ccc}.tdots i.on{background:#ff7aa8}
+.tutlist{display:flex;flex-direction:column;gap:4px;max-height:55vh;overflow:auto;margin:8px 0}.tutlist em{font-size:11px;background:#ff7aa8;color:#fff;border-radius:6px;padding:1px 5px;font-style:normal}
+/* v13.2 (B) move countdown */
+.movebox{transition:background .2s,color .2s}
+.movebox.amber{background:#ffb300 !important;color:#3a2600}
+.movebox.red{background:#e53935 !important;color:#fff}
+.movebox.pulse{animation:mvpulse .5s ease}
+@keyframes mvpulse{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+#twistLine{font-weight:700}
+/* v13.2 #6 board skins: confined to the board square, cells stay readable */
+#board.skinned{background-size:cover;background-color:transparent}
 </style></head>
 <body><div id="bg"><canvas id="bgCanvas"></canvas></div><div id="app">
  <section id="title" class="screen on">
@@ -546,6 +570,7 @@ details.howto{margin:4px 0;padding:6px 10px;border-radius:10px;background:#0003}
    <label class="setrow">Speed-run timer in levels <input type="checkbox" id="setSrTimer"></label>
    <label class="setrow">Music volume <input type="range" id="volMusic" min="0" max="100"></label>
    <button class="setrow" id="setHow">How to play (tutorial) ▶</button>
+   <button class="setrow" id="setTuts">Tutorials (replay any) ▶</button>
    <a class="setrow" id="privacyLink" target="_blank" rel="noopener">Privacy policy ↗</a>
    <button class="setrow danger" id="setReset">Reset progress</button>
    <div class="fine">Adorapets v4.0 · Contains optional ads · All animals are original characters.</div>
@@ -554,7 +579,7 @@ details.howto{margin:4px 0;padding:6px 10px;border-radius:10px;background:#0003}
  <section id="game" class="screen">
   <div class="topbar"><button class="iconbtn" id="quitBtn">◀ Map</button><span class="pill" id="lvlName"></span><button class="iconbtn" id="helpBtn" aria-label="How to play">?</button><button class="iconbtn musicBtn" aria-label="Music">🎵</button><button class="iconbtn muteBtn" aria-label="Sound">♪</button></div>
   <div id="goalLine"></div><div id="twistLine"></div>
-  <div id="hud"><div class="hudbox"><small>Moves</small><b id="moves">0</b></div><div class="hudbox" style="position:relative"><small>Score</small><b id="score">0</b><div id="srTimer" class="srtimer" style="display:none"></div></div><div class="hudbox goalbox"><small>Goals</small><div id="goals"></div></div></div>
+  <div id="hud"><div class="hudbox movebox" id="moveBox"><small id="movesLbl">Moves left</small><b id="moves">0</b></div><div class="hudbox" style="position:relative"><small>Score</small><b id="score">0</b><div id="srTimer" class="srtimer" style="display:none"></div></div><div class="hudbox goalbox"><small>Goals</small><div id="goals"></div></div></div>
   <div id="starbar"><div id="starfill"></div></div><div id="starObj"></div>
   <div id="bossBar" class="bossbar" style="display:none"></div>
   <div id="boardWrap"><div id="toolTip"></div><div id="board"></div><div id="cheer"></div></div>
@@ -1337,7 +1362,7 @@ window.LB_CONFIG = {
     hide: { icon: '\ud83c\udf3f', name: 'Hide & Seek', hint: 'A baby is hiding in one of the bushes! Pop pets next to bushes to peek inside. Careful: every few moves the baby giggles and sneaks to a different bush (watch for the rustle).' },
     night: { icon: '\ud83c\udf19', name: 'Day & Night', hint: 'The sky changes every few moves. At night the glowing pets shine: they score double and count toward your moonlight goal. During the day they are just sleepy.' },
     buddy: { icon: '\ud83d\udc9e', name: 'Best Buddies', hint: 'Two pets with matching hearts are best buddies. Pop BOTH buddies in the same move to reunite them! If only one pops, the lonely buddy picks a new friend right next to it.' },
-    echo: { icon: '\ud83c\udfd4\ufe0f', name: 'Mountain Echo', hint: 'Yoo-hoo! Every few moves the mountain echoes your swap on the mirror side of the board (left \u2194 right). Plan swaps whose mirror twin also makes a match!' },
+    echo: { icon: '\ud83c\udfd4\ufe0f', name: 'Mountain Echo', hint: 'Yoo-hoo! Every 2nd move the mountain echoes your swap on the mirror side of the board (column c \u2192 column 7\u2212c, e.g. a swap in column 2 echoes in column 5). If the mirror swap makes a match it pops for free and counts as an echo!' },
     bubble: { icon: '\ud83e\udee7', name: 'Floaty Bubbles', hint: 'Some pets are wrapped in bubbles and float up one row every move. Match them to pop the bubble before they drift away (they bob back in at the bottom).' }
   };
   var WORLD_TWISTS = [['sleepy'], ['tides'], ['snack'], ['trail'], ['hide'], ['night'], ['buddy'], ['echo'], ['bubble'], ['bubble', 'tides'], ['snack', 'buddy']];
@@ -1550,7 +1575,7 @@ window.LB_CONFIG = {
       if (lv.goals.collect) for (var c in lv.goals.collect) lv.goals.collect[c] = Math.max(3, Math.round(lv.goals.collect[c] * row.goal));
       SCALE_GOALS.forEach(function (k) { if (lv.goals[k]) { lv.goals[k] = Math.max(1, Math.round(lv.goals[k] * row.goal)); if (k === 'snacks') lv.tw.snack.goal = lv.goals[k]; if (k === 'buddies') lv.tw.buddy.goal = lv.goals[k]; if (k === 'bubbles') lv.tw.bubble.goal = lv.goals[k]; if (k === 'wake') { lv.tw.sleep.count = lv.goals[k]; } } });
     }
-    lv.bonus.moves = Math.max(2, Math.round(lv.moves * .15));
+    lv.bonus.moves = Math.max(2, Math.round(lv.moves * .1));
     lv.goalCount = Object.keys(lv.goals).reduce(function (s, k) { return s + (k === 'collect' ? Object.keys(lv.goals.collect).length : 1); }, 0);
   }
 
@@ -1567,6 +1592,10 @@ window.LB_CONFIG = {
         if (pool.length) list.push(pool[Math.floor(r() * pool.length)]);
       }
     }
+    // v13.2 #3: more echo levels - after the mountains (world 8+), stage 7 of every world adds the Mountain Echo,
+    // and stage 5 of the mountain world itself gets echo-only (no second twist) so it is a pure echo practice level.
+    if (n > 80 && k === 7 && !lv.boss && list.indexOf('echo') < 0) { if (list.length >= 2) list[list.length - 1] = 'echo'; else list.push('echo'); }
+    if (w === 7 && k === 5) list = ['echo'];
     // v13 (Kristi's list): levels 27, 29 and 30 must always have sleepy pets.
     if (FORCE_SLEEPY[n] && list.indexOf('sleepy') < 0) { if (list.length >= 2) list[list.length - 1] = 'sleepy'; else list.push('sleepy'); }
     lv.twists = list; lv.tw = {};
@@ -1601,9 +1630,9 @@ window.LB_CONFIG = {
     }
     // star objectives: 2nd star = finish with moves to spare, 3rd star = a bonus goal
     var kinds = ['combo', 'specials', 'score', 'noboost'];
-    lv.bonus = { moves: Math.max(2, Math.round(lv.moves * .15)), kind: kinds[n % 4] };
+    lv.bonus = { moves: Math.max(2, Math.round(lv.moves * .1)), kind: kinds[n % 4] }; // v13.2: easier 2nd star (10% spare, was 15%)
     if (lv.bonus.kind === 'combo') lv.bonus.n = 3;
-    if (lv.bonus.kind === 'specials') lv.bonus.n = 2 + Math.floor(d * 2);
+    if (lv.bonus.kind === 'specials') lv.bonus.n = 1 + Math.floor(d * 2);
     if (lv.bonus.kind === 'score') lv.bonus.n = lv.stars[1];
   }
   // r = {movesLeft, score, bestCombo, specials, boosters}
@@ -1772,7 +1801,11 @@ window.LB_CONFIG = {
     { m: 'powers', t: 'Use your companion power {n} times', lo: 2, hi: 4, c: 45 },
     { m: 'perfect', t: 'Get \u2605\u2605\u2605 on {n} levels', lo: 1, hi: 3, c: 60 },
     { m: 'clean', t: 'Win {n} levels without boosters', lo: 1, hi: 3, c: 50 },
-    { m: 'wild', t: 'Spot {n} Wild Axolotl', lo: 1, hi: 1, c: 70 }
+    { m: 'wild', t: 'Spot {n} Wild Axolotl', lo: 1, hi: 1, c: 70 },
+    // v13.2 more missions
+    { m: 'echoes', t: 'Hear {n} mountain echoes', lo: 2, hi: 4, c: 55 },
+    { m: 'spare', t: 'Win {n} levels with 5+ moves left', lo: 1, hi: 3, c: 50 },
+    { m: 'goals', t: 'Finish {n} level goals (any goal line)', lo: 4, hi: 8, c: 45 }
   ];
   var DAILY_BOOST = ['hint', 'shuffle', 'hammer', 'moves5', 'sline', 'row', 'sbomb'];
   function hash(str) { var h = 2166136261; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h >>> 0; }
@@ -1818,7 +1851,9 @@ window.LB_CONFIG = {
   add('tw_hide', 'Find 15 hiding babies', stat('found'), 15, 120, 'sbomb', 'Twists');
   add('tw_glow', 'Collect 100 moonlight pets', stat('glow'), 100, 120, 'hint', 'Twists');
   add('tw_buddy', 'Reunite 20 best buddies', stat('buddies'), 20, 120, 'sline', 'Twists');
+  add('tw_echo5', 'Hear your first 5 mountain echoes', stat('echoes'), 5, 60, 'hint', 'Twists');
   add('tw_echo', 'Hear 20 mountain echoes', stat('echoes'), 20, 120, 'moves5', 'Twists');
+  add('tw_echo60', 'Hear 60 mountain echoes', stat('echoes'), 60, 250, 'srainbow', 'Twists');
   add('tw_bub', 'Pop 40 bubbles', stat('popped'), 40, 120, 'shuffle', 'Twists');
   add('tw_friend', 'Free 5 bosses\u2019 friends', stat('friends'), 5, 200, 'srainbow', 'Twists');
   [7, 30].forEach(function (n) { add('dg' + n, 'Finish all daily goals on ' + n + ' days', stat('dailyAll'), n, n * 15, n >= 30 ? 'srainbow' : 'moves5', 'Skills'); });
@@ -3019,7 +3054,12 @@ window.LB_CONFIG = {
       { k: 'super', t: 'Fire a SUPER move', ok: function (r) { return (r.supers || 0) > 0; } },
       { k: 'axo', t: 'Catch the Wild Axolotl', ok: function (r) { return !!r.axo; } },
       { k: 'boss', t: 'Defeat a boss', ok: function (r) { return !!r.bossWin; } },
-      { k: 'clean', t: 'Win with no boosters', ok: function (r) { return !r.boosters; } }
+      { k: 'clean', t: 'Win with no boosters', ok: function (r) { return !r.boosters; } },
+      // v13.2 #3: more ways to earn the 3rd star
+      { k: 'echo3', t: 'Hear 3 mountain echoes', ok: function (r) { return (r.echoes || 0) >= 3; } },
+      { k: 'chain4', t: 'Make a 4+ chain reaction', ok: function (r) { return (r.bestCombo || 0) >= 4; } },
+      { k: 'spare8', t: 'Finish with 8+ moves left', ok: function (r) { return (r.movesLeft || 0) >= 8; } },
+      { k: 'twistpro', t: 'Beat a twist goal by 2 extra', ok: function (r) { return !!r.twistExtra; } }
     ],
     met: function (r) { return STARWAYS.list.filter(function (w) { return w.ok(r || {}); }).map(function (w) { return w.k; }); },
     stars: function (base, r) { return Math.min(3, base + (base < 3 && STARWAYS.met(r).length ? 1 : 0)); }
@@ -3044,7 +3084,7 @@ window.LB_CONFIG = {
     { k: 'tides', icon: '\ud83c\udf0a', t: 'Tides', d: 'Every few moves the bottom row slides one step right. Plan around it to get free matches.' },
     { k: 'night', icon: '\ud83c\udf19', t: 'Day and night', d: 'At night glowing pets score double and count toward the moonlight goal.' },
     { k: 'buddy', icon: '\ud83e\udd1d', t: 'Buddies', d: 'Make a match that touches two buddy pets at once to reunite them.' },
-    { k: 'echo', icon: '\ud83d\udd0a', t: 'Echoes', d: 'Some matches echo and pop again two moves later. Echo matches count for the goal.' },
+    { k: 'echo', icon: '\ud83d\udd0a', t: 'Echoes', d: 'Every 2nd move the mountain copies your swap on the mirror side of the board (left \u2194 right). Example: swap two pets in column 2 and the mountain also swaps the same two spots in column 5 (columns count 0-7, so column c echoes in column 7\u2212c). If that mirror swap makes a match, it pops for free and counts as an echo for the goal. Watch the "Echo in 1 move" counter!' },
     { k: 'bubble', icon: '\ud83e\udee7', t: 'Bubbles', d: 'Pets in bubbles must be matched to pop the bubble.' },
     { k: 'boss', icon: '\ud83d\udc7e', t: 'Boss fights', d: 'Every match hurts the boss. Finishing a goal hits for 25%. Watch the warning: the boss telegraphs its super move one turn early (locks, fog, move theft, scramble). A Boss Shield blocks one attack.' },
     { k: 'axo', icon: '\ud83e\udd8e', t: 'Wild Axolotl', d: 'Sometimes a Wild Axolotl appears. Pop its tile within 3 moves for +3 moves, +40 coins and a bonus star chance.' },
@@ -3054,6 +3094,81 @@ window.LB_CONFIG = {
   var API = { DIFF: DIFF, SUPERUSE: SUPERUSE, BOSS: BOSS, IQUEST: IQUEST, COSM: COSM, ITEM: ITEM, NEWPETS: NEWPETS, BOSSCUT: BOSSCUT, DAILY: DAILY, BULK: BULK, STARWAYS: STARWAYS, AXO: AXO, HOWTO: HOWTO, COINRESET: COINRESET, TAG: TAG };
   for (var k in API) root[k] = API[k];
   if (typeof module !== 'undefined') module.exports = API;
+})(typeof window !== 'undefined' ? window : globalThis);
+</script><script>// Adorapets v13.2 - short tutorial cards for each mechanic (Kristi: "a 1-3 step card with a simple example").
+// Pure data + tiny illustration builder (no game state) so it can be unit-tested in Node.
+(function (root) {
+  'use strict';
+  // g(rows): rows of cells; a cell is an emoji, '[x]' = highlighted, '(x)' = dimmed. '|' draws a mirror line.
+  function g(rows) {
+    return '<div class="tgrid">' + rows.map(function (r) {
+      return '<div class="trow">' + r.split(' ').map(function (c) {
+        if (c === '|') return '<span class="tmir"></span>';
+        if (c[0] === '[') return '<span class="tc hi">' + c.slice(1, -1) + '</span>';
+        if (c[0] === '(') return '<span class="tc dim">' + c.slice(1, -1) + '</span>';
+        return '<span class="tc">' + c + '</span>';
+      }).join('') + '</div>';
+    }).join('') + '</div>';
+  }
+  var D = '\ud83d\udc36', C = '\ud83d\udc31', B = '\ud83d\udc30', F = '\ud83e\udd8a', P = '\ud83d\udc3c', Z = '\ud83d\udca4', W = '\ud83d\udc3e', K = '\ud83c\udf6a', U = '\ud83c\udf3f', M = '\ud83c\udf19', H = '\u2764\ufe0f', O = '\ud83e\udee7', A = '\u2b07\ufe0f', R = '\u27a1\ufe0f';
+  var LIST = [
+    { k: 'echo', icon: '\ud83c\udfd4\ufe0f', t: 'Mountain Echo', steps: [
+      { p: 'Every <b>2nd move</b> the mountain copies your swap on the <b>mirror side</b> of the board (left \u2194 right).', ill: g(['0 1 [2] 3 | 4 [5] 6 7']) + '<div class="tcap">Column 2 echoes in column 5 (c \u2192 7\u2212c)</div>' },
+      { p: 'Example: you swap two pets in <b>column 2</b>. On an echo move the mountain swaps the same two spots in <b>column 5</b>.', ill: g([D + ' [' + C + '] ' + B + ' | ' + B + ' [' + C + '] ' + D, D + ' [' + D + '] ' + F + ' | ' + F + ' [' + D + '] ' + D]) },
+      { p: 'If the mirror swap makes a match it pops <b>for free</b> and counts as an <b>echo</b> for the goal. Watch the <b>\u201cEcho in 1 move\u201d</b> counter above the board.', ill: '<div class="tcount">\ud83c\udfd4\ufe0f Echo in 1 move</div>' }] },
+    { k: 'sleepy', icon: Z, t: 'Sleepy pets', steps: [
+      { p: 'Pets with ' + Z + ' are napping. Make a match <b>right next to</b> one to wake it.', ill: g([D + ' [' + Z + '] ' + C, '[' + B + '] [' + B + '] [' + B + ']']) },
+      { p: 'Each wake counts for the goal. If nobody wakes it before its timer hits 0, it rolls over into a different pet (still asleep).' }] },
+    { k: 'trail', icon: W, t: 'Paw prints', steps: [
+      { p: 'A trail of ' + W + ' starts at the bottom. Pop the pet sitting on the <b>next print</b> to light it.', ill: g(['(' + D + ') (' + C + ') [' + W + ']', '(' + B + ') [' + W + '] [' + W + ']']) },
+      { p: 'Follow the trail in order all the way to the end.' }] },
+    { k: 'tides', icon: '\ud83c\udf0a', t: 'Tides', steps: [
+      { p: 'Every few moves the <b>bottom row slides one step right</b>. The last pet wraps to the left.', ill: g([D + ' ' + C + ' ' + B + ' ' + F, R + ' ' + R + ' ' + R + ' ' + R]) },
+      { p: 'Plan around it: a slide can line up a free match! The \u201cTide in N\u201d counter shows when.' }] },
+    { k: 'snack', icon: K, t: 'Snack delivery', steps: [
+      { p: 'Snacks drop in from the top. Clear the pets <b>under</b> a snack so it falls.', ill: g(['[' + K + '] ' + D, A + ' ' + C, '[' + B + '] ' + F]) },
+      { p: 'Get it to the <b>bottom row</b> to deliver it. Snacks sink by themselves every 2 moves.' }] },
+    { k: 'hide', icon: U, t: 'Hide and seek', steps: [
+      { p: 'Baby pets hide in ' + U + ' bushes. Match pets <b>next to</b> a bush to rustle it.', ill: g([D + ' [' + U + '] ' + C, '[' + F + '] [' + F + '] [' + F + ']']) },
+      { p: 'Found it! Every few moves a baby sneaks to another bush, so be quick.' }] },
+    { k: 'night', icon: M, t: 'Moonlight', steps: [
+      { p: 'The sky turns day \u2194 night every few moves. At <b>night</b>, glowing pets score double.', ill: g(['[' + D + '] ' + C + ' [' + D + '] ' + B]) },
+      { p: 'Match glowing pets at night to fill the ' + M + ' moonlight goal.' }] },
+    { k: 'buddy', icon: H, t: 'Best buddies', steps: [
+      { p: 'Two buddy pets wear a ' + H + '. Make one match that <b>touches both</b> to reunite them.', ill: g(['[' + D + H + '] [' + D + '] [' + D + H + ']']) }] },
+    { k: 'bubble', icon: O, t: 'Bubbles', steps: [
+      { p: 'Pets in ' + O + ' bubbles are stuck. Match them to pop the bubble.', ill: g(['[' + O + '] ' + C + ' ' + B, D + ' [' + D + '] [' + D + ']']) },
+      { p: 'Bubbles slowly rise. Each pop counts for the goal.' }] },
+    { k: 'mini', icon: '\u2694\ufe0f', t: 'Mini-bosses', steps: [
+      { p: 'Every 5th level is a <b>mini-boss</b>. Every match hurts it; its health bar is above the board.', ill: '<div class="tbar"><i style="width:60%"></i></div>' },
+      { p: 'It warns you one turn before its attack. Beat it for <b>2\u00d7 rewards</b> and a chest!' }] },
+    { k: 'boss', icon: '\ud83d\udc51', t: 'World bosses', steps: [
+      { p: 'Every 10th level is a <b>boss</b>. Matches hurt it, finishing a goal hits for 25%.', ill: '<div class="tbar"><i style="width:35%"></i></div>' },
+      { p: 'The boss telegraphs its super move one turn early (locks, fog, move theft, scramble). A Boss Shield blocks one attack.' },
+      { p: 'Free the caged friend ' + '\ud83d\udd13' + ' and win a new <b>companion</b>!' }] },
+    { k: 'super', icon: '\u26a1', t: 'Companion supers', steps: [
+      { p: 'Pop pets to fill your companion\u2019s meter. When it glows, tap the <b>power button</b> under the board.', ill: '<div class="tbar pw"><i style="width:100%"></i></div>' },
+      { p: 'Fill it <b>twice</b> for a SUPER. Supers with actions play out on the board: the <b>Narwhal Anchor</b> plunges from the sky and clears a whole column; the <b>Bull Stampede</b> charges down columns and rows. They pick the best spot for you.', ill: g(['(' + D + ') [' + A + '] (' + C + ')', '(' + B + ') [' + A + '] (' + F + ')']) }] },
+    { k: 'bulk', icon: '\ud83d\uded2', t: '5\u00d7 and 10\u00d7 buy', steps: [
+      { p: 'In the Shop each booster has <b>1\u00d7, 5\u00d7 and 10\u00d7 (max)</b> buttons. Bigger packs save coins: 5\u00d7 is 5% off and 10\u00d7 is 10% off. Buttons you can\u2019t afford yet are greyed out.', ill: '<div class="tqty"><span>1\u00d7</span><span>5\u00d7</span><span>10\u00d7</span></div>' }] },
+    { k: 'axo', icon: '\ud83e\udd8e', t: 'Wild Axolotl', steps: [
+      { p: 'Sometimes a Wild Axolotl hides on a tile for <b>3 moves</b>.', ill: g([D + ' [\ud83e\udd8e] ' + C]) },
+      { p: 'Pop that tile to catch it: <b>+3 moves, +40 coins</b>, and it can earn a bonus star.' }] },
+    { k: 'coinreset', icon: '\u23f3', t: 'Season coin reset', steps: [
+      { p: 'Coins belong to a <b>season</b>. When the season ends, coins reset to the starter amount.', ill: '<div class="tcount">\u23f3 3 days left this season</div>' },
+      { p: 'You get warnings before it happens. Spend your coins in the Shop first \u2013 boosters, pets and costumes stay yours!' }] },
+    { k: 'tag', icon: '\ud83c\udfae', t: 'Gamer tags', steps: [
+      { p: 'Your gamer tag is the name shown on leaderboards. 3\u201316 letters, numbers, _ or spaces. Never use your real name.', ill: '<div class="tcount">\u2b50 Sparkle_Paws</div>' },
+      { p: 'You can change it from Settings > Gamer tag (with a short wait between changes).' }] }
+  ];
+  var BY = {}; LIST.forEach(function (x) { BY[x.k] = x; });
+  // twist names used by the level generator -> tutorial key
+  var TWIST_KEY = { sleepy: 'sleepy', trail: 'trail', tides: 'tides', snack: 'snack', hide: 'hide', night: 'night', buddy: 'buddy', echo: 'echo', bubble: 'bubble' };
+  // which tutorials a level needs on first encounter
+  function forLevel(L) { var out = (L.twists || []).map(function (t) { return TWIST_KEY[t]; }).filter(Boolean); if (L.boss) out.push('boss'); else if (L.mini) out.push('mini'); return out; }
+  function unseen(S, keys) { S.tutSeen = S.tutSeen || {}; return keys.filter(function (k) { return BY[k] && !S.tutSeen[k]; }); }
+  var api = { LIST: LIST, BY: BY, forLevel: forLevel, unseen: unseen };
+  root.TUTS = api; if (typeof module !== 'undefined') module.exports = api;
 })(typeof window !== 'undefined' ? window : globalThis);
 </script><script>// Adorapets - UI, animation, audio, themed worlds, rewards, boosters and ads
 (function () {
@@ -3285,7 +3400,7 @@ window.LB_CONFIG = {
   $('titleCritters').innerHTML = [0, 1, 2, 3, 4, 5].map(function (c, i) { return '<div class="tpet" style="animation-delay:' + (i * .15) + 's">' + PETS.tileSVG(0, c, 0) + '</div>'; }).join('');
   $('playBtn').onclick = function () { AU.unlock(); syncAudio(); refreshMap(true); show('mapScreen'); if (dailyState().claimed === false && S.unlocked > 1) setTimeout(function () { dailyModal(); }, 300); };
   document.querySelectorAll('.rewardsBtn').forEach(function (b) { b.onclick = function () { refreshRewards(); show('rewards'); }; });
-  document.querySelectorAll('.shopBtn').forEach(function (b) { b.onclick = function () { refreshShop(); show('shop'); }; });
+  document.querySelectorAll('.shopBtn').forEach(function (b) { b.onclick = function () { refreshShop(); show('shop'); tutOnce('bulk', function () { tutOnce('coinreset'); }); }; });
   document.querySelectorAll('.goalsBtn').forEach(function (b) { b.onclick = function () { refreshGoals(); show('goalsScreen'); }; });
   document.querySelectorAll('.petsBtn').forEach(function (b) { b.onclick = function () { refreshCollection(); show('collection'); }; });
   // ---- v10 #6 / v11 weeklong events + Halloween theme -----------------------------
@@ -3332,7 +3447,7 @@ window.LB_CONFIG = {
   function LITE_NO_DECO() { return /[?&]nodeco=1/.test(location.search); }
   function costumeHTML() { var ev = curEvent(), list = COSTUMES.visible(S, ev).concat(COSM.costumes(S).map(function (c) { return { slot: c.slot, svg: c.svg }; })); return list.map(function (c) { return '<div class="costume ' + c.slot + '">' + c.svg + '</div>'; }).join(''); }
   // v13 board + tile skins
-  function applySkins() { var bw = $('boardWrap'); if (!bw) return; var bk = COSM.worn(S, 'board'), tk = COSM.worn(S, 'tile'), bc = bk && COSM.get(bk); bw.style.background = bc ? bc.sw : ''; bw.className = bw.className.replace(/\s?tskin-\S+/g, '') + (tk ? ' tskin-' + tk.replace('tile_', '') : ''); }
+  function applySkins() { var bw = $('boardWrap'); if (!bw) return; var bk = COSM.worn(S, 'board'), tk = COSM.worn(S, 'tile'), bc = bk && COSM.get(bk); bw.style.background = ''; var bd = $('board'); if (bd) { bd.style.backgroundImage = bc ? bc.sw : ''; bd.classList.toggle('skinned', !!bc); } /* v13.2 #6: board skins paint the board square only (was the whole full-width #boardWrap = big rectangle) */ bw.className = bw.className.replace(/\s?tskin-\S+/g, '') + (tk ? ' tskin-' + tk.replace('tile_', '') : ''); }
   function eventModal() {
     var ev = curEvent(); if (!ev) return; var d = today(), w = EV.window(ev, d) || { start: d, end: d }, dl = EV.daysLeft(ev, d);
     var fmt = function (x) { return x.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }, last = new Date(w.end.getTime() - 864e5);
@@ -3362,9 +3477,11 @@ window.LB_CONFIG = {
   var LEAF = '<svg viewBox="0 0 40 40"><path d="M6 34 C6 14 20 4 36 4 C36 22 26 34 6 34 Z" fill="#ff9a3c" stroke="#000" stroke-width="2.5"/><path d="M6 34 L28 12" stroke="#000" stroke-width="2"/></svg>';
   var SPARK = '<svg viewBox="0 0 40 40"><path d="M20 2 L24 16 L38 20 L24 24 L20 38 L16 24 L2 20 L16 16 Z" fill="#ffd36e" stroke="#000" stroke-width="2"/></svg>';
   function cutscene(snack, done, bossPreview) {
-    var c = activeSpecial() || COMP.featured(S); if (!c) { done(); return; }
-    var ev = curEvent(), plan = bossPreview ? BOSSCUT.plan(c.name || 'Your pet', bossPreview, ev) : CUTSCENE.pick(c.special ? c.special : c, ev, snack), svg = c.special ? PETS.animalSVG(c.special, 0) : c.svg ? PETS.animalSVG(c, 0) : COMP.svg(c);
-    try { svg = activeSpecial() ? PETS.animalSVG(activeSpecial(), 0) : COMP.svg(c); } catch (e) {}
+    // v13.2 fix: a bought/hatched pet (activeSpecial) is a PETS animal, not a COMP def - COMP.svg() on it threw and the
+    // boss level (e.g. 40) never opened. Build the svg from the right source and never let the cutscene block the level.
+    var sp0 = activeSpecial(), c = sp0 || COMP.featured(S); if (!c) { done(); return; }
+    var ev, plan, svg;
+    try { ev = curEvent(); plan = bossPreview ? BOSSCUT.plan(c.name || 'Your pet', bossPreview, ev) : CUTSCENE.pick(c, ev, snack); svg = sp0 ? PETS.animalSVG(sp0, 0) : COMP.svg(c); } catch (e) { done(); return; }
     var propSVG = plan.prop === 'bat' ? SPOOK.bat : plan.prop === 'leaf' ? LEAF : plan.prop === 'pumpkin' ? SPOOK.pumpkin : plan.prop === 'moon' ? SPOOK.moon : plan.prop === 'sparkle' ? SPARK : '<span class="cs-food">' + plan.prop + '</span>';
     var d = document.createElement('div'); d.id = 'cutscene'; d.className = 'cs-' + plan.act + (plan.spooky ? ' spooky' : '') + (plan.boss ? ' cs-boss' : '');
     d.innerHTML = '<div class="cs-stage"><div class="cs-prop">' + propSVG + '</div><div class="cs-pet">' + costumeHTML() + '<div class="fpsvg">' + svg + '</div></div><div class="cs-crumbs"></div></div><div class="cs-line">' + plan.line + '</div><div class="cs-skip">Tap to skip \u25b6</div>';
@@ -3436,16 +3553,30 @@ window.LB_CONFIG = {
     var list = COMP.slots(S), n = COMP.count(S), C = COMP.ensure(S);
     $('compCount').textContent = '\ud83d\udc96 ' + n + ' collected';
     $('compGrid').innerHTML = list.map(function (x) {
-      var c = x.c, on = x.earned && C.featured === c.w;
+      var c = x.c, on = x.earned && C.featured === c.w && !activeSpecial() && !S.useChamp;
       return '<button class="ccard' + (x.earned ? '' : ' locked') + (on ? ' feat' : '') + '" data-comp="' + c.w + '"><div class="cimg">' + COMP.svg(c) + '</div><b>' + (x.earned ? c.name : '???') + '</b><small>' + (x.earned ? c.kind + ' \u00b7 World ' + (c.w + 1) : 'Beat World ' + (c.w + 1) + ' to unlock') + '</small>' + (on ? '<i class="ftag">\u2b50 My pet</i>' : '') + '</button>';
-    }).join('') + '<div class="fine">Endless worlds keep giving shiny remix companions every 10 levels!</div>';
+    }).join('') + '<div class="fine">Endless worlds keep giving shiny remix companions every 10 levels!</div>' + boughtCompHTML();
+  }
+  // v13.2 #1: pets you BOUGHT in the Shop, hatched from eggs, or won from quests show on the Companions page too,
+  // so you can switch to them right here.
+  function boughtCompHTML() {
+    var own = Object.keys((S.adopt && S.adopt.owned) || {}).filter(function (k) { return S.adopt.owned[k] && PETS.BY_KEY[k]; });
+    var champ = (S.champPets || []).length > 0, h = '<h3 class="shophead" id="boughtHead">\ud83d\uded2 Bought &amp; hatched pets</h3>';
+    if (!own.length && !champ) return h + '<div class="fine">Pets you buy in the Shop or hatch from eggs show up here.</div>';
+    own.forEach(function (k) { var a = PETS.BY_KEY[k], on = S.adopt.active === k && !S.useChamp, pw = powerFor(k);
+      h += '<button class="ccard' + (on ? ' feat' : '') + '" data-spet="' + k + '"><div class="cimg">' + PETS.animalSVG(a, 0) + '</div><b>' + a.name + '</b><small>' + a.kind + ' \u00b7 \u26a1 ' + pw.name + '</small>' + (on ? '<i class="ftag">\u2b50 My pet</i>' : '') + '</button>'; });
+    if (champ) h += '<button class="ccard' + (S.useChamp ? ' feat' : '') + '" data-spet="__champ"><div class="cimg">' + champSVG() + '</div><b>' + CHAMP.pet.name + '</b><small>' + CHAMP.pet.kind + '</small>' + (S.useChamp ? '<i class="ftag">\u2b50 My pet</i>' : '') + '</button>';
+    return h;
   }
   $('compGrid').addEventListener('click', function (e) {
+    var sb = e.target.closest('[data-spet]'); if (sb) { var k = sb.dataset.spet;
+      if (k === '__champ') { S.useChamp = true; } else { S.adopt.active = k; S.useChamp = false; }
+      save(); sfx.happy(); toast('\u2b50 ' + (k === '__champ' ? CHAMP.pet.name : PETS.BY_KEY[k].name) + ' is now your pet!'); refreshComp(); refreshFeatured(); return; }
     var b = e.target.closest('[data-comp]'); if (!b) return; var w = +b.dataset.comp, c = COMP.def(w);
     if (b.classList.contains('locked')) { modal('<h2>Locked companion</h2><div class="petbig locked">' + COMP.svg(c) + '</div><p>Beat the World ' + (w + 1) + ' boss (level ' + ((w + 1) * 10) + ') to meet this friend!</p><button class="btn" id="cOk">OK</button>'); $('cOk').onclick = closeModal; return; }
     var isF = COMP.ensure(S).featured === w;
     modal('<h2>' + c.name + '</h2><div class="petbig comp">' + COMP.svg(c) + '</div><p class="fine">' + c.kind + ' from ' + c.world + '</p><p>' + c.bio + '</p>' + (isF ? '<button class="btn alt" disabled>\u2b50 Already your pet</button>' : '<button class="btn" id="cSet">\u2b50 Set as my pet</button>') + '<button class="btn alt small" id="cOk">Close</button>');
-    if ($('cSet')) $('cSet').onclick = function () { COMP.setFeatured(S, w); S.adopt.active = null; save(); sfx.happy(); closeModal(); refreshComp(); refreshFeatured(); };
+    if ($('cSet')) $('cSet').onclick = function () { COMP.setFeatured(S, w); S.adopt.active = null; S.useChamp = false; save(); sfx.happy(); closeModal(); refreshComp(); refreshFeatured(); };
     $('cOk').onclick = closeModal;
   });
   function compModal(c, next) {
@@ -3584,7 +3715,7 @@ window.LB_CONFIG = {
     $('shopList').innerHTML = h;
     document.querySelectorAll('[data-ibuy]').forEach(function (b) { b.onclick = function () { var it = ITEM.list.filter(function (x) { return x.key === b.dataset.ibuy; })[0], n = +b.dataset.n; if (!it || !BULK.pay(S, it.price, n)) return; ITEM.give(S, it.key, n); save(); sfx.coin(); toast(it.icon + ' ' + it.name + ' x' + n); refreshShop(); }; });
     document.querySelectorAll('[data-cos]').forEach(function (b) { b.onclick = function () { var k = b.dataset.cos; if (COSM.owned(S, k)) COSM.equip(S, k); else if (!COSM.buy(S, k)) return; save(); sfx.coin(); applySkins(); refreshShop(); }; });
-    document.querySelectorAll('[data-npet]').forEach(function (b) { b.onclick = function () { if (NEWPETS.buy(S, b.dataset.npet)) { save(); sfx.chest(); toast('New companion!'); refreshShop(); } }; });
+    document.querySelectorAll('[data-npet]').forEach(function (b) { b.onclick = function () { if (NEWPETS.buy(S, b.dataset.npet)) { save(); sfx.chest(); toast('New companion! Switch pets anytime on the Companions page.'); refreshShop(); refreshFeatured(); } }; });
     document.querySelectorAll('[data-snackbuy]').forEach(function (b) { b.onclick = function () { if (SNACKS.buy(S, b.dataset.snackbuy)) { save(); sfx.coin(); refreshShop(); } }; });
     document.querySelectorAll('[data-xbuy]').forEach(function (b) { b.onclick = function () { var x = EXTRA_ITEMS.filter(function (i) { return i.key === b.dataset.xbuy; })[0]; if (!x || S.coins < x.price || (x.can && !x.can())) return; S.coins -= x.price; x.give(); save(); sfx.coin(); toast(x.icon + ' ' + x.name + '!'); refreshShop(); }; });
     document.querySelectorAll('[data-buy]').forEach(function (b) { b.onclick = function () { var k = b.dataset.buy, n = +b.dataset.n || 1; if (!BULK.pay(S, PRICE[k], n)) return; S.boost[k] = (S.boost[k] || 0) + n; save(); sfx.coin(); refreshShop(); }; });
@@ -3613,6 +3744,7 @@ window.LB_CONFIG = {
   $('volSfx').onchange = function () { sfx.pop(3); };
   $('volMusic').oninput = function () { S.musVol = this.value / 100; save(); audioCfg(); };
   if ($('setHow')) $('setHow').onclick = function () { howToPlay(); };
+  if ($('setTuts')) $('setTuts').onclick = function () { tutList(); };
   if ($('helpBtn')) $('helpBtn').onclick = function () { howToPlay(); };
   if ($('setReduced')) $('setReduced').onchange = function () { S.reducedFx = this.checked; save(); };
   if ($('setSrTimer')) $('setSrTimer').onchange = function () { S.srTimer = this.checked; save(); srTick(); };
@@ -3702,6 +3834,14 @@ window.LB_CONFIG = {
     }
     render();
   }
+  // v13.2 #2: "Next level" from the win card starts the next level right away (no trip back to the map).
+  // Falls back to the normal pre-level card only when it is needed: out of lives, or a new world's intro.
+  function playNext(id) {
+    tickLives(); var L = DIFF.applyLevel(GP.getLevel(id), DIFF.get(S));
+    if (S.lives <= 0 || (L.stage === 0 && !S.introSeen[L.world])) { refreshMap(); show('mapScreen'); preLevel(id); return; }
+    setTheme(L.world); window.__lastNext = id;
+    if (L.boss) cutscene(null, function () { startLevel(id, [], null, false); }, BOSS.init(L, DIFF.get(S))); else startLevel(id, [], null, false);
+  }
   // v10 #14 feed a snack + #12 champion spark, shown in the pre-level card
   function snackRow(sel, spark) {
     var have = SNACKS.list.filter(function (x) { return SNACKS.count(S, x.key) > 0; }), h = '';
@@ -3757,11 +3897,31 @@ window.LB_CONFIG = {
   function bonusText(L) { var b = L.bonus; return b.kind === 'combo' ? 'make a ' + b.n + '-chain' : b.kind === 'specials' ? 'make ' + b.n + ' special pets' : b.kind === 'score' ? 'score ' + b.n : 'win without boosters'; }
   // first-time hint for each twist (introduced one at a time, world by world)
   function twistHint(L) {
-    var k = (L.twists || []).filter(function (t) { return !S.twistSeen[t]; })[0]; if (!k) return false;
-    S.twistSeen[k] = 1; save(); var T = GP.TWISTS[k];
-    modal('<div class="twisthint"><small>New twist!</small><div class="tico">' + T.icon + '</div><h2>' + T.name + '</h2><p>' + T.hint + '</p><button class="btn" id="thOk">Got it!</button></div>', 'introcard');
-    $('thOk').onclick = function () { closeModal(); if (!twistHint(L)) goalIntro(L); };
+    // v13.2 (A): every mechanic gets a short 1-3 step tutorial card the first time you meet it (replay: Settings > Tutorials)
+    var k = window.TUTS ? TUTS.unseen(S, TUTS.forLevel(L))[0] : null;
+    (L.twists || []).forEach(function (t) { S.twistSeen[t] = 1; });
+    if (!k) return false;
+    showTut(k, function () { if (!twistHint(L)) goalIntro(L); }, 'New twist!');
     return true;
+  }
+  function showTut(k, done, kicker) {
+    var T = TUTS.BY[k]; if (!T) { if (done) done(); return; }
+    S.tutSeen = S.tutSeen || {}; S.tutSeen[k] = 1; save(); var i = 0;
+    function draw() {
+      var st = T.steps[i], last = i === T.steps.length - 1;
+      modal('<div class="twisthint tut" data-tut="' + k + '"><small>' + (kicker || 'How it works') + (T.steps.length > 1 ? ' \u00b7 ' + (i + 1) + '/' + T.steps.length : '') + '</small><div class="tico">' + T.icon + '</div><h2>' + T.t + '</h2>' + (st.ill ? '<div class="till">' + st.ill + '</div>' : '') + '<p>' + st.p + '</p>' +
+        '<div class="tdots">' + T.steps.map(function (_, j) { return '<i class="' + (j === i ? 'on' : '') + '"></i>'; }).join('') + '</div>' +
+        (i > 0 ? '<button class="btn alt small" id="tutBack">\u25c0 Back</button> ' : '') + '<button class="btn" id="tutNext">' + (last ? 'Got it!' : 'Next \u25b6') + '</button></div>', 'introcard');
+      $('tutNext').onclick = function () { if (last) { closeModal(); if (done) done(); } else { i++; draw(); } };
+      if ($('tutBack')) $('tutBack').onclick = function () { i--; draw(); };
+    }
+    draw();
+  }
+  function tutOnce(k, done) { if (window.TUTS && TUTS.unseen(S, [k]).length) showTut(k, done); else if (done) done(); }
+  function tutList() {
+    modal('<h2>\ud83d\udcd6 Tutorials</h2><p class="fine">Tap any mechanic to replay its tutorial.</p><div class="tutlist">' + TUTS.LIST.map(function (T) { return '<button class="setrow" data-tutk="' + T.k + '">' + T.icon + ' ' + T.t + (S.tutSeen && S.tutSeen[T.k] ? '' : ' <em>new</em>') + '</button>'; }).join('') + '</div><button class="btn" id="tutClose">Close</button>');
+    document.querySelectorAll('[data-tutk]').forEach(function (b) { b.onclick = function () { showTut(b.dataset.tutk, tutList); }; });
+    $('tutClose').onclick = closeModal;
   }
   // --- tutorial (level 1, first time) --------------------------------------
   function tutorial() {
@@ -3802,7 +3962,7 @@ window.LB_CONFIG = {
     c.innerHTML = cheerSquad().map(function (a, k) { return '<div class="cpet ' + mode + '" style="animation-delay:' + (k * .1) + 's">' + PETS.animalSVG(a, 0) + '</div>'; }).join('');
   }
   function updateHud() { if (G && G.boss !== undefined) bossHud();
-    $('moves').textContent = G.moves; $('score').textContent = G.score;
+    $('moves').textContent = G.moves; $('score').textContent = G.score; moveCountdown();
     var L = G.L, h = '', gl = goalList(L, G), t = G.board.tw;
     gl.forEach(function (x) { h += '<span class="goal' + (x.done ? ' done' : '') + '" data-g="' + x.key + '" title="' + x.label + '">' + x.icon + '<i>' + (x.done ? '\u2713' : x.have + '/' + x.need) + '</i></span>'; });
     if (!G.over) gl.forEach(function (x) { if (x.done && !G.doneGoals[x.key]) { G.doneGoals[x.key] = 1; var left = gl.filter(function (y) { return !y.done; }).length; if (left) { goalPop('\u2713 ' + x.label + '!', left + ' goal' + (left > 1 ? 's' : '') + ' to go'); sfx.star(1); } } });
@@ -3813,7 +3973,7 @@ window.LB_CONFIG = {
     var cfg = t.cfg, st = [];
     if (cfg.night) st.push((GP.isNight(G.board) ? '\ud83c\udf19 Sunrise in ' : '\u2600\ufe0f Night in ') + (cfg.night.every - t.moveNo % cfg.night.every));
     if (cfg.tides) st.push('\ud83c\udf0a Tide in ' + (cfg.tides.every - t.moveNo % cfg.tides.every));
-    if (cfg.echo) st.push('\ud83c\udfd4\ufe0f Echo on move ' + (t.moveNo + cfg.echo.every - t.moveNo % cfg.echo.every));
+    if (cfg.echo) { var eIn = cfg.echo.every - t.moveNo % cfg.echo.every - 1; st.push(eIn <= 0 ? '\ud83c\udfd4\ufe0f Echo THIS move!' : '\ud83c\udfd4\ufe0f Echo in ' + eIn + ' move' + (eIn > 1 ? 's' : '')); }
     if (cfg.hide) st.push('\ud83c\udf3f Baby sneaks in ' + (cfg.hide.every - t.moveNo % cfg.hide.every));
     if (cfg.snack) st.push(SNACK() + ' snacks sink every 2 moves');
     if (cfg.sleep) st.push('\ud83d\udca4 nappers roll over at 0');
@@ -3897,14 +4057,17 @@ window.LB_CONFIG = {
   };
   var CHAMP_POWER = { name: 'Aurora\u2019s Dawn', fx: 'cross', also: [{ fx: 'x' }], desc: 'Aurora lights a big plus and X across the board.' };
   var CHAMP_SUPER = { name: 'Champion Rainbow', fx: 'rainbow', n: 4, desc: 'Aurora makes 4 rainbow pets!' };
-  function powerFor(key) { return SPECIAL_POWERS[key] || COMP_POWERS[0]; }
+  function petFallback(key) { var a = PETS.BY_KEY[key], wi = a && a.world >= 0 ? a.world : 0; return ((wi % COMP_POWERS.length) + COMP_POWERS.length) % COMP_POWERS.length; }
+  function powerFor(key) { return SPECIAL_POWERS[key] || COMP_POWERS[petFallback(key)]; }
   function curPower() {
     if (S.useChamp && (S.champPets || []).length) return { p: CHAMP_POWER, sup: CHAMP_SUPER, svg: champSVG(), who: CHAMP.pet.name, look: { champ: true, key: 'champ', kind: 'champion', color: CHAMP.pet.c || '#c48bff' } };
-    var sa = activeSpecial(); if (sa) return { p: SPECIAL_POWERS[sa.key], sup: SPECIAL_SUPERS[sa.key], svg: PETS.animalSVG(sa, 0), who: sa.name, look: { key: sa.key, kind: sa.kind, color: sa.c } };
+    // v13.2 #4: hatched/quest pets (e.g. the mountain animals you hatch in the 70s) had no entry in SPECIAL_POWERS, so
+    // p/sup were undefined and the power button + super crashed. Fall back to a world power that fits the pet.
+    var sa = activeSpecial(); if (sa) { var fb = petFallback(sa.key); return { p: SPECIAL_POWERS[sa.key] || COMP_POWERS[fb], sup: SPECIAL_SUPERS[sa.key] || COMP_SUPERS[fb], svg: PETS.animalSVG(sa, 0), who: sa.name, look: { key: sa.key, kind: sa.kind, color: sa.c } }; }
     var c = COMP.featured(S); if (c) { var bi = ((c.w % COMP_POWERS.length) + COMP_POWERS.length) % COMP_POWERS.length; return { p: COMP_POWERS[bi], sup: COMP_SUPERS[bi], svg: COMP.svg(c), who: c.name, look: { key: c.animal.key, kind: c.kind, color: c.animal.c } }; }
     return { p: COMP_POWERS[0], sup: COMP_SUPERS[0], svg: '\ud83d\udc30', who: 'Lil Pip', look: { key: 'bunny', kind: 'Bunny', color: '#b48cff' } }; // Lil Pip helps everyone until you earn a pet
   }
-  function chargePower(n) { if (!G || G.over || G.inPower) return; var was = S.power.energy >= pFull(); S.power.energy = Math.min(sFull(), S.power.energy + n); if (was && S.power.energy >= sFull() && !G.superChimed && G.powerUses < pUses()) { G.superChimed = 1; sfx.chime(); banner('\u26a1 SUPER move ready!', 'c4'); } if (!was && S.power.energy >= pFull() && G.powerUses < pUses()) { sfx.chime(); } refreshPower(); }
+  function chargePower(n) { if (!G || G.over || G.inPower) return; var was = S.power.energy >= pFull(); S.power.energy = Math.min(sFull(), S.power.energy + n); if (was && S.power.energy >= sFull() && !G.superChimed && G.powerUses < pUses()) { G.superChimed = 1; sfx.chime(); banner('\u26a1 SUPER move ready!', 'c4'); } if (!was && S.power.energy >= pFull() && G.powerUses < pUses()) { sfx.chime(); if (window.TUTS && TUTS.unseen(S, ['super']).length) setTimeout(function () { if (G && !G.over && !busy && !$('modal').classList.contains('on')) tutOnce('super'); }, 900); } refreshPower(); }
   function refreshPower() {
     var b = $('powerBtn'); if (!b || !G) return; var cp = curPower(), full = S.power.energy >= pFull(), left = pUses() - (G.powerUses || 0);
     var sup = S.power.energy >= sFull() && cp.sup;
@@ -4125,7 +4288,7 @@ window.LB_CONFIG = {
     else if (AXO.roll(G, Math.random)) { var cand = []; for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) { var q = G.board.cells[r][c]; if (q && !q.crate && !q.snack && !(G.locks && G.locks[r + '_' + c])) cand.push([r, c]); } if (cand.length) { var at = cand[Math.floor(Math.random() * cand.length)]; G.axo = { r: at[0], c: at[1], id: G.board.cells[at[0]][at[1]].id, left: AXO.STAY }; axoExplain(); } }
     axoLayer();
   }
-  function axoExplain() { sfx.happy(); if (S.axoSeen) { banner('\ud83e\udd8e A Wild Axolotl appeared!', 'c4'); return; } S.axoSeen = 1; save(); var d = document.createElement('div'); d.id = 'axoTip'; d.className = 'axotip'; d.innerHTML = '<b>\ud83e\udd8e Wild Axolotl!</b><p>' + AXO.explain + '</p><button class="btn small">Got it</button>'; document.body.appendChild(d); d.querySelector('button').onclick = function () { d.remove(); }; setTimeout(function () { if (d.parentNode) d.remove(); }, 9000); }
+  function axoExplain() { sfx.happy(); S.tutSeen = S.tutSeen || {}; S.tutSeen.axo = 1; if (S.axoSeen) { banner('\ud83e\udd8e A Wild Axolotl appeared!', 'c4'); return; } S.axoSeen = 1; save(); var d = document.createElement('div'); d.id = 'axoTip'; d.className = 'axotip'; d.innerHTML = '<b>\ud83e\udd8e Wild Axolotl!</b><p>' + AXO.explain + '</p><button class="btn small">Got it</button>'; document.body.appendChild(d); d.querySelector('button').onclick = function () { d.remove(); }; setTimeout(function () { if (d.parentNode) d.remove(); }, 9000); }
   var tryMove = guard(async function (a, c) {
     if (busy || G.over) return; var b = G.board, pa = b.cells[a[0]][a[1]], pc = b.cells[c[0]][c[1]];
     if (pa.crate || pc.crate || (pa.snack && pc.snack)) { sfx.bad(); return; }
@@ -4170,9 +4333,16 @@ window.LB_CONFIG = {
   var TWK = ['woken', 'delivered', 'found', 'trailIdx', 'buddies', 'popped', 'glow', 'echoes', 'friend'];
   var TWSTAT = { woken: 'woken', delivered: 'delivered', found: 'found', trailIdx: 'prints', buddies: 'buddies', popped: 'popped', glow: 'glow', echoes: 'echoes', friend: 'friends' };
   function twSnap() { var t = G.board.tw, o = {}; TWK.forEach(function (k) { o[k] = t[k] || 0; }); return o; }
+  // v13.2 (B): visible move countdown - "Moves left: 12", amber at 5, red at 3, with a small pulse on each change
+  function moveCountdown() {
+    var box = $('moveBox'), m = G.moves; if (!box) return;
+    box.classList.toggle('amber', m <= 5 && m > 3); box.classList.toggle('red', m <= 3);
+    if (G.lastMv !== undefined && G.lastMv !== m && m <= 5) { box.classList.remove('pulse'); void box.offsetWidth; box.classList.add('pulse'); }
+    G.lastMv = m; box.title = 'Moves left: ' + m; box.setAttribute('aria-label', 'Moves left: ' + m);
+  }
   function twTally(o) {
     var t = G.board.tw, tot = 0;
-    TWK.forEach(function (k) { var d = (t[k] || 0) - o[k]; if (d > 0) { S.stats[TWSTAT[k]] += d; tot += d; } });
+    TWK.forEach(function (k) { var d = (t[k] || 0) - o[k]; if (d > 0) { S.stats[TWSTAT[k]] += d; tot += d; if (k === 'echoes') trackDaily('echoes', d); } });
     if (G.tides) { S.stats.tides += G.tides; G.tides = 0; }
     trackDaily('twist', tot); checkMilestones();
   }
@@ -4226,11 +4396,14 @@ window.LB_CONFIG = {
     if (GP.goalsMet(G.L, G.board, G.score, G.collected) || BOSS.defeated(G.boss)) {
       G.over = true; var lbOK = DIFF.CFG[G.dkMin || G.dk || 'normal'].rank >= 1; var movesLeft = G.moves; G.score += G.moves * 100; updateHud();
       var rr = { movesLeft: movesLeft, score: G.score, bestCombo: G.bestCombo, specials: G.specials, boosters: G.boosters }, bm = GP.bonusMet(G.L, rr);
-      rr.supers = G.supers || 0; rr.axo = !!G.axoCaught; rr.bossWin = !!G.boss; var st0 = GP.starsFor(G.L, rr), st = STARWAYS.stars(st0, rr), id = G.L.id, L = G.L, first = !S.stars[id], prevStars = S.stars[id] || 0;
+      rr.supers = G.supers || 0; rr.axo = !!G.axoCaught; rr.bossWin = !!G.boss;
+      var tw9 = G.board.tw, g9 = G.L.goals || {}; rr.echoes = tw9 ? tw9.echoes : 0; // v13.2 #3 more star ways
+      rr.twistExtra = !!tw9 && [['wake', 'woken'], ['glow', 'glow'], ['echoes', 'echoes'], ['bubbles', 'popped'], ['snacks', 'delivered'], ['buddies', 'buddies']].some(function (p) { return g9[p[0]] && (tw9[p[1]] || 0) >= g9[p[0]] + 2; });
+      var st0 = GP.starsFor(G.L, rr), st = STARWAYS.stars(st0, rr), id = G.L.id, L = G.L, first = !S.stars[id], prevStars = S.stars[id] || 0;
       S.stars[id] = Math.max(S.stars[id] || 0, st); if (lbOK) { S.lbStars = S.lbStars || {}; S.lbStars[id] = Math.max(S.lbStars[id] || 0, st); }
       var dkW = G.dk; IQUEST.track(S, 'win', dkW === 'impossible' ? 1 : 0); if (st >= 3) IQUEST.track(S, 'star3', dkW === 'impossible' ? 1 : 0); if (L.boss) IQUEST.track(S, 'boss', dkW === 'impossible' ? 1 : 0); S.best[id] = Math.max(S.best[id] || 0, G.score);
       S.unlocked = Math.max(S.unlocked, id + 1); S.stats.wins++; STREAK.win(S, st); SPEEDRUN.win(S, id, Date.now()).forEach(function (k) { var t = SPEEDRUN.tiers.filter(function (x) { return x.key === k; })[0]; toast('\u23f1\ufe0f ' + t.name + '! ' + t.n + ' levels in ' + t.min + ' min'); }); reportAch(); var newComp = L.boss ? COMP.award(S, id) : null;
-      if (bm) S.stats.bonus++; trackDaily('wins', 1); trackDaily('stars', Math.max(0, st - prevStars)); if (bm) trackDaily('bonus', 1); if (st >= 3) trackDaily('perfect', 1); if (!G.boosters) trackDaily('clean', 1); if (st > st0) toast('\u2b50 Bonus star: ' + STARWAYS.list.filter(function (w) { return STARWAYS.met(rr).indexOf(w.k) >= 0; })[0].t + '!'); checkMilestones(); refreshQuestBtn();
+      if (bm) S.stats.bonus++; trackDaily('wins', 1); trackDaily('stars', Math.max(0, st - prevStars)); if (bm) trackDaily('bonus', 1); if (st >= 3) trackDaily('perfect', 1); if (!G.boosters) trackDaily('clean', 1); if (movesLeft >= 5) trackDaily('spare', 1); trackDaily('goals', Object.keys(G.L.goals || {}).length); if (st > st0) toast('\u2b50 Bonus star: ' + STARWAYS.list.filter(function (w) { return STARWAYS.met(rr).indexOf(w.k) >= 0; })[0].t + '!'); checkMilestones(); refreshQuestBtn();
       try { if (window.PGS && lbOK) PGS.report(S, { boss: !!L.boss }); } catch (e) {}
       S.failStreak = {}; var gift = null;
       if (first) { S.firstClears = (S.firstClears || 0) + 1; if (S.firstClears % 3 === 0) { var GB = ['moves5', 'hammer', 'moves5', 'shuffle', 'row']; gift = GB[(S.firstClears / 3) % GB.length]; S.boost[gift] = (S.boost[gift] || 0) + 1; } }
@@ -4249,7 +4422,7 @@ window.LB_CONFIG = {
       setTimeout(function () {
         if (G !== thisGame) return;
         var squad = cheerSquad().map(function (a) { return '<span>' + PETS.animalSVG(a, 0) + '</span>'; }).join('');
-        modal('<h2>' + (L.boss ? '\ud83d\udc51 Boss beaten!' : L.mini ? '\u2694\ufe0f Mini-boss beaten!' : 'Level ' + id + ' complete!') + '</h2><div class="stars">' + [1, 2, 3].map(function (i) { return '<span class="' + (i <= st ? '' : 'off') + '">\u2605</span>'; }).join('') + '</div><div class="fine">\u2605 Win \u2713 \u00b7 \u2605 ' + L.bonus.moves + '+ moves left ' + (movesLeft >= L.bonus.moves ? '\u2713' : '\u2717') + ' \u00b7 \u2605 ' + bonusText(L) + ' ' + (bm ? '\u2713' : '\u2717') + '</div><div class="cheerline">' + squad + '</div>' + (st > prevStars && !first ? '<div class="fine newbest">New best! ' + starRow(st) + '</div>' : (!first ? '<div class="fine">Best: ' + starRow(S.stars[id]) + '</div>' : '')) + '<p>Score ' + G.score + ' \u00b7 <b id="coinTxt">+' + coins + ' coins</b></p>' + (dbl ? '<div class="fine gift dbl">\ud83d\udc51 Boss bonus: DOUBLE rewards!</div>' : '') + (ev ? '<div class="fine">' + ev.emoji + ' ' + ev.name + ': +' + Math.round(ev.bonus * 100) + '% coins</div>' : '') + (seasonPts ? '<div class="fine">\ud83c\udfc6 +' + seasonPts + ' season points</div>' : '') + (candy ? '<div class="fine gift evgift">' + ev.quest.icon + ' +' + candy + ' ' + ev.quest.name + ' (' + QUEST.state(S, ev, today()).n + ')' + (QUEST.claimable(S, ev, today()).length ? ' \u00b7 \ud83c\udf81 chest ready!' : '') + '</div>' : '') + (snackDrop ? '<div class="fine gift">' + snackDrop.icon + ' You found a ' + snackDrop.name + ' snack!</div>' : '') + (gift ? '<div class="fine gift">\ud83c\udf81 Bonus earned: ' + BICON[gift] + ' ' + BNAME[gift] + '</div>' : '') + adBtn('adDouble', 'Watch ad: double coins') + '<button class="btn" id="nextBtn">Next level</button>' + (st < 3 ? '<button class="btn alt" id="replayBtn">\u21bb Replay for \u2605\u2605\u2605</button>' : '') + '<button class="btn alt small" id="mapBtn">Map</button>');
+        modal('<h2>' + (L.boss ? '\ud83d\udc51 Boss beaten!' : L.mini ? '\u2694\ufe0f Mini-boss beaten!' : 'Level ' + id + ' complete!') + '</h2><div class="stars">' + [1, 2, 3].map(function (i) { return '<span class="' + (i <= st ? '' : 'off') + '">\u2605</span>'; }).join('') + '</div><div class="fine">\u2605 Win \u2713 \u00b7 \u2605 ' + L.bonus.moves + '+ moves left ' + (movesLeft >= L.bonus.moves ? '\u2713' : '\u2717') + ' \u00b7 \u2605 ' + bonusText(L) + ' ' + (bm ? '\u2713' : '\u2717') + '</div><div class="cheerline">' + squad + '</div>' + (st > prevStars && !first ? '<div class="fine newbest">New best! ' + starRow(st) + '</div>' : (!first ? '<div class="fine">Best: ' + starRow(S.stars[id]) + '</div>' : '')) + '<p>Score ' + G.score + ' \u00b7 <b id="coinTxt">+' + coins + ' coins</b></p>' + (dbl ? '<div class="fine gift dbl">\ud83d\udc51 Boss bonus: DOUBLE rewards!</div>' : '') + (ev ? '<div class="fine">' + ev.emoji + ' ' + ev.name + ': +' + Math.round(ev.bonus * 100) + '% coins</div>' : '') + (seasonPts ? '<div class="fine">\ud83c\udfc6 +' + seasonPts + ' season points</div>' : '') + (candy ? '<div class="fine gift evgift">' + ev.quest.icon + ' +' + candy + ' ' + ev.quest.name + ' (' + QUEST.state(S, ev, today()).n + ')' + (QUEST.claimable(S, ev, today()).length ? ' \u00b7 \ud83c\udf81 chest ready!' : '') + '</div>' : '') + (snackDrop ? '<div class="fine gift">' + snackDrop.icon + ' You found a ' + snackDrop.name + ' snack!</div>' : '') + (gift ? '<div class="fine gift">\ud83c\udf81 Bonus earned: ' + BICON[gift] + ' ' + BNAME[gift] + '</div>' : '') + adBtn('adDouble', 'Watch ad: double coins') + '<button class="btn" id="nextBtn">\u25b6 Next level</button>' + (st < 3 ? '<button class="btn alt" id="replayBtn">\u21bb Replay for \u2605\u2605\u2605</button>' : '') + '<button class="btn alt small" id="mapBtn">Map</button>');
         for (var si = 0; si < st; si++) setTimeout(sfx.star.bind(null, si), 250 + si * 280);
         if ($('adDouble')) $('adDouble').onclick = function () { Ads.showRewarded('double_coins', function () { S.coins += coins; save(); sfx.coin(); afterWin(); }, 'double coins'); };
         function afterWin() { var ad = $('adDouble'); if (ad) ad.remove(); }
@@ -4263,7 +4436,7 @@ window.LB_CONFIG = {
           if (pendingFriends.length) steps.push(function (next) { friendModal(next); });
           (function run() { var s = steps.shift(); if (s) s(run); else Ads.afterLevel(id, fn); })();
         };
-        $('nextBtn').onclick = function () { proceed(function () { refreshMap(); show('mapScreen'); preLevel(id + 1); }); };
+        $('nextBtn').onclick = function () { proceed(function () { playNext(id + 1); }); }; // v13.2 #2: straight into the next level
         if ($('replayBtn')) $('replayBtn').onclick = function () { proceed(function () { refreshMap(); show('mapScreen'); preLevel(id); }); };
         $('mapBtn').onclick = function () { proceed(function () { refreshMap(); show('mapScreen'); }); };
       }, 900);
@@ -4337,6 +4510,7 @@ window.LB_CONFIG = {
   function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }); }
   // ---- v13.1 gamer tag (local now; shared board via LB adapter when LB_CONFIG is set) ----
   function tagUI(first) {
+    if (!first && window.TUTS && TUTS.unseen(S, ['tag']).length) { /* first-run prompt stays first; tutorial on later visits */ showTut('tag', function () { tagUI(first); }); return; }
     var c = TAG.canRename(S, Date.now());
     modal('<h2>' + (first ? '\ud83c\udfae Pick your gamer tag' : '\ud83c\udfae Gamer tag') + '</h2><p class="fine">Shown on leaderboards. 3\u201316 letters, numbers, _ or spaces. Don\u2019t use your real name.</p>' +
       '<input id="tagIn" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" value="' + (S.tag || '') + '" style="font-size:18px;padding:8px;border-radius:10px;width:90%">' +
@@ -4370,7 +4544,7 @@ window.LB_CONFIG = {
     refreshPills(); crBanner(); return r;
   }
   // test hook
-  window.__glow = { tagUI: function (f) { tagUI(f); }, crCheck: function () { return crCheck(); }, crBanner: function () { crBanner(); }, event: function () { return curEvent(); }, power: function () { return { energy: S.power.energy, uses: G && G.powerUses, p: curPower().p }; }, usePower: function () { return usePower(); }, fillSuper: function () { S.power.energy = sFull(); refreshPower(); }, fill: function () { S.power.energy = pFull(); refreshPower(); }, recover: recover, busy: function () { return busy; }, tool: function () { return tool; }, start: startLevel, preLevel: preLevel, state: function () { return G; }, S: S, show: show, refreshCollection: refreshCollection, refreshSettings: refreshSettings, refreshMap: refreshMap, refreshRewards: refreshRewards, refreshShop: refreshShop, worldIntro: worldIntro, setTheme: setTheme, Ads: Ads, save: save, FRIEND_AT: FRIEND_AT, ACH: ACH, refreshGoals: refreshGoals, refreshComp: refreshComp, compModal: compModal, refreshFeatured: refreshFeatured, COMP: COMP, toast: toast, cutscene: cutscene, applyEvent: applyEvent, eventModal: eventModal, trackDaily: trackDaily, goalList: function () { return goalList(G.L, G); }, checkEnd: checkEnd, superFire: function (r, c) { return superFire([r, c]); }, failScreen: failScreen, move: function (a, c) { return tryMove(a, c); }, axoTurn: axoTurn, applySkins: applySkins, refreshGoals: refreshGoals };
+  window.__glow = { hud: function(){ updateHud(); }, showTut: function (k) { showTut(k); }, tutList: function () { tutList(); }, playNext: function (id) { playNext(id); }, tagUI: function (f) { tagUI(f); }, crCheck: function () { return crCheck(); }, crBanner: function () { crBanner(); }, event: function () { return curEvent(); }, power: function () { return { energy: S.power.energy, uses: G && G.powerUses, p: curPower().p }; }, usePower: function () { return usePower(); }, fillSuper: function () { S.power.energy = sFull(); refreshPower(); }, fill: function () { S.power.energy = pFull(); refreshPower(); }, recover: recover, busy: function () { return busy; }, tool: function () { return tool; }, start: startLevel, preLevel: preLevel, state: function () { return G; }, S: S, show: show, refreshCollection: refreshCollection, refreshSettings: refreshSettings, refreshMap: refreshMap, refreshRewards: refreshRewards, refreshShop: refreshShop, worldIntro: worldIntro, setTheme: setTheme, Ads: Ads, save: save, FRIEND_AT: FRIEND_AT, ACH: ACH, refreshGoals: refreshGoals, refreshComp: refreshComp, compModal: compModal, refreshFeatured: refreshFeatured, COMP: COMP, toast: toast, cutscene: cutscene, applyEvent: applyEvent, eventModal: eventModal, trackDaily: trackDaily, goalList: function () { return goalList(G.L, G); }, checkEnd: checkEnd, superFire: function (r, c) { return superFire([r, c]); }, failScreen: failScreen, move: function (a, c) { return tryMove(a, c); }, axoTurn: axoTurn, applySkins: applySkins, refreshGoals: refreshGoals };
   syncMute(); Ads.init(); try { if (window.PGS) PGS.init().then(function (ok) { if (ok) { PGS.report(S, {}); PGS.reportSeason(S); reportAch(); } }); } catch (e) {} setTheme(0); refreshPills();
   applyEvent(); seasonCheck(); try { crCheck(); } catch (e) {} refreshTagUI();
   if (!S.tag && !S.tagAsked && S.tutDone && !$('modal').classList.contains('on')) setTimeout(function () { if (!$('modal').classList.contains('on')) tagUI(true); }, 1500);
