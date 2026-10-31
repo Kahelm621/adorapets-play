@@ -59,7 +59,7 @@ h1{font-size:46px;margin:6vh 0 0;letter-spacing:1px;text-align:center;background
 .particle{position:absolute;width:8px;height:8px;border-radius:50%;pointer-events:none}
 .float{position:absolute;font-weight:900;font-size:20px;pointer-events:none;text-shadow:0 2px 4px #000;animation:up .8s forwards}
 @keyframes up{to{transform:translateY(-40px);opacity:0}}
-.banner{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-size:34px;font-weight:900;color:#ffd36e;text-shadow:0 0 18px #ff7ad9;pointer-events:none;animation:ban 1.2s forwards;white-space:nowrap;z-index:5}
+.banner{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-size:34px;font-weight:900;color:#ffd36e;text-shadow:0 0 18px #ff7ad9;pointer-events:none;animation:ban 1.2s forwards;white-space:nowrap;z-index:9;max-width:96%}
 @keyframes ban{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}20%{transform:translate(-50%,-50%) scale(1.1);opacity:1}80%{opacity:1}100%{opacity:0}}
 .modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:20}
 .modal.on{display:flex}
@@ -510,6 +510,25 @@ details.howto{margin:4px 0;padding:6px 10px;border-radius:10px;background:#0003}
 #twistLine{font-weight:700}
 /* v13.2 #6 board skins: confined to the board square, cells stay readable */
 #board.skinned{background-size:cover;background-color:transparent}
+
+/* v13.3 board skins win over event/world themes (spooky used !important and hid every board skin) */
+#board.skinned,body[data-theme] #board.skinned{background:var(--skin) center/cover no-repeat!important}
+#claimWin.claimwin{position:absolute;top:4px;right:6px;z-index:30;width:auto;margin:0;padding:6px 12px}
+/* v13.3 caged pets */
+.pc.caged{overflow:visible}
+.pc .cagebars{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.pc .bd.cg{right:-2px;bottom:-2px;background:#5b6475;color:#fff;font-weight:800;border-radius:8px;padding:1px 3px}
+.pc.crack{animation:cageCrack .26s ease-in}
+.pc.freed{animation:cageFree .5s ease-out}
+@keyframes cageCrack{0%{filter:none}40%{filter:brightness(1.8) drop-shadow(0 0 6px #fff)}100%{filter:brightness(1.2);opacity:.7}}
+@keyframes cageFree{0%{filter:brightness(2) drop-shadow(0 0 12px #fff)}100%{filter:none}}
+
+/* v13.4: banners stack in lanes above the axolotl; long lines shrink so they never spill over each other */
+.banner.long,.banner.c5.long,.banner.c6.long,.banner.c7.long{white-space:nowrap;text-align:center;line-height:1.15}
+.float{z-index:8}
+/* v13.4 #5: bigger Play / Start buttons */
+#playBtn,#goBtn{font-size:32px;padding:20px 72px;min-width:240px;min-height:72px;border-radius:24px;letter-spacing:.5px}
+@media (max-height:700px){#playBtn,#goBtn{font-size:28px;padding:16px 60px;min-height:62px}}
 </style></head>
 <body><div id="bg"><canvas id="bgCanvas"></canvas></div><div id="app">
  <section id="title" class="screen on">
@@ -522,7 +541,7 @@ details.howto{margin:4px 0;padding:6px 10px;border-radius:10px;background:#0003}
   <div class="row2"><button class="btn alt small rewardsBtn">Rewards</button><button class="btn alt small shopBtn">Shop</button></div>
  </section>
  <section id="mapScreen" class="screen">
-  <div class="topbar"><button class="iconbtn" id="mapBack">◀</button><span class="pill livesPill"></span><span class="pill coinPill"></span><button class="iconbtn musicBtn" aria-label="Music">🎵</button><button class="iconbtn muteBtn" aria-label="Sound">♪</button></div>
+  <div class="topbar"><button class="iconbtn" id="mapBack">◀</button><span class="pill livesPill"></span><span class="pill coinPill"></span><button class="iconbtn muteBtn" aria-label="Sound on/off" title="Sound on/off">♪</button></div>
   <div class="maphead"><h2 id="mapLevel">Level Map</h2><div><button class="iconbtn goalsBtn" aria-label="Goals">🎯<i id="goalDot" class="dot"></i></button><button class="iconbtn compBtn" aria-label="Companions">💖</button><button class="iconbtn petsBtn" aria-label="Pet Book">📖</button><button class="iconbtn rewardsBtn" aria-label="Rewards">🎁<i id="rewardDot" class="dot"></i></button><button class="iconbtn shopBtn" aria-label="Shop">🛒</button><button class="iconbtn seasonBtn" aria-label="Season leaderboard">🏆</button><button class="iconbtn achBtn" aria-label="Achievement Hunters">🏅</button></div></div>
   <div id="map"><div id="mapGrid"></div></div>
   <button id="mapPeek" class="mappeek compBtn" aria-label="Your companion"></button>
@@ -577,7 +596,7 @@ details.howto{margin:4px 0;padding:6px 10px;border-radius:10px;background:#0003}
   </div>
  </section>
  <section id="game" class="screen">
-  <div class="topbar"><button class="iconbtn" id="quitBtn">◀ Map</button><span class="pill" id="lvlName"></span><button class="iconbtn" id="helpBtn" aria-label="How to play">?</button><button class="iconbtn musicBtn" aria-label="Music">🎵</button><button class="iconbtn muteBtn" aria-label="Sound">♪</button></div>
+  <div class="topbar"><button class="iconbtn" id="quitBtn">◀ Map</button><span class="pill" id="lvlName"></span><button class="iconbtn" id="helpBtn" aria-label="How to play">?</button><button class="iconbtn muteBtn" aria-label="Sound on/off" title="Sound on/off">♪</button></div>
   <div id="goalLine"></div><div id="twistLine"></div>
   <div id="hud"><div class="hudbox movebox" id="moveBox"><small id="movesLbl">Moves left</small><b id="moves">0</b></div><div class="hudbox" style="position:relative"><small>Score</small><b id="score">0</b><div id="srTimer" class="srtimer" style="display:none"></div></div><div class="hudbox goalbox"><small>Goals</small><div id="goals"></div></div></div>
   <div id="starbar"><div id="starfill"></div></div><div id="starObj"></div>
@@ -1109,6 +1128,7 @@ window.LB_CONFIG = {
   var uid = 1;
   function piece(color, sp) { return { id: uid++, color: color, sp: sp || 0 }; }
   function crate(hp) { return { id: uid++, color: -1, sp: 0, crate: hp || 1 }; }
+  function cage(color) { var p = crate(3); p.cage = 1; p.cagePet = color; return p; } // v13.3 caged pet: 3 hits to open
   function isCrate(p) { return !!(p && p.crate); }
   function inert(p) { return !!(p && (p.crate || p.snack)); } // crates & snacks never match
   function plain(p) { return !!(p && !p.crate && !p.snack && !p.sp && !p.sleep && !p.bub && !p.pal && !p.gold); }
@@ -1215,18 +1235,18 @@ window.LB_CONFIG = {
     var woke = [], wk = {};
     function wake(r, c) { var p = inB(r, c) && b.cells[r][c]; if (!p || !p.sleep || wk[p.id]) return; wk[p.id] = 1; p.sleep = 0; p.nap = 0; woke.push({ r: r, c: c, id: p.id }); }
     removed.forEach(function (x) { hitCrate(x.r - 1, x.c); hitCrate(x.r + 1, x.c); hitCrate(x.r, x.c - 1); hitCrate(x.r, x.c + 1); wake(x.r - 1, x.c); wake(x.r + 1, x.c); wake(x.r, x.c - 1); wake(x.r, x.c + 1); });
-    crateHit.forEach(function (h) { var p = b.cells[h.r][h.c]; if (h.gone) { h.baby = !!p.baby; h.bush = !!p.bush; h.friend = !!p.friend; b.cells[h.r][h.c] = null; } });
+    crateHit.forEach(function (h) { var p = b.cells[h.r][h.c]; if (h.gone) { h.baby = !!p.baby; h.bush = !!p.bush; h.friend = !!p.friend; if (p.cage) { h.cage = 1; h.color = p.cagePet; b.cells[h.r][h.c] = { id: p.id, color: p.cagePet, sp: 0 }; } else b.cells[h.r][h.c] = null; } }); // v13.3: a cage that hits 0 frees its pet in place
     var tw = b.tw;
     if (tw) {
       removed.forEach(function (x) { if (x.sleep) tw.woken++; if (x.bub) tw.popped++; });
       tw.woken += woke.length;
-      crateHit.forEach(function (h) { if (h.baby) tw.found++; if (h.friend) tw.friend = 1; });
+      crateHit.forEach(function (h) { if (h.baby) tw.found++; if (h.friend) tw.friend = 1; if (h.cage) tw.freed++; });
       if (tw.cfg.night && isNight(b)) removed.forEach(function (x) { if (tw.cfg.night.colors.indexOf(x.color) >= 0) { tw.glow++; x.glow = 1; } });
       if (tw.trail) { var cl = {}; removed.forEach(function (x) { cl[x.r + ',' + x.c] = 1; }); var lit = []; while (tw.trailIdx < tw.trail.length && cl[tw.trail[tw.trailIdx] + '']) { lit.push(tw.trail[tw.trailIdx]); tw.trailIdx++; } if (lit.length) iceHit.trail = lit; }
     }
     return { removed: removed, iceHit: iceHit, crateHit: crateHit, woke: woke, trailLit: iceHit.trail || [] };
   }
-  function cratesLeft(b) { var n = 0; for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) { var p = b.cells[r][c]; if (isCrate(p) && !p.bush && !p.friend) n++; } return n; }
+  function cratesLeft(b) { var n = 0; for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) { var p = b.cells[r][c]; if (isCrate(p) && !p.bush && !p.friend && !p.cage) n++; } return n; }
   function count(b, f) { var n = 0; for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) if (b.cells[r][c] && f(b.cells[r][c])) n++; return n; }
   function isNight(b) { var t = b.tw, nc = t && t.cfg.night; return !!nc && Math.floor(t.moveNo / nc.every) % 2 === 1; }
   function iceLeft(b) { var n = 0; for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) n += b.ice[r][c]; return n; }
@@ -1295,10 +1315,12 @@ window.LB_CONFIG = {
     var tw = b.tw, echo = null;
     if (tw) tw.bestCombo = Math.max(tw.bestCombo, steps.length);
     // ECHO (mountains): every few moves the mountain repeats your swap mirrored left<->right.
-    if (tw && tw.cfg.echo && (tw.moveNo + 1) % tw.cfg.echo.every === 0) {
+    // v13.4 #3: when the mirrored swap had no match (often right after a tide slid the bottom row) the echo was silently
+    // thrown away and the "Echo in N" counter started over. Now a missed echo stays PENDING and fires on the next move.
+    if (tw && tw.cfg.echo && (tw.echoPending || (tw.moveNo + 1) % tw.cfg.echo.every === 0)) {
       var ma = [a[0], N - 1 - a[1]], mc = [c[0], N - 1 - c[1]];
-      if (hasMatchAfterSwap(b, ma, mc)) { var eids = [b.cells[ma[0]][ma[1]].id, b.cells[mc[0]][mc[1]].id]; var er = playMove(b, ma, mc, { inner: true }); tw.echoes++; echo = { a: ma, c: mc, ids: eids, steps: er.steps, snap: null }; }
-      else echo = { miss: true };
+      if (hasMatchAfterSwap(b, ma, mc)) { var eids = [b.cells[ma[0]][ma[1]].id, b.cells[mc[0]][mc[1]].id]; var er = playMove(b, ma, mc, { inner: true }); tw.echoes++; tw.echoPending = 0; echo = { a: ma, c: mc, ids: eids, steps: er.steps, snap: null }; }
+      else { tw.echoPending = 1; echo = { miss: true }; }
     }
     var tr = tw ? afterTurn(b, true) : null;
     var shuffled = false;
@@ -1346,7 +1368,7 @@ window.LB_CONFIG = {
   // Start-of-level booster: turn a random plain pet into a special.
   function placeSpecial(b, sp, rand) {
     rand = rand || b.rand; var list = [];
-    for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) { var p = b.cells[r][c]; if (p && !p.crate && !p.sp) list.push([r, c]); }
+    for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) { var p = b.cells[r][c]; if (p && !p.crate && !p.sp && !p.snack && !p.bush && !p.gold && p.color >= 0) list.push([r, c]); } // v13.4: never hide a special inside a snack/bush
     if (!list.length) return null; var at = list[Math.floor(rand() * list.length)]; b.cells[at[0]][at[1]].sp = sp; return at;
   }
 
@@ -1363,10 +1385,11 @@ window.LB_CONFIG = {
     night: { icon: '\ud83c\udf19', name: 'Day & Night', hint: 'The sky changes every few moves. At night the glowing pets shine: they score double and count toward your moonlight goal. During the day they are just sleepy.' },
     buddy: { icon: '\ud83d\udc9e', name: 'Best Buddies', hint: 'Two pets with matching hearts are best buddies. Pop BOTH buddies in the same move to reunite them! If only one pops, the lonely buddy picks a new friend right next to it.' },
     echo: { icon: '\ud83c\udfd4\ufe0f', name: 'Mountain Echo', hint: 'Yoo-hoo! Every 2nd move the mountain echoes your swap on the mirror side of the board (column c \u2192 column 7\u2212c, e.g. a swap in column 2 echoes in column 5). If the mirror swap makes a match it pops for free and counts as an echo!' },
+    cage: { icon: '\ud83d\udd12', name: 'Caged Pets', hint: 'Some pets are locked in cages! A caged pet can\u2019t be swapped and doesn\u2019t match. Make 3 matches right next to a cage (the counter shows 3, 2, 1) to crack it open. The freed pet joins the board.' },
     bubble: { icon: '\ud83e\udee7', name: 'Floaty Bubbles', hint: 'Some pets are wrapped in bubbles and float up one row every move. Match them to pop the bubble before they drift away (they bob back in at the bottom).' }
   };
   var WORLD_TWISTS = [['sleepy'], ['tides'], ['snack'], ['trail'], ['hide'], ['night'], ['buddy'], ['echo'], ['bubble'], ['bubble', 'tides'], ['snack', 'buddy']];
-  function newTw(cfg) { return { cfg: cfg, moveNo: 0, woken: 0, delivered: 0, found: 0, trailIdx: 0, trail: cfg.trail ? cfg.trail.path : null, buddies: 0, popped: 0, glow: 0, echoes: 0, bestCombo: 0, friend: 0, snackLeft: 0, pairs: [], nextPal: 1 }; }
+  function newTw(cfg) { return { cfg: cfg, moveNo: 0, woken: 0, delivered: 0, found: 0, trailIdx: 0, trail: cfg.trail ? cfg.trail.path : null, buddies: 0, popped: 0, glow: 0, echoes: 0, freed: 0, bestCombo: 0, friend: 0, snackLeft: 0, pairs: [], nextPal: 1 }; }
   function plainCells(b, rMin, rMax) { var out = []; for (var r = rMin; r <= rMax; r++) for (var c = 0; c < N; c++) if (plain(b.cells[r][c])) out.push([r, c]); return out; }
   function takeRandom(b, list) { if (!list.length) return null; var i = Math.floor(b.rand() * list.length); return list.splice(i, 1)[0]; }
   function spawnPair(b) {
@@ -1387,6 +1410,7 @@ window.LB_CONFIG = {
     if (cfg.hide) { cfg.hide.bushes.forEach(function (x) { var cr = crate(1); cr.bush = 1; b.cells[x[0]][x[1]] = cr; }); hideBaby(b); }
     if (cfg.bubble) { var bc = plainCells(b, 3, N - 1); for (i = 0; i < cfg.bubble.goal; i++) { at = takeRandom(b, bc); if (!at) break; b.cells[at[0]][at[1]].bub = 1; } }
     if (cfg.buddy) for (i = 0; i < Math.min(cfg.buddy.goal, 2); i++) spawnPair(b);
+    if (cfg.cage) cfg.cage.cells.forEach(function (x) { var q = b.cells[x[0]][x[1]]; b.cells[x[0]][x[1]] = cage(q && q.color >= 0 ? q.color : Math.floor(b.rand() * b.colors)); });
     if (cfg.friend) { var fr = crate(3); fr.friend = 1; b.cells[cfg.friend[0]][cfg.friend[1]] = fr; }
     // v10 fix (level 29 "need ZZ but no ZZ"): sleepers are placed LAST, so snacks (row 0), bushes and the
     // caged friend can no longer overwrite them. Before, up to a third of boards started with fewer sleepy pets than the goal.
@@ -1413,6 +1437,7 @@ window.LB_CONFIG = {
     if (g.glow && !(lv.tw && lv.tw.night)) bad.push('glow goal but no night');
     if (g.echoes && !(lv.tw && lv.tw.echo)) bad.push('echo goal but no echo');
     if (g.friend && !(lv.tw && lv.tw.friend)) bad.push('friend goal but no friend');
+    if (g.cages && !(lv.tw && lv.tw.cage && lv.tw.cage.cells.length >= g.cages)) bad.push('cage goal > cages placed');
     if (g.score && g.score <= 0) bad.push('bad score');
     for (var s = 1; s <= seeds && !bad.length; s++) {
       var b = makeBoard(lv.colors, rng(s * 31 + lv.id), lv.obstacles, lv.crates, lv);
@@ -1421,6 +1446,7 @@ window.LB_CONFIG = {
       if (g.crates && cratesLeft(b) !== g.crates) bad.push('seed ' + s + ': crate mismatch');
       if (g.bubbles && count(b, function (q) { return q.bub; }) < Math.min(g.bubbles, 1)) bad.push('seed ' + s + ': no bubbles');
       if (g.friend && !count(b, function (q) { return q.friend; })) bad.push('seed ' + s + ': friend missing');
+      if (g.cages && count(b, function (q) { return q.cage; }) < g.cages) bad.push('seed ' + s + ': cages missing');
       if (!hasMove(b)) bad.push('seed ' + s + ': no move');
     }
     return bad;
@@ -1456,7 +1482,7 @@ window.LB_CONFIG = {
     var before = steps.length; deliver(b, steps); if (steps.length > before) steps = steps.concat(cascade(b, null, null));
     return { events: ev, snap: snap, steps: steps };
   }
-  function twistProgress(b) { var t = b.tw; return t ? t.woken + t.delivered * 2 + t.found * 3 + t.trailIdx * 2 + t.buddies * 3 + t.popped + t.glow + t.echoes * 2 + t.friend * 4 : 0; }
+  function twistProgress(b) { var t = b.tw; return t ? t.woken + t.delivered * 2 + t.found * 3 + t.trailIdx * 2 + t.buddies * 3 + t.popped + t.glow + t.echoes * 2 + t.friend * 4 + (t.freed || 0) * 3 : 0; }
 
   // ---- Endless level generator --------------------------------------------
   // Deterministic: getLevel(n) always returns the same level for the same n.
@@ -1596,6 +1622,10 @@ window.LB_CONFIG = {
     // and stage 5 of the mountain world itself gets echo-only (no second twist) so it is a pure echo practice level.
     if (n > 80 && k === 7 && !lv.boss && list.indexOf('echo') < 0) { if (list.length >= 2) list[list.length - 1] = 'echo'; else list.push('echo'); }
     if (w === 7 && k === 5) list = ['echo'];
+    // v13.3 Caged Pets (Kristi: "caged pets take 3x matching to open"): first met on level 93 (cage only, a practice level),
+    // then stage 6 of every world from 9 on (levels 97, 107, 117...) swaps its pool twist for cages. Bosses never get cages.
+    if (w === 9 && k === 2) list = ['cage'];
+    else if (w >= 9 && k === 6 && !lv.boss) { if (list.length >= 2) list[list.length - 1] = 'cage'; else list.push('cage'); }
     // v13 (Kristi's list): levels 27, 29 and 30 must always have sleepy pets.
     if (FORCE_SLEEPY[n] && list.indexOf('sleepy') < 0) { if (list.length >= 2) list[list.length - 1] = 'sleepy'; else list.push('sleepy'); }
     lv.twists = list; lv.tw = {};
@@ -1623,6 +1653,7 @@ window.LB_CONFIG = {
         if (name === 'buddy') { lv.tw.buddy = { goal: g(1.5, 2) }; lv.goals.buddies = lv.tw.buddy.goal; }
         if (name === 'echo') { lv.tw.echo = { every: 2 }; lv.goals.echoes = g(2, 3); }
         if (name === 'bubble') { lv.tw.bubble = { goal: g(3, 5) }; lv.goals.bubbles = lv.tw.bubble.goal; }
+        if (name === 'cage') { var nCage = list.length === 1 ? 2 : Math.max(2, Math.min(4, g(2, 2.5))), cells = pickCells(r, nCage + 4, 2, used).filter(function (x) { return !occ[x + ''] && x[0] <= N - 2 && x[1] >= 1 && x[1] <= N - 2; }).slice(0, nCage); cells.forEach(function (x) { occ[x + ''] = 1; }); lv.tw.cage = { cells: cells }; lv.goals.cages = cells.length; lv.moves += cells.length; }
       });
       if (lv.boss && list.length > 1) lv.colors = Math.min(lv.colors, 5);
       if (lv.boss) { var fc = [N - 2, 3 + (n % 2)]; lv.crates = lv.crates.filter(function (x) { return !(x[0] === fc[0] && x[1] === fc[1]); }); lv.obstacles = lv.obstacles.filter(function (x) { return !(x[0] === fc[0] && x[1] === fc[1]); }); if (lv.tw.hide) lv.tw.hide.bushes = lv.tw.hide.bushes.filter(function (x) { return !(x[0] === fc[0] && x[1] === fc[1]); }); lv.tw.friend = fc; lv.goals.friend = 1; }
@@ -1656,6 +1687,7 @@ window.LB_CONFIG = {
     if (g.buddies && t.buddies < g.buddies) return false;
     if (g.echoes && t.echoes < g.echoes) return false;
     if (g.bubbles && t.popped < g.bubbles) return false;
+    if (g.cages && (t.freed || 0) < g.cages) return false;
     if (g.friend && !t.friend) return false;
     return true;
   }
@@ -1703,7 +1735,7 @@ window.LB_CONFIG = {
   function cp(p) { if (!p) return p; var o = {}; for (var k in p) o[k] = p[k]; return o; }
   function clone(b) { var o = { n: N, colors: b.colors, rand: b.rand, ice: b.ice.map(function (r) { return r.slice(); }), cells: b.cells.map(function (r) { return r.map(cp); }) }; if (b.tw) { var t = JSON.parse(JSON.stringify(b.tw)); t.cfg = b.tw.cfg; t.trail = b.tw.trail; o.tw = t; } o.lv = b.lv; return o; }
 
-  var api = { CONFIG: CONFIG, setWave: setWave, feasible: feasible, refillTwists: refillTwists, CURVE: CURVE, CURVE_LATE: CURVE_LATE, curveRow: curveRow, botRandom: botRandom, SUPER: SUPER, superChance: superChance, rollSuper: rollSuper, superCells: superCells, plainCells: plainCells, N: N, SP: SP, rng: rng, makeBoard: makeBoard, findMatches: findMatches, findMove: findMove, hasMove: hasMove, hasMatchAfterSwap: hasMatchAfterSwap, shuffle: shuffle, collapse: collapse, playMove: playMove, swap: swap, adj: adj, piece: piece, LEVELS: LEVELS, COLOR_NAMES: COLOR_NAMES, getLevel: getLevel, difficulty: difficulty, WAVE: WAVE, blast: blast, placeSpecial: placeSpecial, cascade: cascade, crate: crate, isCrate: isCrate, cratesLeft: cratesLeft, iceLeft: iceLeft, goalsMet: goalsMet, botPlay: botPlay, clone: clone, TWISTS: TWISTS, WORLD_TWISTS: WORLD_TWISTS, afterTurn: afterTurn, isNight: isNight, starsFor: starsFor, bonusMet: bonusMet, inert: inert, setupTwists: setupTwists, count: count };
+  var api = { CONFIG: CONFIG, setWave: setWave, feasible: feasible, refillTwists: refillTwists, CURVE: CURVE, CURVE_LATE: CURVE_LATE, curveRow: curveRow, botRandom: botRandom, SUPER: SUPER, superChance: superChance, rollSuper: rollSuper, superCells: superCells, plainCells: plainCells, N: N, SP: SP, rng: rng, makeBoard: makeBoard, findMatches: findMatches, findMove: findMove, hasMove: hasMove, hasMatchAfterSwap: hasMatchAfterSwap, shuffle: shuffle, collapse: collapse, playMove: playMove, swap: swap, adj: adj, piece: piece, LEVELS: LEVELS, COLOR_NAMES: COLOR_NAMES, getLevel: getLevel, difficulty: difficulty, WAVE: WAVE, blast: blast, placeSpecial: placeSpecial, cascade: cascade, crate: crate, cage: cage, isCrate: isCrate, cratesLeft: cratesLeft, iceLeft: iceLeft, goalsMet: goalsMet, botPlay: botPlay, clone: clone, TWISTS: TWISTS, WORLD_TWISTS: WORLD_TWISTS, afterTurn: afterTurn, isNight: isNight, starsFor: starsFor, bonusMet: bonusMet, inert: inert, setupTwists: setupTwists, count: count };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.GP = api;
 })(this);
 </script><script>// Adorapets v5 - Companions: beat a world's boss (every 10th level) to earn that world's companion.
@@ -1805,7 +1837,9 @@ window.LB_CONFIG = {
     // v13.2 more missions
     { m: 'echoes', t: 'Hear {n} mountain echoes', lo: 2, hi: 4, c: 55 },
     { m: 'spare', t: 'Win {n} levels with 5+ moves left', lo: 1, hi: 3, c: 50 },
-    { m: 'goals', t: 'Finish {n} level goals (any goal line)', lo: 4, hi: 8, c: 45 }
+    { m: 'goals', t: 'Finish {n} level goals (any goal line)', lo: 4, hi: 8, c: 45 },
+    // v13.3
+    { m: 'freed', t: 'Free {n} caged pets', lo: 2, hi: 3, c: 60 }
   ];
   var DAILY_BOOST = ['hint', 'shuffle', 'hammer', 'moves5', 'sline', 'row', 'sbomb'];
   function hash(str) { var h = 2166136261; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h >>> 0; }
@@ -1853,6 +1887,7 @@ window.LB_CONFIG = {
   add('tw_buddy', 'Reunite 20 best buddies', stat('buddies'), 20, 120, 'sline', 'Twists');
   add('tw_echo5', 'Hear your first 5 mountain echoes', stat('echoes'), 5, 60, 'hint', 'Twists');
   add('tw_echo', 'Hear 20 mountain echoes', stat('echoes'), 20, 120, 'moves5', 'Twists');
+  add('tw_cage20', 'Free 20 caged pets', stat('freed'), 20, 150, 'hammer', 'Twists'); // v13.3
   add('tw_echo60', 'Hear 60 mountain echoes', stat('echoes'), 60, 250, 'srainbow', 'Twists');
   add('tw_bub', 'Pop 40 bubbles', stat('popped'), 40, 120, 'shuffle', 'Twists');
   add('tw_friend', 'Free 5 bosses\u2019 friends', stat('friends'), 5, 200, 'srainbow', 'Twists');
@@ -3025,12 +3060,20 @@ window.LB_CONFIG = {
   // ---------------- DAILY REWARD (auto-clicker fix) ----------------
   // Pure. Marks the day claimed and records a monotonic timestamp BEFORE the caller grants anything.
   // Rejects: same calendar day, clock rolled back past the last claim. (Busy re-entry is blocked in game.js.)
+  // v13.4 #4: day keys are unpadded 'Y-M-D' strings, so the old string compare (day < S.lastDaily) said '2026-10-10' was
+  // BEFORE '2026-10-9' and '2026-10-1' before '2026-9-30': the claim was rejected as "clock" and the streak never grew.
+  // Days are now compared as real calendar day numbers.
+  function dayNum(k) { var m = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(String(k || '')); return m ? Math.round(Date.UTC(+m[1], +m[2] - 1, +m[3]) / 864e5) : null; }
   var DAILY = {
+    dayNum: dayNum,
+    // streak to show (and continue from) on calendar day `day`: kept if claimed today or yesterday, else 0.
+    state: function (S, day) { var d = dayNum(day), l = dayNum(S.lastDaily), claimed = l != null && d === l, gap = l == null || d == null ? 99 : d - l, streak = gap === 0 || gap === 1 ? (S.streak || 0) : 0; return { claimed: claimed, streak: streak, idx: claimed ? Math.max(0, streak - 1) % 7 : streak % 7, clock: gap < 0 }; },
     claim: function (S, nowMs, day, yday, nRewards) {
-      if (S.lastDaily === day) return { ok: false, why: 'claimed' };
+      var d = dayNum(day), l = dayNum(S.lastDaily);
+      if (l != null && d === l) return { ok: false, why: 'claimed' };
       if (S.lastDailyTs && nowMs < S.lastDailyTs) return { ok: false, why: 'clock' };
-      if (S.lastDaily && day < S.lastDaily) return { ok: false, why: 'clock' };
-      var streak = S.lastDaily === yday ? (S.streak || 0) : 0, idx = streak % (nRewards || 7);
+      if (l != null && d != null && d < l) return { ok: false, why: 'clock' };
+      var streak = l != null && d - l === 1 ? (S.streak || 0) : 0, idx = streak % (nRewards || 7);
       S.streak = streak + 1; S.lastDaily = day; S.lastDailyTs = nowMs;
       return { ok: true, idx: idx, streak: S.streak };
     }
@@ -3072,7 +3115,11 @@ window.LB_CONFIG = {
     CHANCE: 0.06, STAY: 3, COINS: 40, MOVES: 3,
     explain: 'A Wild Axolotl wandered onto your board! Pop the tile it is hiding on within 3 moves to catch it: +3 moves, +40 coins and it can earn you a bonus star.',
     roll: function (G, rand) { if (!G || G.axoSeen || G.over || (G.movesMade || 0) < 3) return false; if (rand() >= AXO.CHANCE) return false; G.axoSeen = 1; return true; },
-    tick: function (A) { if (!A) return null; A.left--; return A.left <= 0 ? 'gone' : null; }
+    tick: function (A) { if (!A) return null; A.left--; return A.left <= 0 ? 'gone' : null; },
+    // v13.4 #3: the axolotl rides its PET (by id), not a fixed cell. Before, any tide slide, mountain echo swap,
+    // gravity fall or shuffle that moved that pet counted as "caught" (+3 moves) even though nothing was popped.
+    // Returns the pet's new [r, c], or null when the pet is really gone (popped = caught).
+    locate: function (b, A) { if (!b || !A) return null; for (var r = 0; r < b.cells.length; r++) for (var c = 0; c < b.cells[r].length; c++) { var p = b.cells[r][c]; if (p && p.id === A.id) return [r, c]; } return null; }
   };
 
   // ---------------- HOW-TO for quest/twist mechanics ----------------
@@ -3139,6 +3186,10 @@ window.LB_CONFIG = {
     { k: 'bubble', icon: O, t: 'Bubbles', steps: [
       { p: 'Pets in ' + O + ' bubbles are stuck. Match them to pop the bubble.', ill: g(['[' + O + '] ' + C + ' ' + B, D + ' [' + D + '] [' + D + ']']) },
       { p: 'Bubbles slowly rise. Each pop counts for the goal.' }] },
+    { k: 'cage', icon: '\ud83d\udd12', t: 'Caged pets', steps: [
+      { p: 'A pet in a \ud83d\udd12 cage is stuck: you <b>can\u2019t swap it</b> and it <b>doesn\u2019t match</b>.', ill: g([D + ' [\ud83d\udd12] ' + C]) },
+      { p: 'Make <b>3 matches right next to</b> the cage. The counter goes <b>3 \u2192 2 \u2192 1</b> and the bars crack.', ill: g(['(' + D + ') [\ud83d\udd12] (' + C + ')', '[' + B + '] [' + B + '] [' + B + ']']) + '<div class="tcap">Each match next to it = 1 crack</div>' },
+      { p: 'Crack! The pet is <b>free</b>, joins the board and counts for the \u201cFree caged pets\u201d goal.' }] },
     { k: 'mini', icon: '\u2694\ufe0f', t: 'Mini-bosses', steps: [
       { p: 'Every 5th level is a <b>mini-boss</b>. Every match hurts it; its health bar is above the board.', ill: '<div class="tbar"><i style="width:60%"></i></div>' },
       { p: 'It warns you one turn before its attack. Beat it for <b>2\u00d7 rewards</b> and a chest!' }] },
@@ -3163,7 +3214,7 @@ window.LB_CONFIG = {
   ];
   var BY = {}; LIST.forEach(function (x) { BY[x.k] = x; });
   // twist names used by the level generator -> tutorial key
-  var TWIST_KEY = { sleepy: 'sleepy', trail: 'trail', tides: 'tides', snack: 'snack', hide: 'hide', night: 'night', buddy: 'buddy', echo: 'echo', bubble: 'bubble' };
+  var TWIST_KEY = { sleepy: 'sleepy', trail: 'trail', tides: 'tides', snack: 'snack', hide: 'hide', night: 'night', buddy: 'buddy', echo: 'echo', bubble: 'bubble', cage: 'cage' };
   // which tutorials a level needs on first encounter
   function forLevel(L) { var out = (L.twists || []).map(function (t) { return TWIST_KEY[t]; }).filter(Boolean); if (L.boss) out.push('boss'); else if (L.mini) out.push('mini'); return out; }
   function unseen(S, keys) { S.tutSeen = S.tutSeen || {}; return keys.filter(function (k) { return BY[k] && !S.tutSeen[k]; }); }
@@ -3203,8 +3254,12 @@ window.LB_CONFIG = {
     if (S.ver < 3) { S.ver = 3; S.twistSeen = S.twistSeen || {}; S.daily = S.daily || null; }
     if (S.ver < 4) { S.ver = 4; }
     COMP.retro(S); // v5: companions for every world already beaten
+    // v13.3 #5/#6: a second function named today() (event date, returns a Date) shadowed the 'Y-M-D' one, so the daily
+    // reward, daily goals and the ad/chest day counter compared Date objects and reset on every call. Migrate saved ISO days.
+    (function () { function ymd(v) { if (typeof v !== 'string' || !/T\d\d:/.test(v)) return v; var d = new Date(v); return isNaN(d) ? v : d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+      S.lastDaily = ymd(S.lastDaily); if (S.ad) S.ad.day = ymd(S.ad.day); if (S.daily) S.daily.day = ymd(S.daily.day); })();
     S.twistSeen = S.twistSeen || {}; S.stats = S.stats || {}; S.ach = S.ach || {}; S.rescued = S.rescued || {}; S.introSeen = S.introSeen || {}; S.boost = S.boost || { hammer: 1, row: 1, shuffle: 1, moves5: 1, hint: 3, sbomb: 1, sline: 1, srainbow: 0 }; S.ad = S.ad || { day: '', n: 0, chests: 0, lastInter: 0, sinceInter: 0, lastRewarded: 0 };
-    ['matched', 'woken', 'delivered', 'found', 'prints', 'buddies', 'popped', 'glow', 'echoes', 'tides', 'friends', 'bonus', 'dailyAll', 'wins', 'combos', 'specials', 'bosses'].forEach(function (k) { S.stats[k] = S.stats[k] || 0; });
+    ['matched', 'woken', 'delivered', 'found', 'prints', 'buddies', 'popped', 'glow', 'echoes', 'tides', 'friends', 'freed', 'bonus', 'dailyAll', 'wins', 'combos', 'specials', 'bosses'].forEach(function (k) { S.stats[k] = S.stats[k] || 0; });
   }
   var FRIEND_AT = 30; // v8: rescue this many of an animal to befriend it (was 20)
   var OLD_FRIEND_AT = 20;
@@ -3267,7 +3322,7 @@ window.LB_CONFIG = {
   var CFG = window.ADS_CONFIG || {};
   var RCAP = CFG.rewardedDailyCap || 20, IEVERY = CFG.interstitialEvery || 5, IGAP = CFG.interstitialMinGapMs || 180000, IFROM = CFG.interstitialFromLevel || 9;
   function today() { var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
-  function yesterday() { var d = new Date(Date.now() - 864e5); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+  function yesterday() { var d = new Date(); d.setDate(d.getDate() - 1); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
   function adDay() { if (S.ad.day !== today()) { S.ad.day = today(); S.ad.n = 0; S.ad.chests = 0; save(); } return S.ad; }
   function admob() { var C = window.Capacitor; return C && C.isNativePlatform && C.isNativePlatform() && C.Plugins && C.Plugins.AdMob; }
   var Ads = window.Ads = {
@@ -3288,15 +3343,18 @@ window.LB_CONFIG = {
     rewardedLeft: function () { return Math.max(0, RCAP - adDay().n); },
     // Rewarded video: onReward() only after the player watched it to the end.
     showRewarded: function (placement, onReward, label) {
+      if (Ads.busy) return; // v13.3 #5: one rewarded flow at a time (auto-clicker guard)
       if (!Ads.rewardedLeft()) { modal('<h2>That\u2019s all for today</h2><p>You\u2019ve used today\u2019s free ad rewards. More tomorrow!</p><button class="btn" id="adDone">OK</button>'); $('adDone').onclick = closeModal; return; }
-      function granted() { adDay().n++; S.ad.lastRewarded = Date.now(); save(); onReward(); refreshPills(); }
+      var once = false; Ads.busy = true; setTimeout(function () { Ads.busy = false; }, 120000);
+      function granted() { if (once) return; once = true; Ads.busy = false; adDay().n++; S.ad.lastRewarded = Date.now(); save(); onReward(); refreshPills(); }
       var A = admob();
       if (A && Ads.ready && CFG.rewardedId) {
         stopMusic();
         A.prepareRewardVideoAd({ adId: CFG.rewardedId, isTesting: !!CFG.USE_TEST_ADS })
           .then(function () { return A.showRewardVideoAd(); })
-          .then(function (item) { syncAudio(); if (item) granted(); })
-          .catch(function () { syncAudio(); modal('<h2>No ad right now</h2><p>Try again in a minute.</p><button class="btn" id="adDone">OK</button>'); $('adDone').onclick = closeModal; });
+          .then(function (item) { syncAudio(); Ads.busy = false; if (item) granted(); })
+          
+          .catch(function () { Ads.busy = false; syncAudio(); modal('<h2>No ad right now</h2><p>Try again in a minute.</p><button class="btn" id="adDone">OK</button>'); $('adDone').onclick = closeModal; });
         return;
       }
       // web / desktop: simulated ad so the flow can be tested
@@ -3304,7 +3362,7 @@ window.LB_CONFIG = {
       modal('<div class="adlabel">Optional ad \u00b7 reward: ' + (label || placement) + '</div><h2>Simulated ad</h2><div class="adstub">A rewarded video ad would play here.<br><small>(web preview \u2013 no real ad)</small><div class="adtimer" id="adT">' + secs + '</div></div><button class="btn" id="adDone" disabled>Claim reward</button><button class="btn alt small" id="adSkip">No thanks</button>', 'adcard'); AU.duck(true);
       var left = secs, t = setInterval(function () { left--; var e = $('adT'); if (e) e.textContent = left > 0 ? left : '\u2713'; if (left <= 0) { clearInterval(t); var b = $('adDone'); if (b) b.disabled = false; } }, 1000);
       if (secs <= 0) { clearInterval(t); $('adDone').disabled = false; $('adT').textContent = '\u2713'; }
-      $('adSkip').onclick = function () { clearInterval(t); closeModal(); AU.duck(false); };
+      $('adSkip').onclick = function () { Ads.busy = false; clearInterval(t); closeModal(); AU.duck(false); };
       $('adDone').onclick = function () { clearInterval(t); closeModal(); AU.duck(false); granted(); };
     },
     // Called only after a completed level, never mid-level.
@@ -3343,7 +3401,7 @@ window.LB_CONFIG = {
   var BICON = { hammer: '\ud83d\udd28', row: '\u2194\ufe0f', shuffle: '\ud83d\udd00', moves5: '\u2795', hint: '\ud83d\udca1', sbomb: '\ud83d\udca5', sline: '\u26a1', srainbow: '\ud83c\udf08' };
   var PRICE = { hammer: 70, row: 90, shuffle: 45, moves5: 90, hint: 20, sbomb: 60, sline: 50, srainbow: 140 }; // v10: ~40% cheaper (Kristi's list #1)
   function rewardText(r) { return r.c + ' coins' + (r.b ? ' + ' + BNAME[r.b] : '') + (r.life ? ' + full lives' : ''); }
-  function dailyState() { var claimed = S.lastDaily === today(), streak = claimed ? S.streak : (S.lastDaily === yesterday() ? S.streak : 0); return { claimed: claimed, streak: streak, idx: claimed ? (streak - 1) % 7 : streak % 7 }; }
+  function dailyState() { return DAILY.state(S, today()); } // v13.4 #4: real calendar-day compare (see DAILY in v13.js)
   var dailyClaiming = false;
   function dailyModal(after) {
     var d = dailyState();
@@ -3394,7 +3452,7 @@ window.LB_CONFIG = {
   }
   function tickTimer() { var e = $('gTimer'); if (!e) return; var ms = GOALS.msToMidnight(), hh = Math.floor(ms / 36e5), mm = Math.floor(ms / 6e4) % 60; e.textContent = '\u00b7 new goals in ' + hh + 'h ' + mm + 'm'; }
   setInterval(function () { if (curScreen === 'goalsScreen') tickTimer(); }, 30000);
-  function bindAch(again) { document.querySelectorAll('[data-ach]').forEach(function (b) { b.onclick = function () { var x = ACH.filter(function (q) { return q.id === b.dataset.ach; })[0]; if (S.ach[x.id]) return; S.ach[x.id] = 1; S.coins += x.c; if (x.b) S.boost[x.b] = (S.boost[x.b] || 0) + 1; save(); sfx.coin(); again(); refreshPills(); }; }); }
+  function bindAch(again) { document.querySelectorAll('[data-ach]').forEach(function (b) { b.onclick = function () { if (b.disabled) return; b.disabled = true; var x = ACH.filter(function (q) { return q.id === b.dataset.ach; })[0]; if (S.ach[x.id]) return; S.ach[x.id] = 1; S.coins += x.c; if (x.b) S.boost[x.b] = (S.boost[x.b] || 0) + 1; save(); sfx.coin(); again(); refreshPills(); }; }); }
 
   // --- title -------------------------------------------------------------------
   $('titleCritters').innerHTML = [0, 1, 2, 3, 4, 5].map(function (c, i) { return '<div class="tpet" style="animation-delay:' + (i * .15) + 's">' + PETS.tileSVG(0, c, 0) + '</div>'; }).join('');
@@ -3405,8 +3463,8 @@ window.LB_CONFIG = {
   document.querySelectorAll('.petsBtn').forEach(function (b) { b.onclick = function () { refreshCollection(); show('collection'); }; });
   // ---- v10 #6 / v11 weeklong events + Halloween theme -----------------------------
   // ?event=<id> forces an event, ?event=none forces off, ?today=YYYY-MM-DD fakes the date (testing).
-  function today() { var q = (location.search.match(/[?&]today=(\d{4})-(\d\d)-(\d\d)/)); return q ? new Date(+q[1], +q[2] - 1, +q[3], 12) : new Date(); }
-  function curEvent() { try { var q = (location.search.match(/[?&]event=([a-z]+)/) || [])[1]; return EV.current(today(), { off: S.eventsOff || q === 'none', force: q }); } catch (e) { return null; } }
+  function evDay() { var q = (location.search.match(/[?&]today=(\d{4})-(\d\d)-(\d\d)/)); return q ? new Date(+q[1], +q[2] - 1, +q[3], 12) : new Date(); }
+  function curEvent() { try { var q = (location.search.match(/[?&]event=([a-z]+)/) || [])[1]; return EV.current(evDay(), { off: S.eventsOff || q === 'none', force: q }); } catch (e) { return null; } }
   // Original line-art decorations (SVG, drawn in code).
   var SPOOK = {
     bat: '<svg viewBox="0 0 60 30"><path d="M30 12 C26 4 14 0 2 6 C8 9 8 14 6 18 C12 16 14 20 13 25 C19 21 24 22 26 26 C27 20 29 17 30 16 C31 17 33 20 34 26 C36 22 41 21 47 25 C46 20 48 16 54 18 C52 14 52 9 58 6 C46 0 34 4 30 12 Z" fill="#1b0d2b" stroke="#000" stroke-width="1.5"/><circle cx="27.5" cy="12" r="1.3" fill="#ffd36e"/><circle cx="32.5" cy="12" r="1.3" fill="#ffd36e"/></svg>',
@@ -3435,7 +3493,7 @@ window.LB_CONFIG = {
     if (bar) {
       if (!ev) bar.innerHTML = '';
       else {
-        var dl = EV.daysLeft(ev, today()), sn = SNACKS.get(ev.snack) || {}, q = ev.quest ? QUEST.state(S, ev, today()) : null, cl = ev.quest ? QUEST.claimable(S, ev, today()).length : 0;
+        var dl = EV.daysLeft(ev, evDay()), sn = SNACKS.get(ev.snack) || {}, q = ev.quest ? QUEST.state(S, ev, evDay()) : null, cl = ev.quest ? QUEST.claimable(S, ev, evDay()).length : 0;
         bar.innerHTML = '<div class="evtop"><span>' + ev.deco.join(' ') + '</span> <b>' + ev.name + '</b> <span>' + ev.deco.slice().reverse().join(' ') + '</span></div>' +
           '<div class="evsub"><i class="evdays">\u23f3 ' + (dl <= 1 ? 'Last day!' : dl + ' days left') + '</i> \u00b7 +' + Math.round(ev.bonus * 100) + '% coins \u00b7 ' + sn.icon + ' event snacks' +
           (q ? ' \u00b7 <b class="evq">' + ev.quest.icon + ' ' + q.n + '</b>' + (cl ? ' <em class="evclaim">\ud83c\udf81 ' + cl + ' to open!</em>' : '') : '') + '</div>';
@@ -3447,9 +3505,9 @@ window.LB_CONFIG = {
   function LITE_NO_DECO() { return /[?&]nodeco=1/.test(location.search); }
   function costumeHTML() { var ev = curEvent(), list = COSTUMES.visible(S, ev).concat(COSM.costumes(S).map(function (c) { return { slot: c.slot, svg: c.svg }; })); return list.map(function (c) { return '<div class="costume ' + c.slot + '">' + c.svg + '</div>'; }).join(''); }
   // v13 board + tile skins
-  function applySkins() { var bw = $('boardWrap'); if (!bw) return; var bk = COSM.worn(S, 'board'), tk = COSM.worn(S, 'tile'), bc = bk && COSM.get(bk); bw.style.background = ''; var bd = $('board'); if (bd) { bd.style.backgroundImage = bc ? bc.sw : ''; bd.classList.toggle('skinned', !!bc); } /* v13.2 #6: board skins paint the board square only (was the whole full-width #boardWrap = big rectangle) */ bw.className = bw.className.replace(/\s?tskin-\S+/g, '') + (tk ? ' tskin-' + tk.replace('tile_', '') : ''); }
+  function applySkins() { var bw = $('boardWrap'); if (!bw) return; var bk = COSM.worn(S, 'board'), tk = COSM.worn(S, 'tile'), bc = bk && COSM.get(bk); bw.style.background = ''; var bd = $('board'); if (bd) { bd.style.backgroundImage = ''; if (bc) bd.style.setProperty('--skin', bc.sw); else bd.style.removeProperty('--skin'); bd.classList.toggle('skinned', !!bc); } /* v13.3: skin via --skin + !important so event themes (spooky) no longer hide it */ /* v13.2 #6: board skins paint the board square only (was the whole full-width #boardWrap = big rectangle) */ bw.className = bw.className.replace(/\s?tskin-\S+/g, '') + (tk ? ' tskin-' + tk.replace('tile_', '') : ''); }
   function eventModal() {
-    var ev = curEvent(); if (!ev) return; var d = today(), w = EV.window(ev, d) || { start: d, end: d }, dl = EV.daysLeft(ev, d);
+    var ev = curEvent(); if (!ev) return; var d = evDay(), w = EV.window(ev, d) || { start: d, end: d }, dl = EV.daysLeft(ev, d);
     var fmt = function (x) { return x.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }, last = new Date(w.end.getTime() - 864e5);
     var h = '<h2>' + ev.emoji + ' ' + ev.name + '</h2><div class="fine">' + fmt(w.start) + ' \u2013 ' + fmt(last) + ' \u00b7 <b>' + (dl <= 1 ? 'last day!' : dl + ' days left') + '</b></div>';
     h += '<div class="fine">+' + Math.round(ev.bonus * 100) + '% coins on every win. Event snacks: ' + (ev.snacks || [ev.snack]).map(function (k) { var s = SNACKS.get(k); return s ? s.icon + ' ' + s.name : ''; }).join(', ') + ' (in the Shop, and they drop from wins).</div>';
@@ -3469,7 +3527,7 @@ window.LB_CONFIG = {
     h += '<div class="fine">Turn holiday events off any time in \u2699 Settings.</div><button class="btn" id="evClose">Close</button>';
     modal(h, 'evcard');
     $('evClose').onclick = function () { closeModal(); };
-    document.querySelectorAll('[data-evclaim]').forEach(function (b) { b.onclick = function () { var t = QUEST.claim(S, ev, +b.dataset.evclaim, today()); if (t) { save(); sfx.coin(); spookBurst(); toast('\ud83c\udf81 ' + t.label + ' opened!'); applyEvent(); eventModal(); } }; });
+    document.querySelectorAll('[data-evclaim]').forEach(function (b) { b.onclick = function () { if (b.disabled) return; b.disabled = true; var t = QUEST.claim(S, ev, +b.dataset.evclaim, evDay()); if (t) { save(); sfx.coin(); spookBurst(); toast('\ud83c\udf81 ' + t.label + ' opened!'); applyEvent(); eventModal(); } }; });
     document.querySelectorAll('[data-cost]').forEach(function (b) { b.onclick = function () { COSTUMES.toggle(S, b.dataset.cost); save(); sfx.happy(); applyEvent(); eventModal(); }; });
   }
 
@@ -3665,17 +3723,22 @@ window.LB_CONFIG = {
   function addRescue(a, k) { if (!a) return; var before = S.rescued[a.key] || 0; S.rescued[a.key] = before + k; if (!S.grand[a.key] && before < FRIEND_AT && before + k >= FRIEND_AT) pendingFriends.push(a); }
 
   // --- rewards screen ------------------------------------------------------------
+  // v13.3 #6: the bonus chest re-arms one hour after each opening (max 3/day); the countdown ticks live.
+  var CHEST_GAP = 36e5;
+  function chestWait() { var n = (S.ad && S.ad.chestNext) || 0, now = Date.now(); if (n - now > CHEST_GAP) { S.ad.chestNext = now + CHEST_GAP; n = S.ad.chestNext; } return Math.max(0, n - now); }
+  function fmtCd(ms) { var s = Math.ceil(ms / 1000), m = Math.floor(s / 60); return m + ':' + ('0' + (s % 60)).slice(-2); }
+  setInterval(function () { if (curScreen !== 'rewards') return; var e = $('chestCd'); if (!e) return; var w = chestWait(); if (w > 0) e.textContent = '\u23f3 ' + fmtCd(w); else refreshRewards(); }, 1000);
   function refreshRewards() {
     var d = dailyState(), a = adDay(), h = '';
     h += '<div class="rcard"><b>Daily reward</b><small>' + (d.claimed ? 'Claimed today \u2013 streak ' + d.streak : 'Day ' + (d.idx + 1) + ': ' + rewardText(REWARDS[d.idx])) + '</small><button class="btn small" id="rwDaily">' + (d.claimed ? 'View' : 'Claim') + '</button></div>';
-    var chestsLeft = 3 - (a.chests || 0);
-    h += '<div class="rcard"><b>\ud83c\udf81 Bonus chest</b><small>Optional ad \u2013 coins + a booster (' + chestsLeft + ' left today)</small>' + (chestsLeft > 0 && Ads.rewardedLeft() ? '<button class="btn small ad" id="rwChest"><span class="adtag">AD</span> Open</button>' : '<button class="btn small" disabled>Tomorrow</button>') + '</div>';
+    var chestsLeft = 3 - (a.chests || 0), cwait = chestWait();
+    h += '<div class="rcard"><b>\ud83c\udf81 Bonus chest</b><small>Optional ad \u2013 coins + a booster (' + chestsLeft + ' left today)</small>' + (chestsLeft > 0 && Ads.rewardedLeft() ? (cwait > 0 ? '<button class="btn small" id="chestCd" disabled>\u23f3 ' + fmtCd(cwait) + '</button>' : '<button class="btn small ad" id="rwChest"><span class="adtag">AD</span> Open</button>') : '<button class="btn small" disabled>Tomorrow</button>') + '</div>';
     tickLives();
     h += '<div class="rcard"><b>\u2764 Extra life</b><small>' + (S.lives < MAX_LIVES ? 'Optional ad \u2013 +1 life now' : 'Lives are full') + '</small>' + (S.lives < MAX_LIVES && Ads.rewardedLeft() ? '<button class="btn small ad" id="rwLife"><span class="adtag">AD</span> +1</button>' : '') + '</div>';
     h += '<div class="fine">Free ad rewards left today: ' + Ads.rewardedLeft() + '</div><div class="rcard"><b>\ud83c\udfaf Goals &amp; milestones</b><small>' + achReady() + ' milestone reward(s) ready</small><button class="btn small" id="rwGoals">Open</button></div>';
     $('rewardList').innerHTML = h;
     $('rwDaily').onclick = function () { dailyModal(refreshRewards); };
-    if ($('rwChest')) $('rwChest').onclick = function () { Ads.showRewarded('bonus_chest', function () { a.chests = (a.chests || 0) + 1; var c = 50 + Math.floor(Math.random() * 101), b = ['hammer', 'row', 'shuffle', 'moves5', 'hint', 'sbomb', 'sline'][Math.floor(Math.random() * 7)]; S.coins += c; S.boost[b]++; save(); sfx.coin(); prize('Bonus chest!', c + ' coins + ' + BICON[b] + ' ' + BNAME[b]); refreshRewards(); }, 'bonus chest'); };
+    if ($('rwChest')) $('rwChest').onclick = function () { if (chestWait() > 0) return; Ads.showRewarded('bonus_chest', function () { if (chestWait() > 0 || (a.chests || 0) >= 3) return; a.chests = (a.chests || 0) + 1; S.ad.chestNext = Date.now() + CHEST_GAP; var c = 50 + Math.floor(Math.random() * 101), b = ['hammer', 'row', 'shuffle', 'moves5', 'hint', 'sbomb', 'sline'][Math.floor(Math.random() * 7)]; S.coins += c; S.boost[b]++; save(); sfx.coin(); prize('Bonus chest!', c + ' coins + ' + BICON[b] + ' ' + BNAME[b]); refreshRewards(); }, 'bonus chest'); };
     if ($('rwLife')) $('rwLife').onclick = function () { Ads.showRewarded('extra_life', function () { S.lives = Math.min(MAX_LIVES, S.lives + 1); save(); refreshRewards(); }, '+1 life'); };
     $('rwGoals').onclick = function () { refreshGoals(); show('goalsScreen'); };
     refreshPills();
@@ -3788,15 +3851,15 @@ window.LB_CONFIG = {
   var START = ['sbomb', 'sline', 'srainbow'];
   function goalTextFor(L) { return goalList(L).map(function (x) { return x.label; }).join(' + ') + '!'; }
   // v9: one source of truth for goals: icon, clear label, progress.
-  var TWICON = function () { return { wake: '\ud83d\udca4', snacks: SNACK(), trail: '\ud83d\udc3e', babies: '\ud83c\udf3f', glow: '\ud83c\udf19', buddies: '\u2764\ufe0f', echoes: '\ud83c\udfd4\ufe0f', bubbles: '\ud83e\udee7', friend: '\ud83d\udd13' }; };
+  var TWICON = function () { return { wake: '\ud83d\udca4', snacks: SNACK(), trail: '\ud83d\udc3e', babies: '\ud83c\udf3f', glow: '\ud83c\udf19', buddies: '\u2764\ufe0f', echoes: '\ud83c\udfd4\ufe0f', bubbles: '\ud83e\udee7', friend: '\ud83d\udd13', cages: '\ud83d\udd12' }; };
   function goalList(L, g0) {
     var g = L.goals, w = L.world, out = [], tw = g0 && g0.board.tw;
     if (g.score) out.push({ key: 'score', icon: '<span class="ti">\u2b50</span>', label: 'Score ' + g.score + ' points', have: g0 ? g0.score : 0, need: g.score });
     if (g.collect) for (var c in g.collect) { var A = PETS.tileAnimal(w, +c); out.push({ key: 'c' + c, icon: critterSVG(+c, 0, w), label: 'Match ' + g.collect[c] + ' ' + A.hue + ' ' + A.plural + (A.name === 'Lil Pip' ? ' (Lil Pip)' : ''), have: g0 ? (g0.collected[c] || 0) : 0, need: g.collect[c] }); }
     if (g.ice) { var ni = g0 ? g0.iceStart : 0; out.push({ key: 'ice', icon: '<svg viewBox="0 0 10 10"><rect width="10" height="10" rx="2" fill="#9fe6ff"/></svg>', label: 'Melt all the ice', have: g0 ? ni - GP.iceLeft(g0.board) : 0, need: g0 ? ni : g.ice }); }
     if (g.crates) out.push({ key: 'crates', icon: PETS.crateSVG(1), label: 'Break ' + g.crates + ' crates', have: g0 ? g.crates - GP.cratesLeft(g0.board) : 0, need: g.crates });
-    var T = { wake: 'Wake ' + g.wake + ' sleepy pets', snacks: 'Deliver ' + g.snacks + ' snacks to the bottom', trail: 'Light ' + g.trail + ' paw prints in order', babies: 'Find ' + g.babies + ' hiding bab' + (g.babies > 1 ? 'ies' : 'y'), glow: 'Match ' + g.glow + ' moonlit pets', buddies: 'Reunite ' + g.buddies + ' buddy pairs', echoes: 'Make ' + g.echoes + ' echoes', bubbles: 'Pop ' + g.bubbles + ' bubbles', friend: 'Free the boss\u2019s friend' };
-    var have = tw ? { wake: tw.woken, snacks: tw.delivered, trail: tw.trailIdx, babies: tw.found, glow: tw.glow, buddies: tw.buddies, echoes: tw.echoes, bubbles: tw.popped, friend: tw.friend } : {}, I = TWICON();
+    var T = { wake: 'Wake ' + g.wake + ' sleepy pets', snacks: 'Deliver ' + g.snacks + ' snacks to the bottom', trail: 'Light ' + g.trail + ' paw prints in order', babies: 'Find ' + g.babies + ' hiding bab' + (g.babies > 1 ? 'ies' : 'y'), glow: 'Match ' + g.glow + ' moonlit pets', buddies: 'Reunite ' + g.buddies + ' buddy pairs', echoes: 'Make ' + g.echoes + ' echoes', bubbles: 'Pop ' + g.bubbles + ' bubbles', friend: 'Free the boss\u2019s friend', cages: 'Free ' + g.cages + ' caged pet' + (g.cages > 1 ? 's' : '') };
+    var have = tw ? { wake: tw.woken, snacks: tw.delivered, trail: tw.trailIdx, babies: tw.found, glow: tw.glow, buddies: tw.buddies, echoes: tw.echoes, bubbles: tw.popped, friend: tw.friend, cages: tw.freed } : {}, I = TWICON();
     for (var k in T) if (g[k]) out.push({ key: k, icon: '<span class="ti">' + I[k] + '</span>', label: T[k], have: have[k] || 0, need: g[k] });
     out.forEach(function (x) { x.have = Math.max(0, Math.min(x.have, x.need)); x.done = x.have >= x.need; });
     if (g0 && GP.goalsMet(L, g0.board, g0.score, g0.collected)) out.forEach(function (x) { x.done = true; x.have = x.need; });
@@ -3838,7 +3901,9 @@ window.LB_CONFIG = {
   // Falls back to the normal pre-level card only when it is needed: out of lives, or a new world's intro.
   function playNext(id) {
     tickLives(); var L = DIFF.applyLevel(GP.getLevel(id), DIFF.get(S));
-    if (S.lives <= 0 || (L.stage === 0 && !S.introSeen[L.world])) { refreshMap(); show('mapScreen'); preLevel(id); return; }
+    if (S.lives <= 0) { refreshMap(); show('mapScreen'); preLevel(id); return; }
+    // v13.3 #7: after a world boss (e.g. L80) show the next world's intro in place instead of dropping to the map/menu
+    if (L.stage === 0 && !S.introSeen[L.world]) { worldIntro(L.world, function () { playNext(id); }); return; }
     setTheme(L.world); window.__lastNext = id;
     if (L.boss) cutscene(null, function () { startLevel(id, [], null, false); }, BOSS.init(L, DIFF.get(S))); else startLevel(id, [], null, false);
   }
@@ -3883,7 +3948,7 @@ window.LB_CONFIG = {
     setTheme(L.world);
     G = { L: L, board: GP.makeBoard(L.colors, Math.random, L.obstacles, L.crates, L), moves: L.moves, score: 0, collected: {}, combo: 0, over: false, usedRescue: false, coinsX: 1, boosters: (startBoosts || []).length, specials: 0, bestCombo: 0, powerUses: 0, doneGoals: {}, superSt: { since: S.superSince || 0 }, supers: 0 };
     G.dk = G.dkMin = DIFF.get(S); G.pFull = SUPERUSE.full(id, G.dk); G.pUses = SUPERUSE.uses(id, G.dk) + (ITEM.use(S, 'battery') ? 1 : 0);
-    G.locks = {}; G.fog = null; G.boss = BOSS.forLevel(L, G.dk); G.bossGoals = 0;
+    G.locks = {}; G.fog = null; G.boss = BOSS.forLevel(L, G.dk); G.bossGoals = 0; if ($('claimWin')) $('claimWin').remove();
     if (G.boss && ITEM.use(S, 'snooze')) { BOSS.snooze(G.boss, 3); toast('\ud83d\ude34 Boss Snooze: ' + G.boss.name + ' naps 3 extra moves'); }
     G.iceStart = GP.iceLeft(G.board);
     if (snack) { G.snack = snack; if (snack.perk === 'moves') G.moves += snack.n; if (snack.perk === 'power') S.power.energy = Math.min(sFull(), S.power.energy + snack.n); if (snack.perk === 'line') for (var sn = 0; sn < snack.n; sn++) GP.placeSpecial(G.board, Math.random() < .5 ? SP.ROW : SP.COL); }
@@ -3973,7 +4038,7 @@ window.LB_CONFIG = {
     var cfg = t.cfg, st = [];
     if (cfg.night) st.push((GP.isNight(G.board) ? '\ud83c\udf19 Sunrise in ' : '\u2600\ufe0f Night in ') + (cfg.night.every - t.moveNo % cfg.night.every));
     if (cfg.tides) st.push('\ud83c\udf0a Tide in ' + (cfg.tides.every - t.moveNo % cfg.tides.every));
-    if (cfg.echo) { var eIn = cfg.echo.every - t.moveNo % cfg.echo.every - 1; st.push(eIn <= 0 ? '\ud83c\udfd4\ufe0f Echo THIS move!' : '\ud83c\udfd4\ufe0f Echo in ' + eIn + ' move' + (eIn > 1 ? 's' : '')); }
+    if (cfg.echo) { var eIn = t.echoPending ? 0 : cfg.echo.every - t.moveNo % cfg.echo.every - 1; st.push(eIn <= 0 ? '\ud83c\udfd4\ufe0f Echo THIS move!' : '\ud83c\udfd4\ufe0f Echo in ' + eIn + ' move' + (eIn > 1 ? 's' : '')); }
     if (cfg.hide) st.push('\ud83c\udf3f Baby sneaks in ' + (cfg.hide.every - t.moveNo % cfg.hide.every));
     if (cfg.snack) st.push(SNACK() + ' snacks sink every 2 moves');
     if (cfg.sleep) st.push('\ud83d\udca4 nappers roll over at 0');
@@ -4028,13 +4093,13 @@ window.LB_CONFIG = {
   var COMP_SUPERS = [
     { name: 'Mega Thump', fx: 'thump', also: [{ fx: 'cross' }], desc: 'Lil Pip does a MEGA thump: frees every stuck thing and blasts a big plus.' },
     { name: 'Tidal Anchor', fx: 'cols', n: 3, desc: 'Captain Nori clears 3 whole columns.' },
-    { name: 'Solar Flare', fx: 'specials', n: 5, desc: 'Sandy makes 5 sparkly line pets.' },
+    { name: 'Solar Flare', fx: 'specials', n: 5, desc: 'Sandy makes 5 sparkly line pets and sets them all off!' },
     { name: 'Avalanche Slide', fx: 'rows', n: 3, desc: 'Waddle slides across 3 rows.' },
     { name: 'Time Freeze', fx: 'moves', n: 7, desc: 'Dr. Snooze freezes the clock: +7 moves.' },
     { name: 'Quill Storm', fx: 'box', n: 4, desc: 'Prickles pops four 3x3 patches.' },
     { name: 'Mud Flood', fx: 'cross', also: [{ fx: 'x' }], desc: 'Farmer Truffle floods a plus AND an X.' },
     { name: 'Rockslide', fx: 'x', also: [{ fx: 'rows', n: 2 }], desc: 'Rusty rolls an X and 2 rows of boulders.' },
-    { name: 'Moonbeam Lullaby', fx: 'specials', n: 6, desc: 'Glimmer makes 6 sparkly line pets.' },
+    { name: 'Moonbeam Lullaby', fx: 'specials', n: 6, desc: 'Glimmer makes 6 sparkly line pets and sets them all off!' },
     { name: 'Lantern Festival', fx: 'bombs', n: 4, desc: 'Lumo lures in 4 bomb pets.' },
     { name: 'Sugar Rush', fx: 'rainbow', n: 3, desc: 'Princess Sprinkle makes 3 rainbow pets.' }
   ];
@@ -4109,8 +4174,14 @@ window.LB_CONFIG = {
     if (p.fx === 'moves') { G.moves += p.n; sfx.happy(); banner('+' + p.n + ' moves!'); updateHud(); setBusy(false); resetHint(); refreshPower(); return; }
     if (p.fx === 'specials' || p.fx === 'bombs' || p.fx === 'rainbow' || p.fx === 'shuffle') {
       if (p.fx === 'shuffle') GP.shuffle(G.board);
-      for (var i = 0; i < (p.n || 1); i++) GP.placeSpecial(G.board, p.fx === 'bombs' ? SP.BOMB : p.fx === 'rainbow' ? SP.COLOR : (Math.random() < .5 ? SP.ROW : SP.COL));
-      buildBoard(); sfx.happy(); setBusy(false); resetHint(); refreshPower(); checkEnd(); return;
+      var placed = []; for (var i = 0; i < (p.n || 1); i++) { var at1 = GP.placeSpecial(G.board, p.fx === 'bombs' ? SP.BOMB : p.fx === 'rainbow' ? SP.COLOR : (Math.random() < .5 ? SP.ROW : SP.COL)); if (at1) placed.push(at1); }
+      buildBoard(); sfx.happy();
+      // v13.4 #6: line-pet SUPERS (Solar Flare, Moonbeam Lullaby) only dropped line pets and stopped, so the SUPER looked
+      // like it did nothing (and a line pet could land inside a snack and be invisible). The SUPER now sets them all off.
+      if (isSup && p.fx === 'specials' && placed.length) { window.__lastFlare = { placed: placed.length }; await wait(S.reducedFx ? 150 : 450);
+        G.inPower = true; try { var twf = twSnap(), rf = GP.blast(G.board, placed); window.__lastFlare.popped = rf.steps.reduce(function (a, x) { return a + x.removed.length; }, 0); await animateSteps(rf, true); if (rf.twist) await animateTwist(rf.twist); else refreshPieceArt(); if (rf.shuffled) buildBoard(); twTally(twf); } finally { G.inPower = false; }
+        if (G.superHit) { var sh3 = G.superHit; G.superHit = null; await superFire(sh3); } }
+      setBusy(false); resetHint(); refreshPower(); checkEnd(); return;
     }
     var cells = cellsFor(p); if (!cells.length) { setBusy(false); refreshPower(); return; }
     if (isSup && window.SUPERFX) { SUPERFX.markCells(cells.map(function (rc) { var q = G.board.cells[rc[0]][rc[1]]; return q && els[q.id]; }), !!S.reducedFx); await wait(S.reducedFx ? 120 : 300); }
@@ -4170,17 +4241,24 @@ window.LB_CONFIG = {
     for (r = 0; r < N; r++) for (c = 0; c < N; c++) addPieceEl(b.cells[r][c], r, c);
     drawTrail(); bossLayer(); axoLayer(); applySkins();
   }
+  // v13.3 caged pet: the pet behind bars + a 3/2/1 counter; cracks appear as it weakens
+  function cageArt(p) {
+    var hp = p.crate, cr = hp < 3 ? '<path d="M30 14 L44 40 L36 58 L50 86" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>' : '';
+    if (hp < 2) cr += '<path d="M72 12 L60 36 L70 52 L58 88" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>';
+    return critterSVG(p.cagePet, 0) + '<svg class="cagebars" viewBox="0 0 100 100"><rect x="5" y="5" width="90" height="90" rx="12" fill="none" stroke="#5b6475" stroke-width="7"/><path d="M27 6 V94 M50 6 V94 M73 6 V94" stroke="#5b6475" stroke-width="6"/>' + cr + '</svg><span class="bd cg">\ud83d\udd12' + hp + '</span>';
+  }
   function art(p) {
     if (p.snack) return '<div class="sn">' + SNACK() + '</div>';
     if (p.bush) return '<div class="bu">\ud83c\udf3f</div>';
+    if (p.cage) return cageArt(p);
     var h = p.crate ? PETS.crateSVG(p.crate) : critterSVG(p.color, p.sp);
     if (p.friend) h += '<span class="bd fr">\ud83d\udc3e</span>';
     if (p.sleep) h += '<span class="bd zz">\ud83d\udca4' + (p.nap || '') + '</span>';
     if (p.pal) h += '<span class="bd ht">\u2764</span>';
     return h;
   }
-  function sig(p) { return [p.sp, p.color, p.crate || 0, p.sleep ? p.nap : '', p.pal || '', p.bub || '', p.snack || '', p.bush || '', p.gold || ''].join('|'); }
-  function deco(el, p) { var nc = G && G.board.tw.cfg.night; el.classList.toggle('sleepy', !!p.sleep); el.classList.toggle('gold', !!p.gold); el.classList.toggle('bub', !!p.bub); el.classList.toggle('snack', !!p.snack); el.classList.toggle('cr', !!p.crate && !p.bush); el.classList.toggle('glow', !!(nc && nc.colors.indexOf(p.color) >= 0)); }
+  function sig(p) { return [p.sp, p.color, p.crate || 0, p.cage ? 'k' + p.cagePet : '', p.sleep ? p.nap : '', p.pal || '', p.bub || '', p.snack || '', p.bush || '', p.gold || ''].join('|'); }
+  function deco(el, p) { var nc = G && G.board.tw.cfg.night; el.classList.toggle('sleepy', !!p.sleep); el.classList.toggle('gold', !!p.gold); el.classList.toggle('bub', !!p.bub); el.classList.toggle('snack', !!p.snack); el.classList.toggle('cr', !!p.crate && !p.bush && !p.cage); el.classList.toggle('caged', !!p.cage); if (p.cage) el.dataset.pet = p.cagePet; el.classList.toggle('glow', !!(nc && nc.colors.indexOf(p.color) >= 0)); }
   function drawTrail() {
     var t = G.board.tw; document.querySelectorAll('.trail').forEach(function (x) { x.remove(); }); if (!t.trail) return;
     var s = cellSize(), goal = G.L.goals.trail || t.trail.length, first = boardEl.querySelector('.pc');
@@ -4214,7 +4292,17 @@ window.LB_CONFIG = {
   }
   function floatText(r, c, txt) { var s = cellSize(), d = document.createElement('div'); d.className = 'float'; d.textContent = txt; d.style.left = (c * s + s * .2) + 'px'; d.style.top = (r * s) + 'px'; boardEl.appendChild(d); setTimeout(function () { d.remove(); }, 800); }
   function goalPop(txt, sub) { var d = document.createElement('div'); d.className = 'goalpop'; d.innerHTML = '<b>Goal complete!</b><span>' + txt + '</span>' + (sub ? '<small>' + sub + '</small>' : ''); boardEl.appendChild(d); setTimeout(function () { d.remove(); }, 1900); }
-  function banner(txt, cls) { var d = document.createElement('div'); d.className = 'banner' + (cls ? ' ' + cls : ''); d.textContent = txt; boardEl.appendChild(d); setTimeout(function () { d.remove(); }, 1400); }
+  // v13.4 #2: banners used to all spawn at the same spot, so a multi-row clear ("Sweet!" + "Super!" + "Echo!" + tide...)
+  // printed words on top of each other. Now each banner takes its own lane (stacked rows); extra ones wait in a queue.
+  var BAN_LANES = [0, -1, 1, -2], banLane = [null, null, null, null], banQ = [];
+  function banner(txt, cls) {
+    if (!boardEl) return; for (var j = 0; j < banLane.length; j++) if (banLane[j] && banLane[j].t === txt) return; // same words already showing
+    var i = banLane.indexOf(null); if (i < 0) { if (banQ.length < 6 && !banQ.some(function (q) { return q[0] === txt; })) banQ.push([txt, cls]); return; }
+    var d = document.createElement('div'); d.className = 'banner' + (cls ? ' ' + cls : '') + (txt.length > 18 ? ' long' : ''); d.textContent = txt; d.dataset.lane = i;
+    d.style.top = 'calc(40% + ' + (BAN_LANES[i] * 54) + 'px)'; if (txt.length > 36) { d.style.fontSize = '15px'; d.style.whiteSpace = 'normal'; d.style.width = '94%'; } else if (txt.length > 18) d.style.fontSize = Math.max(14, Math.min(22, Math.floor((boardEl.clientWidth || 360) * 1.7 / txt.length))) + 'px'; /* one line per lane */ boardEl.appendChild(d); banLane[i] = { t: txt, d: d };
+    setTimeout(function () { d.remove(); if (banLane[i] && banLane[i].d === d) banLane[i] = null; if (banQ.length) { var q = banQ.shift(); banner(q[0], q[1]); } }, 1400);
+  }
+  window.__banLanes = function () { return banLane.map(function (x) { return x && x.t; }); };
   function shake() { boardEl.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-4px,2px)' }, { transform: 'translate(4px,-2px)' }, { transform: 'translate(0,0)' }], { duration: 250 }); }
 
   // --- input ------------------------------------------------------------------
@@ -4283,7 +4371,7 @@ window.LB_CONFIG = {
   function axoLayer() { if (!boardEl) return; boardEl.querySelectorAll('.axo').forEach(function (e) { e.remove(); }); var A = G && G.axo; if (!A) return; var s = cellSize(), d = document.createElement('div'); d.className = 'axo'; d.innerHTML = '\ud83e\udd8e<small>' + A.left + '</small>'; d.style.cssText = 'left:' + (A.c * s) + 'px;top:' + (A.r * s) + 'px;width:' + s + 'px;height:' + s + 'px'; boardEl.appendChild(d); }
   function axoTurn() {
     G.movesMade = (G.movesMade || 0) + 1; var A = G.axo;
-    if (A) { var p = G.board.cells[A.r][A.c]; if (!p || p.id !== A.id) { G.axo = null; G.axoCaught = 1; G.moves += AXO.MOVES; S.coins += AXO.COINS; trackDaily('wild', 1); save(); banner('\ud83e\udd8e Caught the Wild Axolotl! +' + AXO.MOVES + ' moves, +' + AXO.COINS + ' coins', 'c4'); sfx.chest(); updateHud(); refreshPills(); }
+    if (A) { var at0 = AXO.locate(G.board, A); if (at0) { A.r = at0[0]; A.c = at0[1]; } if (!at0) { G.axo = null; G.axoCaught = 1; G.moves += AXO.MOVES; S.coins += AXO.COINS; trackDaily('wild', 1); save(); banner('\ud83e\udd8e Caught the Wild Axolotl! +' + AXO.MOVES + ' moves, +' + AXO.COINS + ' coins', 'c4'); sfx.chest(); updateHud(); refreshPills(); }
       else if (AXO.tick(A) === 'gone') { G.axo = null; banner('\ud83e\udd8e The Wild Axolotl swam away...'); } }
     else if (AXO.roll(G, Math.random)) { var cand = []; for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) { var q = G.board.cells[r][c]; if (q && !q.crate && !q.snack && !(G.locks && G.locks[r + '_' + c])) cand.push([r, c]); } if (cand.length) { var at = cand[Math.floor(Math.random() * cand.length)]; G.axo = { r: at[0], c: at[1], id: G.board.cells[at[0]][at[1]].id, left: AXO.STAY }; axoExplain(); } }
     axoLayer();
@@ -4301,7 +4389,7 @@ window.LB_CONFIG = {
     await animateSteps(res, true);
     if (res.echo) {
       await wait(150);
-      if (res.echo.miss) banner('Echo... no match', 'c3');
+      if (res.echo.miss) banner('Echo waits... next move!', 'c3');
       else { banner('\ud83c\udfd4\ufe0f Echo!', 'c4'); sfx.callout(1); var ea = res.echo.a, ec = res.echo.c, e1 = els[res.echo.ids[0]], e2 = els[res.echo.ids[1]]; if (e1) pos(e1, ec[0], ec[1]); if (e2) pos(e2, ea[0], ea[1]); await wait(200); await animateSteps(res.echo, true); }
     }
     if (res.twist) await animateTwist(res.twist); else refreshPieceArt();
@@ -4330,8 +4418,8 @@ window.LB_CONFIG = {
     if (res.shuffled) { banner('No moves - Shuffle!'); await wait(500); buildBoard(); }
     G.superHit = null; updateHud(); await wait(300);
   }
-  var TWK = ['woken', 'delivered', 'found', 'trailIdx', 'buddies', 'popped', 'glow', 'echoes', 'friend'];
-  var TWSTAT = { woken: 'woken', delivered: 'delivered', found: 'found', trailIdx: 'prints', buddies: 'buddies', popped: 'popped', glow: 'glow', echoes: 'echoes', friend: 'friends' };
+  var TWK = ['woken', 'delivered', 'found', 'trailIdx', 'buddies', 'popped', 'glow', 'echoes', 'friend', 'freed'];
+  var TWSTAT = { woken: 'woken', delivered: 'delivered', found: 'found', trailIdx: 'prints', buddies: 'buddies', popped: 'popped', glow: 'glow', echoes: 'echoes', friend: 'friends', freed: 'freed' };
   function twSnap() { var t = G.board.tw, o = {}; TWK.forEach(function (k) { o[k] = t[k] || 0; }); return o; }
   // v13.2 (B): visible move countdown - "Moves left: 12", amber at 5, red at 3, with a small pulse on each change
   function moveCountdown() {
@@ -4342,7 +4430,7 @@ window.LB_CONFIG = {
   }
   function twTally(o) {
     var t = G.board.tw, tot = 0;
-    TWK.forEach(function (k) { var d = (t[k] || 0) - o[k]; if (d > 0) { S.stats[TWSTAT[k]] += d; tot += d; if (k === 'echoes') trackDaily('echoes', d); } });
+    TWK.forEach(function (k) { var d = (t[k] || 0) - o[k]; if (d > 0) { S.stats[TWSTAT[k]] += d; tot += d; if (k === 'echoes') trackDaily('echoes', d); if (k === 'freed') trackDaily('freed', d); } });
     if (G.tides) { S.stats.tides += G.tides; G.tides = 0; }
     trackDaily('twist', tot); checkMilestones();
   }
@@ -4373,7 +4461,7 @@ window.LB_CONFIG = {
       st.removed.forEach(function (x) { if (x.gold) G.superHit = [x.r, x.c]; });
       st.removed.forEach(function (x) { if (x.color >= 0) { G.collected[x.color] = (G.collected[x.color] || 0) + 1; addRescue(PETS.tileAnimal(curWorld, x.color), 1); } var el = els[x.id]; if (el) { el.classList.add('pop', 'surprised'); el.style.transform += ' scale(1.4)'; setTimeout(function () { el.remove(); }, 220); delete els[x.id]; } particles(x.r, x.c, x.color, x.sp ? 10 : 5); });
       st.iceHit.forEach(function (x) { particles(x[0], x[1], -2, 6); });
-      st.crateHit.forEach(function (h) { var el = els[h.id]; sfx.thud(); particles(h.r, h.c, -3, 8); if (!el) return; if (h.gone) { el.classList.add('pop'); setTimeout(function () { el.remove(); }, 220); delete els[h.id]; } else { el.innerHTML = PETS.crateSVG(h.hp); el.dataset.hp = h.hp; el.animate([{ transform: el.style.transform + ' scale(1.15)' }, { transform: el.style.transform }], { duration: 200 }); } });
+      st.crateHit.forEach(function (h) { var el = els[h.id]; sfx.thud(); particles(h.r, h.c, -3, 8); if (!el) return; if (h.gone && h.cage) { sfx.pop && sfx.pop(); particles(h.r, h.c, h.color, 14); el.classList.add('crack'); var cp = { id: h.id, color: h.color, sp: 0 }; setTimeout(function () { el.classList.remove('crack', 'caged'); el.innerHTML = art(cp); el.dataset.sig = sig(cp); el.dataset.color = h.color; el.classList.add('freed'); setTimeout(function () { el.classList.remove('freed'); }, 500); }, 260); return; } if (h.gone) { el.classList.add('pop'); setTimeout(function () { el.remove(); }, 220); delete els[h.id]; } else { el.innerHTML = el.classList.contains('caged') ? cageArt({ crate: h.hp, cagePet: +el.dataset.pet }) : PETS.crateSVG(h.hp); el.dataset.hp = h.hp; el.animate([{ transform: el.style.transform + ' scale(1.15)' }, { transform: el.style.transform }], { duration: 200 }); } });
       if (st.removed.length) { var mid = st.removed[Math.floor(st.removed.length / 2)]; floatText(mid.r, mid.c, '+' + gained); }
       var CALL = { 3: 'Sweet!', 4: 'Super!', 5: 'Amazing!', 6: 'Glowtastic!', 7: 'Unstoppable!' }; if (CALL[G.combo]) { banner(CALL[G.combo], 'c' + Math.min(G.combo, 7)); sfx.callout(G.combo - 2); if (G.combo === 5) S.stats.combos++; }
       for (var r = 0; r < N; r++) for (var cc = 0; cc < N; cc++) { var ie = $('ice' + r + '_' + cc), v = b.ice[r][cc]; if (ie) { if (!v) ie.style.opacity = 0; else ie.className = 'ice' + (v > 1 ? ' l2' : ''); } }
@@ -4393,8 +4481,12 @@ window.LB_CONFIG = {
 
   function checkEnd() {
     if (!G || G.over) return;
-    if (GP.goalsMet(G.L, G.board, G.score, G.collected) || BOSS.defeated(G.boss)) {
-      G.over = true; var lbOK = DIFF.CFG[G.dkMin || G.dk || 'normal'].rank >= 1; var movesLeft = G.moves; G.score += G.moves * 100; updateHud();
+    var gMet = GP.goalsMet(G.L, G.board, G.score, G.collected), bDown = BOSS.defeated(G.boss);
+    // v13.3 #1: boss beaten before the quests/goals are done no longer cuts the level short: the player picks
+    // "Finish my quests" (boss counts as done, keep playing; win when goals are done OR moves run out) or "Claim win now".
+    if (bDown && !gMet && !G.bossClaim && G.moves > 0) { if (!G.bossAsked) bossDownChoice(); return; }
+    if (gMet || bDown) {
+      G.over = true; if ($('claimWin')) $('claimWin').remove(); var lbOK = DIFF.CFG[G.dkMin || G.dk || 'normal'].rank >= 1; var movesLeft = G.moves; G.score += G.moves * 100; updateHud();
       var rr = { movesLeft: movesLeft, score: G.score, bestCombo: G.bestCombo, specials: G.specials, boosters: G.boosters }, bm = GP.bonusMet(G.L, rr);
       rr.supers = G.supers || 0; rr.axo = !!G.axoCaught; rr.bossWin = !!G.boss;
       var tw9 = G.board.tw, g9 = G.L.goals || {}; rr.echoes = tw9 ? tw9.echoes : 0; // v13.2 #3 more star ways
@@ -4414,7 +4506,7 @@ window.LB_CONFIG = {
       if (ITEM.use(S, 'clover')) { coins = Math.round(coins * 1.5); toast('\ud83c\udf40 Lucky Clover: +50% coins!'); }
       if (L.mini) S.stats.minis = (S.stats.minis || 0) + 1;
       var seasonPts = 0, snackDrop = null; try { if (lbOK) { seasonPts = SEASON.addWin(S, st - prevStars, L); LB.submit(S); } snackDrop = SNACKS.drop(S, st, L, Math.random, ev); } catch (e) {}
-      var candy = 0; try { if (ev && ev.quest) { candy = QUEST.earn(st, L); QUEST.add(S, ev, candy, today()); } } catch (e) {}
+      var candy = 0; try { if (ev && ev.quest) { candy = QUEST.earn(st, L); QUEST.add(S, ev, candy, evDay()); } } catch (e) {}
       try { if (window.PGS && lbOK) PGS.reportSeason(S); reportAch(); } catch (e) {}
       S.coins += coins; save();
       sfx.win(); spookBurst(12); banner(L.boss ? 'Boss beaten!' : L.mini ? L.miniName + ' beaten!' : 'Level Clear!'); renderCheer('cheering'); document.querySelectorAll('.pc').forEach(function (p) { p.classList.add('happy'); });
@@ -4422,7 +4514,7 @@ window.LB_CONFIG = {
       setTimeout(function () {
         if (G !== thisGame) return;
         var squad = cheerSquad().map(function (a) { return '<span>' + PETS.animalSVG(a, 0) + '</span>'; }).join('');
-        modal('<h2>' + (L.boss ? '\ud83d\udc51 Boss beaten!' : L.mini ? '\u2694\ufe0f Mini-boss beaten!' : 'Level ' + id + ' complete!') + '</h2><div class="stars">' + [1, 2, 3].map(function (i) { return '<span class="' + (i <= st ? '' : 'off') + '">\u2605</span>'; }).join('') + '</div><div class="fine">\u2605 Win \u2713 \u00b7 \u2605 ' + L.bonus.moves + '+ moves left ' + (movesLeft >= L.bonus.moves ? '\u2713' : '\u2717') + ' \u00b7 \u2605 ' + bonusText(L) + ' ' + (bm ? '\u2713' : '\u2717') + '</div><div class="cheerline">' + squad + '</div>' + (st > prevStars && !first ? '<div class="fine newbest">New best! ' + starRow(st) + '</div>' : (!first ? '<div class="fine">Best: ' + starRow(S.stars[id]) + '</div>' : '')) + '<p>Score ' + G.score + ' \u00b7 <b id="coinTxt">+' + coins + ' coins</b></p>' + (dbl ? '<div class="fine gift dbl">\ud83d\udc51 Boss bonus: DOUBLE rewards!</div>' : '') + (ev ? '<div class="fine">' + ev.emoji + ' ' + ev.name + ': +' + Math.round(ev.bonus * 100) + '% coins</div>' : '') + (seasonPts ? '<div class="fine">\ud83c\udfc6 +' + seasonPts + ' season points</div>' : '') + (candy ? '<div class="fine gift evgift">' + ev.quest.icon + ' +' + candy + ' ' + ev.quest.name + ' (' + QUEST.state(S, ev, today()).n + ')' + (QUEST.claimable(S, ev, today()).length ? ' \u00b7 \ud83c\udf81 chest ready!' : '') + '</div>' : '') + (snackDrop ? '<div class="fine gift">' + snackDrop.icon + ' You found a ' + snackDrop.name + ' snack!</div>' : '') + (gift ? '<div class="fine gift">\ud83c\udf81 Bonus earned: ' + BICON[gift] + ' ' + BNAME[gift] + '</div>' : '') + adBtn('adDouble', 'Watch ad: double coins') + '<button class="btn" id="nextBtn">\u25b6 Next level</button>' + (st < 3 ? '<button class="btn alt" id="replayBtn">\u21bb Replay for \u2605\u2605\u2605</button>' : '') + '<button class="btn alt small" id="mapBtn">Map</button>');
+        modal('<h2>' + (L.boss ? '\ud83d\udc51 Boss beaten!' : L.mini ? '\u2694\ufe0f Mini-boss beaten!' : 'Level ' + id + ' complete!') + '</h2><div class="stars">' + [1, 2, 3].map(function (i) { return '<span class="' + (i <= st ? '' : 'off') + '">\u2605</span>'; }).join('') + '</div><div class="fine">\u2605 Win \u2713 \u00b7 \u2605 ' + L.bonus.moves + '+ moves left ' + (movesLeft >= L.bonus.moves ? '\u2713' : '\u2717') + ' \u00b7 \u2605 ' + bonusText(L) + ' ' + (bm ? '\u2713' : '\u2717') + '</div><div class="cheerline">' + squad + '</div>' + (st > prevStars && !first ? '<div class="fine newbest">New best! ' + starRow(st) + '</div>' : (!first ? '<div class="fine">Best: ' + starRow(S.stars[id]) + '</div>' : '')) + '<p>Score ' + G.score + ' \u00b7 <b id="coinTxt">+' + coins + ' coins</b></p>' + (dbl ? '<div class="fine gift dbl">\ud83d\udc51 Boss bonus: DOUBLE rewards!</div>' : '') + (ev ? '<div class="fine">' + ev.emoji + ' ' + ev.name + ': +' + Math.round(ev.bonus * 100) + '% coins</div>' : '') + (seasonPts ? '<div class="fine">\ud83c\udfc6 +' + seasonPts + ' season points</div>' : '') + (candy ? '<div class="fine gift evgift">' + ev.quest.icon + ' +' + candy + ' ' + ev.quest.name + ' (' + QUEST.state(S, ev, evDay()).n + ')' + (QUEST.claimable(S, ev, evDay()).length ? ' \u00b7 \ud83c\udf81 chest ready!' : '') + '</div>' : '') + (snackDrop ? '<div class="fine gift">' + snackDrop.icon + ' You found a ' + snackDrop.name + ' snack!</div>' : '') + (gift ? '<div class="fine gift">\ud83c\udf81 Bonus earned: ' + BICON[gift] + ' ' + BNAME[gift] + '</div>' : '') + adBtn('adDouble', 'Watch ad: double coins') + '<button class="btn" id="nextBtn">\u25b6 Next level</button>' + (st < 3 || L.boss || L.mini ? '<button class="btn alt" id="replayBtn">\u21bb ' + (st < 3 ? 'Replay for \u2605\u2605\u2605' : L.boss ? 'Replay boss' : 'Replay mini-boss') + '</button>' : '') + '<button class="btn alt small" id="mapBtn">Map</button>');
         for (var si = 0; si < st; si++) setTimeout(sfx.star.bind(null, si), 250 + si * 280);
         if ($('adDouble')) $('adDouble').onclick = function () { Ads.showRewarded('double_coins', function () { S.coins += coins; save(); sfx.coin(); afterWin(); }, 'double coins'); };
         function afterWin() { var ad = $('adDouble'); if (ad) ad.remove(); }
@@ -4449,6 +4541,14 @@ window.LB_CONFIG = {
     }
     save();
   }
+  function bossDownChoice() {
+    G.bossAsked = true; bossHud(); var left = goalList(G.L, G).filter(function (x) { return !x.done; }).length; sfx.win(); banner((G.boss.mini ? '\u2694\ufe0f ' : '\ud83d\udc51 ') + G.boss.name + ' beaten!', 'c5');
+    modal('<h2>' + (G.boss.mini ? '\u2694\ufe0f Mini-boss' : '\ud83d\udc51 Boss') + ' beaten!</h2><p>The boss counts as done \u2713. You still have ' + left + ' quest' + (left === 1 ? '' : 's') + ' left and ' + G.moves + ' moves.</p><div class="fine">Finish them for extra score and stars, or claim the win now. You can\u2019t fail this level any more.</div><button class="btn" id="bdFinish">\u25b6 Finish my quests</button><button class="btn alt" id="bdClaim">\ud83c\udfc6 Claim win now</button>', 'bossdown');
+    $('bdFinish').onclick = function () { closeModal(); showClaim(); resetHint(); };
+    $('bdClaim').onclick = function () { closeModal(); claimBossWin(); };
+  }
+  function claimBossWin() { var c = $('claimWin'); if (c) c.remove(); if (!G || G.over) return; G.bossClaim = true; checkEnd(); }
+  function showClaim() { if ($('claimWin')) return; var b = document.createElement('button'); b.id = 'claimWin'; b.className = 'btn small claimwin'; b.textContent = '\ud83c\udfc6 Claim win'; b.onclick = claimBossWin; var bw = $('boardWrap'); (bw || document.body).appendChild(b); }
   // v9: "Level failed" - shows what was missed and how to keep going. All continues are in-game (boosts, power, coins, optional ad).
   var TRADE = ['hammer', 'row', 'shuffle', 'hint'];
   function failScreen() {
@@ -4545,6 +4645,7 @@ window.LB_CONFIG = {
   }
   // test hook
   window.__glow = { hud: function(){ updateHud(); }, showTut: function (k) { showTut(k); }, tutList: function () { tutList(); }, playNext: function (id) { playNext(id); }, tagUI: function (f) { tagUI(f); }, crCheck: function () { return crCheck(); }, crBanner: function () { crBanner(); }, event: function () { return curEvent(); }, power: function () { return { energy: S.power.energy, uses: G && G.powerUses, p: curPower().p }; }, usePower: function () { return usePower(); }, fillSuper: function () { S.power.energy = sFull(); refreshPower(); }, fill: function () { S.power.energy = pFull(); refreshPower(); }, recover: recover, busy: function () { return busy; }, tool: function () { return tool; }, start: startLevel, preLevel: preLevel, state: function () { return G; }, S: S, show: show, refreshCollection: refreshCollection, refreshSettings: refreshSettings, refreshMap: refreshMap, refreshRewards: refreshRewards, refreshShop: refreshShop, worldIntro: worldIntro, setTheme: setTheme, Ads: Ads, save: save, FRIEND_AT: FRIEND_AT, ACH: ACH, refreshGoals: refreshGoals, refreshComp: refreshComp, compModal: compModal, refreshFeatured: refreshFeatured, COMP: COMP, toast: toast, cutscene: cutscene, applyEvent: applyEvent, eventModal: eventModal, trackDaily: trackDaily, goalList: function () { return goalList(G.L, G); }, checkEnd: checkEnd, superFire: function (r, c) { return superFire([r, c]); }, failScreen: failScreen, move: function (a, c) { return tryMove(a, c); }, axoTurn: axoTurn, applySkins: applySkins, refreshGoals: refreshGoals };
+  window.__glow.banner = banner; window.__glow.axoTurn = axoTurn; window.__glow.axoLayer = axoLayer; // v13.4 test hooks
   syncMute(); Ads.init(); try { if (window.PGS) PGS.init().then(function (ok) { if (ok) { PGS.report(S, {}); PGS.reportSeason(S); reportAch(); } }); } catch (e) {} setTheme(0); refreshPills();
   applyEvent(); seasonCheck(); try { crCheck(); } catch (e) {} refreshTagUI();
   if (!S.tag && !S.tagAsked && S.tutDone && !$('modal').classList.contains('on')) setTimeout(function () { if (!$('modal').classList.contains('on')) tagUI(true); }, 1500);
